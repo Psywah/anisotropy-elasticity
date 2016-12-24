@@ -87,7 +87,7 @@ int main()
 
 
   // Read mesh
-  Mesh mesh("../../mesh/tube-2layer.xml");
+  Mesh mesh("../../mesh/tube-2layer-mid-fine.xml");
 
   // Create mesh functions over the cells and acets
   MeshFunction<std::size_t> sub_domains_mark(mesh, mesh.topology().dim() );
@@ -112,11 +112,11 @@ int main()
 
   
   // Save sub domains to file
-  File file("tube-2layer-domains-marker.xml");
+  File file("tube-2layer-mid-fine-domains-marker.xml");
   file << sub_domains_mark;
 
   // Save sub domains to file
-  File file_bnd("tube-2layer-boundary-marker.xml");
+  File file_bnd("tube-2layer-mid-fine-boundary-marker.xml");
   file_bnd << boundary_mark;
 
   

@@ -2,7 +2,7 @@
 <dolfin xmlns:dolfin="http://fenicsproject.org">
     <parameters name="parameters">
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
-        <parameter key="pressure_boundary_condition"    type="double"   value="24e3" />
+        <parameter key="pressure_boundary_condition"    type="double"   value="24." />
         <parameters name="newton_solver">
             <parameter key="absolute_tolerance"         type="double"   value="1e-6" />
             <parameter key="convergence_criterion"      type="string"   value="residual" />
@@ -53,7 +53,7 @@
             <parameter key="linear_solver"              type="string"   value="lu" />
             <parameter key="maximum_iterations"         type="int"      value="50" />
             <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
-            <parameter key="method"                     type="string"   value="newtontr" />
+            <parameter key="method"                     type="string"   value="newtonls" />
             <parameter key="options_prefix"             type="string"   value="default" />
             <parameter key="preconditioner"             type="string"   value="default" />
             <parameter key="relative_tolerance"         type="double"   value="1e-06" />

@@ -8,23 +8,22 @@ using namespace dolfin;
 #define Thk_med 0.00132
 #define Thk_adv 0.00096
 #define Depth 0.005
-#define C1_adv 6.8e3
-#define C1_med 11.8e3
-#define Epsilon1_adv 52.5e3
-#define Epsilon1_med 84.2e3
+#define C1_adv 6.8
+#define C1_med 11.8
+#define Epsilon1_adv 52.5
+#define Epsilon1_med 84.2
 #define Epsilon2_adv 10.
 #define Epsilon2_med 5.94
-#define Alpha3_adv 1005.2e3
-#define Alpha3_med 49999.1e3
+#define Alpha3_adv 1005.2
+#define Alpha3_med 49999.1
 #define Alpha4_adv 6.3
 #define Alpha4_med 4.1
-#define Beta1 80.e3
-#define Eta1 250.e3
-#define Delta1 2000.e3
+#define Beta1 80.0
+#define Eta1 250.0
+#define Delta1 2000.0
 #define Delta2 (Beta1+Eta1*2+Delta1)
 #define Phi_adv 57.1
 #define Phi_med 28.8
-#define Pressure 1500
 
 // Sub domain for clamp at left end
 class LeftPoint : public SubDomain
@@ -156,7 +155,7 @@ class MCoef_alpha4 : public Expression
             else if (r > R)
                 values[0] = Alpha4_med;
             else
-                values[0] = 0.0;
+                values[0] = Alpha4_med;
         }
 
 };
@@ -266,11 +265,11 @@ int main()
     para_file >> para;
     
     // Create mesh and define function space
-    Mesh mesh("../../mesh/tube-2layer.xml");
+    Mesh mesh("../../mesh/tube-2layer-fine.xml");
     MeshFunction<std::size_t> sub_domains_mark(mesh, 
-            "../../mesh/tube-2layer-domains-marker.xml" );
+            "../../mesh/tube-2layer-fine-domains-marker.xml" );
     MeshFunction<std::size_t> boundary_mark(mesh, 
-            "../../mesh/tube-2layer-boundary-marker.xml");
+            "../../mesh/tube-2layer-fine-boundary-marker.xml");
 
     HyperElasticity::FunctionSpace V(mesh);
 
@@ -301,7 +300,7 @@ int main()
     MCoef_epsilon1 coef_epsilon1;
     MCoef_epsilon2 coef_epsilon2;
     MCoef_alpha3 coef_alpha3;
-    MCoef_alpha3 coef_alpha4;
+    MCoef_alpha4 coef_alpha4;
     Constant coef_beta1(Beta1);
     Constant coef_eta1(Eta1);
     Constant coef_delta1(Delta1);
@@ -348,10 +347,11 @@ int main()
 
     std::stringstream ss;
     ss << std::fixed << std::setprecision(2) << double(para["pressure_boundary_condition"]);
-    std::string idx = std::string("Pres") + ss.str();
+    std::string idx = std::string("Refine3Pres") + ss.str();
     // Save solution in VTK format
     File file(std::string("displacement")+idx+std::string(".pvd"));
     file << u;
+
     Von_Misec_Stress::FunctionSpace VMS(mesh);
     Von_Misec_Stress::BilinearForm a(VMS,VMS);
     Von_Misec_Stress::LinearForm L(VMS);
