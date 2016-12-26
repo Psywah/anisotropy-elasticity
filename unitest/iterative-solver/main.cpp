@@ -265,11 +265,11 @@ int main()
     para_file >> para;
     
     // Create mesh and define function space
-    Mesh mesh("../../mesh/tube-2layer-fine.xml");
+    Mesh mesh("../../mesh/tube-2layer-coarse.xml");
     MeshFunction<std::size_t> sub_domains_mark(mesh, 
-            "../../mesh/tube-2layer-fine-domains-marker.xml" );
+            "../../mesh/tube-2layer-coarse-domains-marker.xml" );
     MeshFunction<std::size_t> boundary_mark(mesh, 
-            "../../mesh/tube-2layer-fine-boundary-marker.xml");
+            "../../mesh/tube-2layer-coarse-boundary-marker.xml");
 
     HyperElasticity::FunctionSpace V(mesh);
 
@@ -347,7 +347,7 @@ int main()
 
     std::stringstream ss;
     ss << std::fixed << std::setprecision(2) << double(para["pressure_boundary_condition"]);
-    std::string idx = std::string("Refine3Pres") + ss.str();
+    std::string idx = std::string("Pres") + ss.str();
     // Save solution in VTK format
     File file(std::string("displacement")+idx+std::string(".pvd"));
     file << u;

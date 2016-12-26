@@ -37,6 +37,9 @@ int main()
 #define Thk_med 0.00132
 #define Thk_adv 0.00096
 #define Depth 0.005
+#define Thk_pla 0.006
+#define H_ca ((Thk_pla-.002)/2.)
+#define W_ca (H_ca*2.5)
 
   // adventitia domain (3)
   class Adventitia : public SubDomain
@@ -44,6 +47,20 @@ int main()
     bool inside(const Array<double>& x, bool on_boundary) const
     {
         return sqrt(x[0]*x[0]+x[1]*x[1]) >= R+Thk_med - DOLFIN_EPS;
+    }
+  };
+
+  // calcification domain (4)
+  class Calcification : public SubDomain
+  {
+    bool inside(const Array<double>& x, bool on_boundary) const
+    {
+        double cy = -R + Thk_pla/2.;
+        double cxr = sqrt(W_ca*W_ca - H_ca*H_ca);
+        double cxl = -cxr;
+        return (sqrt((x[0]- cxl)*(x[0]-cxl)+(x[1]-cy)*(x[1]-cy))
+               + sqrt((x[0]- cxr)*(x[0]-cxr)+(x[1]-cy)*(x[1]-cy)))
+                <= (2*W_ca + DOLFIN_EPS);
     }
   };
 
@@ -87,7 +104,7 @@ int main()
 
 
   // Read mesh
-  Mesh mesh("../../mesh/tube-2layer-mid-fine.xml");
+  Mesh mesh("../../mesh/tube-4components-fine1.xml");
 
   // Create mesh functions over the cells and acets
   MeshFunction<std::size_t> sub_domains_mark(mesh, mesh.topology().dim() );
@@ -97,6 +114,8 @@ int main()
   sub_domains_mark = 1;
   boundary_mark = 0;
 
+  Calcification calcification;
+  calcification.mark(sub_domains_mark, 4);
   Adventitia adventitia;
   adventitia.mark(sub_domains_mark, 3);
   Media media;
@@ -112,27 +131,33 @@ int main()
 
   
   // Save sub domains to file
-  File file("tube-2layer-mid-fine-domains-marker.xml");
+  File file("tube-4components-fine1-domains-marker.xml");
   file << sub_domains_mark;
 
   // Save sub domains to file
-  File file_bnd("tube-2layer-mid-fine-boundary-marker.xml");
+  File file_bnd("tube-4components-fine1-boundary-marker.xml");
   file_bnd << boundary_mark;
+  
 
   
-  /*
+  
 
+  
+  
+  /*
   sub_domains_mark = 0;
   boundary_mark = 0;
 
   // Read sub domains from file
-  File file_read("tube-2layer-domains-marker.xml");
+  File file_read("../../mesh/tube-4components_physical_region.xml");
   file_read >> sub_domains_mark;
 
   // Save sub domains to file
-  File file_bnd_read("tube-2layer-boundary-marker.xml");
+  File file_bnd_read("../../mesh/tube-4components_facet_region.xml");
   file_bnd_read >> boundary_mark;
   */
+  
+  
 
 
   plot(mesh);
