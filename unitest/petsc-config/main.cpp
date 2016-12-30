@@ -259,17 +259,18 @@ int main()
     #ifdef HAS_PETSC
     std::cout<<"has PETSc"<<std::endl;
     list_petsc_snes_methods();
+    parameters["linear_algebra_backend"] = "PETSc";
     #endif
     Parameters para("user_defined_parameters");
     File para_file("aniso_elas_parameters.xml");
     para_file >> para;
     
     // Create mesh and define function space
-    Mesh mesh("../../mesh/tube-4components-fine1.xml");
+    Mesh mesh("../../mesh/tube-4components.xml");
     MeshFunction<std::size_t> sub_domains_mark(mesh, 
-            "../../mesh/tube-4components-fine1-domains-marker.xml" );
+            "../../mesh/tube-4components-domains-marker.xml" );
     MeshFunction<std::size_t> boundary_mark(mesh, 
-            "../../mesh/tube-4components-fine1-boundary-marker.xml");
+            "../../mesh/tube-4components-boundary-marker.xml");
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
 
