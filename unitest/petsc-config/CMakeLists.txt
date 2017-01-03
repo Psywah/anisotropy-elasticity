@@ -5,7 +5,7 @@
 # Require CMake 2.8
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME demo_hyperelasticity)
+set(PROJECT_NAME AnisoElas)
 project(${PROJECT_NAME})
 
 # Set verbose output while testing CMake
@@ -35,14 +35,22 @@ add_definitions(${DOLFIN_CXX_DEFINITIONS})
 # Compiler flags
 set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
 
+# Set useful directory
+set(AE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(AE_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(AE_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
 # Include directories
+include_directories(${AE_INCLUDE_DIR})
 include_directories(${DOLFIN_INCLUDE_DIRS})
 include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 
+file(GLOB AE_LIB_SRC ${AE_SRC_DIR}/*.cpp)
+#add_library(anisoelas SHARED ${AE_LIB_SRC})
+#target_link_libraries(anisoelas ${DOLFIN_LIBRARIES})
+
 # Executable
-add_executable(${PROJECT_NAME} main.cpp)
-#add_executable(test-von-misec test-von-misec-stress.cpp)
+add_executable(${PROJECT_NAME} main.cpp ${AE_LIB_SRC})
 
 # Target libraries
-target_link_libraries(${PROJECT_NAME} ${DOLFIN_LIBRARIES})
-#target_link_libraries(test-von-misec ${DOLFIN_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}  ${DOLFIN_LIBRARIES})

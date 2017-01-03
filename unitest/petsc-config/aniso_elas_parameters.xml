@@ -1,95 +1,117 @@
 <?xml version="1.0"?>
 <dolfin xmlns:dolfin="http://fenicsproject.org">
     <parameters name="parameters">
-        <parameter key="nonlinear_solver"               type="string"   value="snes" />
-        <parameter key="pressure_boundary_condition"    type="double"   value="24." />
-        <parameters name="newton_solver">
-            <parameter key="absolute_tolerance"         type="double"   value="1e-6" />
-            <parameter key="convergence_criterion"      type="string"   value="residual" />
-            <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
-            <parameter key="linear_solver"              type="string"   value="lu" />
-            <parameter key="maximum_iterations"         type="int"      value="50" />
-            <parameter key="method"                     type="string"   value="full" />
-            <parameter key="preconditioner"             type="string"   value="default" />
-            <parameter key="relative_tolerance"         type="double"   value="1e-05" />
-            <parameter key="relaxation_parameter"       type="double"   value=".5" />
-            <parameter key="report"                     type="bool"     value="true" />
-            <parameters name="krylov_solver">
-                <parameter key="absolute_tolerance"     type="double"   value="1e-5" />
-                <parameter key="divergence_limit"       type="double"   value="1e4" />
-                <parameter key="error_on_nonconvergence" type="bool"    value="false" />
-                <parameter key="maximum_iterations"     type="int"      value="1000" />
-                <parameter key="monitor_convergence"    type="bool"     value="true" />
-                <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
-                <parameter key="relative_tolerance"     type="double"   value="1e-04" />
-                <parameter key="report"                 type="bool"     value="true" />
-                <parameters name="gmres">
-                    <parameter key="restart"            type="int"      value="30" />
-                </parameters>
-                <parameters name="preconditioner">
-                    <parameter key="report"             type="bool"     value="true" />
-                    <parameter key="shift_nonzero"      type="double"   value="0" />
-                    <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
-                    <parameters name="ilu">
-                        <parameter key="fill_level"     type="int"      value="3" />
-                    </parameters>
-                    <parameters name="schwarz">
-                        <parameter key="overlap"        type="int"      value="1" />
-                    </parameters>
-                </parameters>
-            </parameters>
-            <parameters name="lu_solver">
-                <parameter key="report"                 type="bool"     value="true" />
-                <parameter key="reuse_factorization"    type="bool"     value="false" />
-                <parameter key="same_nonzero_pattern"   type="bool"     value="false" />
-                <parameter key="symmetric"              type="bool"     value="false" />
-                <parameter key="verbose"                type="bool"     value="false" />
-            </parameters>
+        <parameters name="problem_parameters">
+            <parameter key="pressure_boundary_condition"    type="double"   value="24." />
+            <parameter key="C1_adv"    type="double"   value="6.8" />
+            <parameter key="C1_med"    type="double"   value="11.8" />
+            <parameter key="C1_pla"    type="double"   value="11.8" />
+            <parameter key="Epsilon1_adv"    type="double"   value="52.5" />
+            <parameter key="Epsilon1_med"    type="double"   value="84.2" />
+            <parameter key="Epsilon1_pla"    type="double"   value="84.2" />
+            <parameter key="Epsilon2_adv"    type="double"   value="10" />
+            <parameter key="Epsilon2_med"    type="double"   value="5.94" />
+            <parameter key="Epsilon2_pla"    type="double"   value="5.94" />
+            <parameter key="Alpha3_adv"    type="double"   value="1005.2" />
+            <parameter key="Alpha3_med"    type="double"   value="49999.1" />
+            <parameter key="Alpha4_adv"    type="double"   value="6.3" />
+            <parameter key="Alpha4_med"    type="double"   value="4.1" />
+            <parameter key="Beta1"    type="double"   value="80.0" />
+            <parameter key="Eta1"    type="double"   value="250.0" />
+            <parameter key="Delta1"    type="double"   value="2000.0" />
+            <parameter key="Phi_adv"    type="double"   value="57.1" />
+            <parameter key="Phi_med"    type="double"   value="28.8" />
         </parameters>
-        <parameters name="snes_solver">
-            <parameter key="absolute_tolerance"         type="double"   value="1e-7" />
-            <parameter key="error_on_nonconvergence"    type="bool"     value="true" />
-            <parameter key="line_search"                type="string"   value="bt" />
-            <parameter key="linear_solver"              type="string"   value="lu" />
-            <parameter key="maximum_iterations"         type="int"      value="50" />
-            <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
-            <parameter key="method"                     type="string"   value="newtonls" />
-            <parameter key="options_prefix"             type="string"   value="default" />
-            <parameter key="preconditioner"             type="string"   value="default" />
-            <parameter key="relative_tolerance"         type="double"   value="1e-06" />
-            <parameter key="report"                     type="bool"     value="true" />
-            <parameter key="sign"                       type="string"   value="default" />
-            <parameter key="solution_tolerance"         type="double"   value="1e-6" />
-            <parameters name="krylov_solver">
-                <parameter key="absolute_tolerance"     type="double"   value="1e-4" />
-                <parameter key="divergence_limit"       type="double"   value="10000" />
-                <parameter key="error_on_nonconvergence" type="bool"    value="true" />
-                <parameter key="maximum_iterations"     type="int"      value="10000" />
-                <parameter key="monitor_convergence"    type="bool"     value="false" />
-                <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
-                <parameter key="relative_tolerance"     type="double"   value="1e-04" />
-                <parameter key="report"                 type="bool"     value="false" />
-                <parameters name="gmres">
-                    <parameter key="restart"            type="int"      value="30" />
+        <parameters name="nonlinear_solver_parameters">
+            <parameter key="nonlinear_solver"               type="string"   value="snes" />
+            <parameters name="newton_solver">
+                <parameter key="absolute_tolerance"         type="double"   value="1e-6" />
+                <parameter key="convergence_criterion"      type="string"   value="residual" />
+                <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
+                <parameter key="linear_solver"              type="string"   value="lu" />
+                <parameter key="maximum_iterations"         type="int"      value="50" />
+                <parameter key="method"                     type="string"   value="full" />
+                <parameter key="preconditioner"             type="string"   value="default" />
+                <parameter key="relative_tolerance"         type="double"   value="1e-05" />
+                <parameter key="relaxation_parameter"       type="double"   value=".5" />
+                <parameter key="report"                     type="bool"     value="true" />
+                <parameters name="krylov_solver">
+                    <parameter key="absolute_tolerance"     type="double"   value="1e-5" />
+                    <parameter key="divergence_limit"       type="double"   value="1e4" />
+                    <parameter key="error_on_nonconvergence" type="bool"    value="false" />
+                    <parameter key="maximum_iterations"     type="int"      value="1000" />
+                    <parameter key="monitor_convergence"    type="bool"     value="true" />
+                    <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
+                    <parameter key="relative_tolerance"     type="double"   value="1e-04" />
+                    <parameter key="report"                 type="bool"     value="true" />
+                    <parameters name="gmres">
+                        <parameter key="restart"            type="int"      value="30" />
+                    </parameters>
+                    <parameters name="preconditioner">
+                        <parameter key="report"             type="bool"     value="true" />
+                        <parameter key="shift_nonzero"      type="double"   value="0" />
+                        <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
+                        <parameters name="ilu">
+                            <parameter key="fill_level"     type="int"      value="3" />
+                        </parameters>
+                        <parameters name="schwarz">
+                            <parameter key="overlap"        type="int"      value="1" />
+                        </parameters>
+                    </parameters>
                 </parameters>
-                <parameters name="preconditioner">
-                    <parameter key="report"             type="bool"     value="false" />
-                    <parameter key="shift_nonzero"      type="double"   value="0" />
-                    <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
-                    <parameters name="ilu">
-                        <parameter key="fill_level"     type="int"      value="0" />
-                    </parameters>
-                    <parameters name="schwarz">
-                        <parameter key="overlap"        type="int" value="1" />
-                    </parameters>
+                <parameters name="lu_solver">
+                    <parameter key="report"                 type="bool"     value="true" />
+                    <parameter key="reuse_factorization"    type="bool"     value="false" />
+                    <parameter key="same_nonzero_pattern"   type="bool"     value="false" />
+                    <parameter key="symmetric"              type="bool"     value="false" />
+                    <parameter key="verbose"                type="bool"     value="false" />
                 </parameters>
             </parameters>
-            <parameters name="lu_solver">
-                <parameter key="report"                 type="bool"     value="true" />
-                <parameter key="reuse_factorization"    type="bool"     value="false" />
-                <parameter key="same_nonzero_pattern"   type="bool"     value="false" />
-                <parameter key="symmetric"              type="bool"     value="false" />
-                <parameter key="verbose"                type="bool"     value="false" />
+            <parameters name="snes_solver">
+                <parameter key="absolute_tolerance"         type="double"   value="1e-7" />
+                <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
+                <parameter key="line_search"                type="string"   value="bt" />
+                <parameter key="linear_solver"              type="string"   value="lu" />
+                <parameter key="maximum_iterations"         type="int"      value="40" />
+                <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
+                <parameter key="method"                     type="string"   value="newtonls" />
+                <parameter key="options_prefix"             type="string"   value="default" />
+                <parameter key="preconditioner"             type="string"   value="default" />
+                <parameter key="relative_tolerance"         type="double"   value="1e-7" />
+                <parameter key="report"                     type="bool"     value="true" />
+                <parameter key="sign"                       type="string"   value="default" />
+                <parameter key="solution_tolerance"         type="double"   value="1e-7" />
+                <parameters name="krylov_solver">
+                    <parameter key="absolute_tolerance"     type="double"   value="1e-4" />
+                    <parameter key="divergence_limit"       type="double"   value="10000" />
+                    <parameter key="error_on_nonconvergence" type="bool"    value="true" />
+                    <parameter key="maximum_iterations"     type="int"      value="10000" />
+                    <parameter key="monitor_convergence"    type="bool"     value="false" />
+                    <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
+                    <parameter key="relative_tolerance"     type="double"   value="1e-04" />
+                    <parameter key="report"                 type="bool"     value="false" />
+                    <parameters name="gmres">
+                        <parameter key="restart"            type="int"      value="30" />
+                    </parameters>
+                    <parameters name="preconditioner">
+                        <parameter key="report"             type="bool"     value="false" />
+                        <parameter key="shift_nonzero"      type="double"   value="0" />
+                        <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
+                        <parameters name="ilu">
+                            <parameter key="fill_level"     type="int"      value="0" />
+                        </parameters>
+                        <parameters name="schwarz">
+                            <parameter key="overlap"        type="int" value="1" />
+                        </parameters>
+                    </parameters>
+                </parameters>
+                <parameters name="lu_solver">
+                    <parameter key="report"                 type="bool"     value="true" />
+                    <parameter key="reuse_factorization"    type="bool"     value="false" />
+                    <parameter key="same_nonzero_pattern"   type="bool"     value="false" />
+                    <parameter key="symmetric"              type="bool"     value="false" />
+                    <parameter key="verbose"                type="bool"     value="false" />
+                </parameters>
             </parameters>
         </parameters>
     </parameters>

@@ -36,7 +36,7 @@ int main()
 #define R 0.01
 #define Thk_med 0.00132
 #define Thk_adv 0.00096
-#define Depth 0.005
+#define Depth 0.002
 #define Thk_pla 0.006
 #define H_ca ((Thk_pla-.002)/2.)
 #define W_ca (H_ca*2.5)
@@ -104,7 +104,7 @@ int main()
 
 
   // Read mesh
-  Mesh mesh("../../mesh/tube-4components-fine1.xml");
+  Mesh mesh("../../mesh/tube-4components-short.xml");
 
   // Create mesh functions over the cells and acets
   MeshFunction<std::size_t> sub_domains_mark(mesh, mesh.topology().dim() );
@@ -131,11 +131,11 @@ int main()
 
   
   // Save sub domains to file
-  File file("tube-4components-fine1-domains-marker.xml");
+  File file("tube-4components-short-domains-marker.xml");
   file << sub_domains_mark;
 
   // Save sub domains to file
-  File file_bnd("tube-4components-fine1-boundary-marker.xml");
+  File file_bnd("tube-4components-short-boundary-marker.xml");
   file_bnd << boundary_mark;
   
 

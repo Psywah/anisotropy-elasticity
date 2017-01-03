@@ -31,6 +31,11 @@
 #include "NonlinearVariationalProblem.h"
 #include "NonlinearVariationalSolver.h"
 
+//#define SAVE_RESIDULE_VEC
+#ifdef SAVE_RESIDULE_VEC
+#include <dolfin/io/dolfin_io.h>
+#endif
+
 using namespace dolfin;
 
 //-----------------------------------------------------------------------------
@@ -155,7 +160,33 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                                *_problem->upper_bound());
     }
     else
-      ret = snes_solver->solve(*nonlinear_problem, *u->vector());
+    {
+      #ifdef SAVE_RESIDULE_VEC
+       File u_hist("u_hist.pvd");
+       File du_hist("du_hist.pvd");
+       File r_hist("r_hist.pvd");
+       Function u0(u->function_space()), du(u->function_space()), res(u->function_space());
+       std::size_t iter = 0 ;
+       bool converged = false;
+       while(iter< 30 && !converged)
+       {
+           nonlinear_problem->F(*res.vector(), *u->vector());
+           *(du.vector()) = *(u->vector());
+           ret = snes_solver->solve(*nonlinear_problem, *u->vector());
+           *(du.vector()) *= -1.0;
+           *(du.vector()) += *(u->vector());
+           ++iter;
+           converged = std::get<1>(ret);
+           info("save residule of iterations (%d).\n", iter);
+           u_hist << *u ;
+           du_hist << du ;
+           r_hist << res ;
+       }
+      #else
+       info("begin snes solve");
+         ret = snes_solver->solve(*nonlinear_problem, *u->vector());
+      #endif
+    }
   }
   #endif
   else
