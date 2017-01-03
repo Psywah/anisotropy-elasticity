@@ -153,35 +153,6 @@ VariationalForms::VariationalForms(
 {
     
     _mesh = reference_to_no_delete_pointer(mesh);
-    _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(mesh);
-
-    // Define Dirichlet boundaries
-    std::shared_ptr<LeftPoint> left = std::make_shared<LeftPoint>();
-    std::shared_ptr<RightPoint> right = std::make_shared<RightPoint>();
-    std::shared_ptr<BottomPoint> bottom = std::make_shared<BottomPoint>();
-
-    // Define Dirichlet boundary functions
-    std::shared_ptr<Constant> zero = std::make_shared<Constant>(0.0);
-    std::string  method("pointwise");
-
-    // Create Dirichlet boundary conditions
-    std::shared_ptr<DirichletBC> bcl = std::make_shared<DirichletBC>((*_V)[1], zero, left, method);
-    std::shared_ptr<DirichletBC> bcr = std::make_shared<DirichletBC>((*_V)[1], zero, right, method);
-    std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
-    std::shared_ptr<DirichletBC> bc_cross = std::make_shared<DirichletBC>((*_V)[2], zero, 
-            reference_to_no_delete_pointer(boundary_mark), 2);
-    bcs.push_back(bcl);
-    bcs.push_back(bcr);
-    bcs.push_back(bct);
-    bcs.push_back(bc_cross);
-    
-
-    // Define source and boundary traction functions
-    std::shared_ptr<PressureNormal> pressure_normal = 
-                     std::make_shared<PressureNormal>(mesh,double(para["pressure_boundary_condition"]));
-    std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
-
-
     // Set material parameters
     double C1_adv = (double)(para["C1_adv"]),
            C1_med  = (double)(para["C1_med"]),
@@ -214,69 +185,73 @@ VariationalForms::VariationalForms(
     std::shared_ptr<Constant> coef_delta2 = std::make_shared<Constant>(Delta2);
     std::shared_ptr<Orient> vec1 = std::make_shared<Orient>(1.0,Phi_adv,Phi_med), 
                             vec2 = std::make_shared<Orient>(-1.0,Phi_adv,Phi_med);
-
-    // Define solution function
-    _u = std::make_shared<Function>(_V);
-
-    // Create (linear) form defining (nonlinear) variational problem
-    std::map<std::string, std::shared_ptr<const GenericFunction>> coef_list 
-     ={ {"u",       _u},
-        {"vec1",    vec1},
-        {"vec2",    vec2},
-        {"alpha3",  coef_alpha3},
-        {"alpha4",  coef_alpha4},
-        {"beta1",   coef_beta1},
-        {"eta1",    coef_eta1},
-        {"delta1",  coef_delta1},
-        {"delta2",  coef_delta2},
-        {"c1",      coef_c1},
-        {"epsilon1",coef_epsilon1},
-        {"epsilon2",coef_epsilon2},
-        {"B",       B},
-        {"T",       pressure_normal}};
-
-
-    _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
-    _F->set_coefficients(coef_list);
-    /*HyperElasticity::ResidualForm& F = *((HyperElasticity::ResidualForm*)_F.get());
-    F.vec1 = *vec1; F.vec2 = *vec2;
-    F.alpha3 = *coef_alpha3; F.alpha4 = *coef_alpha4;
-    F.beta1 = *coef_beta1; F.eta1 = *coef_eta1; F.delta1=*coef_delta1; F.delta2=*coef_delta2;
-    F.c1 = *coef_c1; F.epsilon1 = *coef_epsilon1; F.epsilon2 = *coef_epsilon2; F.u = *_u;
-    F.B = *B; F.T = *pressure_normal;
-    */
+    // Define source and boundary traction functions
+    std::shared_ptr<PressureNormal> pressure_normal = 
+                     std::make_shared<PressureNormal>(mesh,double(para["pressure_boundary_condition"]));
+    std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
+     
+    std::string elas_model = para["elas_model"];
+    std::map<std::string, std::shared_ptr<const GenericFunction>> coef_list
+        = { {"u",       _u},
+            {"vec1",    vec1},
+            {"vec2",    vec2},
+            {"alpha3",  coef_alpha3},
+            {"alpha4",  coef_alpha4},
+            {"beta1",   coef_beta1},
+            {"eta1",    coef_eta1},
+            {"delta1",  coef_delta1},
+            {"delta2",  coef_delta2},
+            {"c1",      coef_c1},
+            {"epsilon1",coef_epsilon1},
+            {"epsilon2",coef_epsilon2},
+            {"B",       B},
+            {"T",       pressure_normal}};
+    switch (elas_model[0]) {
+        case 'C':
+            // FunctionSpace
+            _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(mesh);
+            _u = std::make_shared<Function>(_V);
+            _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
+            _J = std::make_shared<HyperElasticityC::Form_Jac>(_V, _V);
+            _VMS = std::make_shared<HyperElasticityC::Form_L_vms::TestSpace>(mesh);
+            _p = std::make_shared<Function>(_VMS);
+            _a = std::make_shared<HyperElasticityC::Form_Mass_vms>(_VMS,_VMS);
+            _L = std::make_shared<HyperElasticityC::Form_L_vms>(_VMS);
+            break;
+        case 'A':
+            break;
+        default :
+            dolfin_error("VariationalForms.cpp",
+                         "Switch Elasticity Model",
+                         "Error option for Elasticity Model");
+    }
+    _F->set_some_coefficients(coef_list);
     _F->ds = boundary_mark;
     _F->dx = sub_domains_mark;
-
-    
-    std::map<std::string, std::shared_ptr<const GenericFunction>>::iterator it;
-    coef_list.erase("B");
-    coef_list.erase("T");
-    // Create jacobian dF = F' (for use in nonlinear solver).
-    _J = std::make_shared<HyperElasticityC::Form_Jac>(_V, _V);
-    _J->set_coefficients(coef_list);
-    /*HyperElasticity::JacobianForm& J=*((HyperElasticity::JacobianForm*)_J.get());
-    J.vec1 = *vec1; J.vec2 = *vec2;
-    J.alpha3 = *coef_alpha3; J.alpha4 = *coef_alpha4;
-    J.beta1 = *coef_beta1; J.eta1 = *coef_eta1; J.delta1=*coef_delta1; J.delta2=*coef_delta2;
-    J.c1 = *coef_c1; J.epsilon1 = *coef_epsilon1; J.epsilon2 = *coef_epsilon2; J.u = *_u;
-    */
+    _J->set_some_coefficients(coef_list);
     _J->dx = sub_domains_mark;
-    
-
-    _VMS = std::make_shared<HyperElasticityC::Form_L_vms::TestSpace>(mesh);
-    _a = std::make_shared<HyperElasticityC::Form_Mass_vms>(_VMS,_VMS);
-    _L = std::make_shared<HyperElasticityC::Form_L_vms>(_VMS);
-    _L->set_coefficients(coef_list);
-    /*Von_Misec_Stress::LinearForm& L = *((Von_Misec_Stress::LinearForm*)_L.get());
-    L.vec1 = *vec1; L.vec2 = *vec2;
-    L.alpha3 = *coef_alpha3; L.alpha4 = *coef_alpha4;
-    L.beta1 = *coef_beta1; L.eta1 = *coef_eta1; L.delta1=*coef_delta1; L.delta2=*coef_delta2;
-    L.c1 = *coef_c1; L.epsilon1 = *coef_epsilon1; L.epsilon2 = *coef_epsilon2; L.u = *_u;
-    */
+    _L->set_some_coefficients(coef_list);
     _L->dx = sub_domains_mark;
 
-    _p = std::make_shared<Function>(_VMS);
+    // Define Dirichlet boundaries
+    std::shared_ptr<LeftPoint> left = std::make_shared<LeftPoint>();
+    std::shared_ptr<RightPoint> right = std::make_shared<RightPoint>();
+    std::shared_ptr<BottomPoint> bottom = std::make_shared<BottomPoint>();
+
+    // Define Dirichlet boundary functions
+    std::shared_ptr<Constant> zero = std::make_shared<Constant>(0.0);
+    std::string  method("pointwise");
+
+    // Create Dirichlet boundary conditions
+    std::shared_ptr<DirichletBC> bcl = std::make_shared<DirichletBC>((*_V)[1], zero, left, method);
+    std::shared_ptr<DirichletBC> bcr = std::make_shared<DirichletBC>((*_V)[1], zero, right, method);
+    std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
+    std::shared_ptr<DirichletBC> bc_cross = std::make_shared<DirichletBC>((*_V)[2], zero, 
+            reference_to_no_delete_pointer(boundary_mark), 2);
+    bcs.push_back(bcl);
+    bcs.push_back(bcr);
+    bcs.push_back(bct);
+    bcs.push_back(bc_cross);
 
 }
 
