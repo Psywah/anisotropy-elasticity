@@ -153,6 +153,27 @@ VariationalForms::VariationalForms(
 {
     
     _mesh = reference_to_no_delete_pointer(mesh);
+    std::string elas_model = para["elas_model"];
+    switch (elas_model[0]) {
+        case 'C':
+            // FunctionSpace
+            _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(mesh);
+            _u = std::make_shared<Function>(_V);
+            _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
+            dolfin_assert(_F);
+            _J = std::make_shared<HyperElasticityC::Form_Jac>(_V, _V);
+            _VMS = std::make_shared<HyperElasticityC::Form_L_vms::TestSpace>(mesh);
+            _p = std::make_shared<Function>(_VMS);
+            _a = std::make_shared<HyperElasticityC::Form_Mass_vms>(_VMS,_VMS);
+            _L = std::make_shared<HyperElasticityC::Form_L_vms>(_VMS);
+            break;
+        case 'A':
+            break;
+        default :
+            dolfin_error("VariationalForms.cpp",
+                         "Switch Elasticity Model",
+                         "Error option for Elasticity Model");
+    }
     // Set material parameters
     double C1_adv = (double)(para["C1_adv"]),
            C1_med  = (double)(para["C1_med"]),
@@ -190,7 +211,6 @@ VariationalForms::VariationalForms(
                      std::make_shared<PressureNormal>(mesh,double(para["pressure_boundary_condition"]));
     std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
      
-    std::string elas_model = para["elas_model"];
     std::map<std::string, std::shared_ptr<const GenericFunction>> coef_list
         = { {"u",       _u},
             {"vec1",    vec1},
@@ -206,26 +226,7 @@ VariationalForms::VariationalForms(
             {"epsilon2",coef_epsilon2},
             {"B",       B},
             {"T",       pressure_normal}};
-    switch (elas_model[0]) {
-        case 'C':
-            // FunctionSpace
-            _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(mesh);
-            _u = std::make_shared<Function>(_V);
-            _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
-            _J = std::make_shared<HyperElasticityC::Form_Jac>(_V, _V);
-            _VMS = std::make_shared<HyperElasticityC::Form_L_vms::TestSpace>(mesh);
-            _p = std::make_shared<Function>(_VMS);
-            _a = std::make_shared<HyperElasticityC::Form_Mass_vms>(_VMS,_VMS);
-            _L = std::make_shared<HyperElasticityC::Form_L_vms>(_VMS);
-            break;
-        case 'A':
-            break;
-        default :
-            dolfin_error("VariationalForms.cpp",
-                         "Switch Elasticity Model",
-                         "Error option for Elasticity Model");
-    }
-    _F->set_some_coefficients(coef_list);
+    _F->set_coefficients(coef_list);
     _F->ds = boundary_mark;
     _F->dx = sub_domains_mark;
     _J->set_some_coefficients(coef_list);

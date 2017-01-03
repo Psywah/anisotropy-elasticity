@@ -50,12 +50,16 @@ int main()
     */
 
     
+    info("initial forms");
     VariationalForms forms(mesh, sub_domains_mark, boundary_mark, para("problem_parameters"));
 
     //solve(F == 0, u, bcs, J, para);
+    info("initial nonlinear problem");
     NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
+    info("initial nonlinear solver");
     NonlinearVariationalSolver solver(problem);
     solver.parameters.update(para("nonlinear_solver_parameters"));
+    info("solve nonlinear problem");
     solver.solve();
 
     forms.save_solution();

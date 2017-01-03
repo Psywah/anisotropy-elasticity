@@ -226,9 +226,7 @@ NonlinearDiscreteProblem::F(GenericVector& b, const GenericVector& x)
   // Assemble right-hand side
   dolfin_assert(F);
   Assembler assembler;
-  info("assembling res");
   assembler.assemble(b, *F);
-  info("assembled res");
 
   // Apply boundary conditions
   for (std::size_t i = 0; i < bcs.size(); i++)
