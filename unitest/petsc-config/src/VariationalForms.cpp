@@ -62,7 +62,7 @@ class PressureNormal : public Expression
 {
     public:
 
-        PressureNormal(const Mesh& mesh, double pres) : Expression(3), mesh(mesh), pressure(pres){}
+        PressureNormal(const Mesh& mesh, double* pres) : Expression(3), mesh(mesh), pressure(pres){}
 
         void eval(Array<double>& values, const Array<double>& x,
                 const ufc::cell& ufc_cell) const
@@ -71,15 +71,15 @@ class PressureNormal : public Expression
 
             Cell cell(mesh, ufc_cell.index);
             Point n = cell.normal(ufc_cell.local_facet);
-            values[0] = -pressure*n[0];
-            values[1] = -pressure*n[1];
-            values[2] = -pressure*n[2];
+            values[0] = -*pressure*n[0];
+            values[1] = -*pressure*n[1];
+            values[2] = -*pressure*n[2];
         }
 
     private:
 
         const Mesh& mesh;
-        const double pressure;
+        double* pressure;
 
 
 };
@@ -221,8 +221,10 @@ VariationalForms::VariationalForms(
     std::shared_ptr<Orient> vec1 = std::make_shared<Orient>(1.0,Phi_adv,Phi_med), 
                             vec2 = std::make_shared<Orient>(-1.0,Phi_adv,Phi_med);
     // Define source and boundary traction functions
+    pressure = para["pressure_boundary_condition"]; t = 1.0;
+    final_pressure = pressure;
     std::shared_ptr<PressureNormal> pressure_normal = 
-                     std::make_shared<PressureNormal>(mesh,double(para["pressure_boundary_condition"]));
+                     std::make_shared<PressureNormal>(mesh,&pressure);
     std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
      
     std::map<std::string, std::shared_ptr<const GenericFunction>> coef_list

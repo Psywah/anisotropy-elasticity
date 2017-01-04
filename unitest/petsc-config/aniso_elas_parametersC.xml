@@ -1,23 +1,22 @@
 <?xml version="1.0"?>
 <dolfin xmlns:dolfin="http://fenicsproject.org">
     <parameters name="parameters">
-        <parameter key="dt"    type="double"   value="0.1" />
         <parameters name="problem_parameters">
             <parameter key="elas_model"               type="string"   value="A" />
             <parameter key="pressure_boundary_condition"    type="double"   value="24." />
-            <parameter key="C1_adv"    type="double"   value="6.6" />
-            <parameter key="C1_med"    type="double"   value="17.5" />
-            <parameter key="C1_pla"    type="double"   value="17.5" />
-            <parameter key="Epsilon1_adv"    type="double"   value="23.9" />
-            <parameter key="Epsilon1_med"    type="double"   value="499.8" />
-            <parameter key="Epsilon1_pla"    type="double"   value="499.8" />
-            <parameter key="Epsilon2_adv"    type="double"   value="10.0" />
-            <parameter key="Epsilon2_med"    type="double"   value="2.4" />
-            <parameter key="Epsilon2_pla"    type="double"   value="2.4" />
-            <parameter key="Alpha1_adv"    type="double"   value="1503.0" />
-            <parameter key="Alpha1_med"    type="double"   value="30001.9" />
+            <parameter key="C1_adv"    type="double"   value="6.8" />
+            <parameter key="C1_med"    type="double"   value="11.8" />
+            <parameter key="C1_pla"    type="double"   value="11.8" />
+            <parameter key="Epsilon1_adv"    type="double"   value="52.5" />
+            <parameter key="Epsilon1_med"    type="double"   value="84.2" />
+            <parameter key="Epsilon1_pla"    type="double"   value="84.2" />
+            <parameter key="Epsilon2_adv"    type="double"   value="10" />
+            <parameter key="Epsilon2_med"    type="double"   value="5.94" />
+            <parameter key="Epsilon2_pla"    type="double"   value="5.94" />
+            <parameter key="Alpha1_adv"    type="double"   value="1005.2" />
+            <parameter key="Alpha1_med"    type="double"   value="49999.1" />
             <parameter key="Alpha2_adv"    type="double"   value="6.3" />
-            <parameter key="Alpha2_med"    type="double"   value="5.1" />
+            <parameter key="Alpha2_med"    type="double"   value="4.1" />
             <parameter key="Alpha3_adv"    type="double"   value="1005.2" />
             <parameter key="Alpha3_med"    type="double"   value="49999.1" />
             <parameter key="Alpha4_adv"    type="double"   value="6.3" />
@@ -78,7 +77,7 @@
                 <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
                 <parameter key="line_search"                type="string"   value="bt" />
                 <parameter key="linear_solver"              type="string"   value="lu" />
-                <parameter key="maximum_iterations"         type="int"      value="20" />
+                <parameter key="maximum_iterations"         type="int"      value="40" />
                 <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
                 <parameter key="method"                     type="string"   value="newtonls" />
                 <parameter key="options_prefix"             type="string"   value="default" />

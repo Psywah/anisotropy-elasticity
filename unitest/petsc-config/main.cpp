@@ -17,6 +17,8 @@ void list_petsc_snes_methods()
     t(solver.first, "Description") = solver.second;
   cout << t.str(true) << endl;
 }
+void pseudo_time_steping(double dt, VariationalForms& forms, 
+                         NonlinearVariationalSolver& solver);
 
 int main()
 {
@@ -44,31 +46,61 @@ int main()
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
 
-    /*std::vector<double>& coord = mesh.coordinates();
+    std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
         coord[i]*= 1000.;
-    */
+    
 
     
-    info("initial forms");
+    Timer t1("Inital Forms"); info("Initial Forms");
+    t1.start();
     VariationalForms forms(mesh, sub_domains_mark, boundary_mark, para("problem_parameters"));
+    t1.stop();
 
     //solve(F == 0, u, bcs, J, para);
-    info("initial nonlinear problem");
+    Timer t2("Inital Nonlinear Problem"); info("Initial Nonlinear Problem");
+    t2.start();
     NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
-    info("initial nonlinear solver");
+    t2.stop();
+
+    Timer t3("Initial Nonlinear Solver"); info("Initial Nonlinear Solver");
+    t3.start();
     NonlinearVariationalSolver solver(problem);
     solver.parameters.update(para("nonlinear_solver_parameters"));
-    info("solve nonlinear problem");
-    solver.solve();
+    t3.stop();
+
+    Timer t4("Solve Nonlinear Problem"); info("Solve Nonlinear Problem");
+    double dt = para["dt"];
+    t4.start();
+    pseudo_time_steping(dt, forms, solver);
+    //solver.solve();
+    t4.stop();
 
     forms.save_solution();
-
     forms.save_von_misec_stress();
+
+    std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
+    list_timings(TimingClear::clear,type); 
+
     forms.plot_solution();
 
 
     return 0;
+
+}
+
+void pseudo_time_steping(double dt, VariationalForms& forms, 
+                         NonlinearVariationalSolver& solver)
+{
+    double t = dt;
+    while(t < 1.0 + dt -DOLFIN_EPS)
+    {
+        info("Solve for time %f, current time step %f, End time 1.0", t, dt);
+        forms.set_pseudo_time((t>1.0)? 1.0:t);
+        solver.solve();
+        t += dt;
+        //forms.plot_solution();
+    }
 
 }
 

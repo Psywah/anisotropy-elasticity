@@ -30,6 +30,7 @@
 #include <dolfin/fem/Form.h>
 #include "NonlinearVariationalProblem.h"
 #include "NonlinearVariationalSolver.h"
+#include <dolfin/common/Timer.h>
 
 //#define SAVE_RESIDULE_VEC
 #ifdef SAVE_RESIDULE_VEC
@@ -218,6 +219,7 @@ NonlinearVariationalSolver::NonlinearDiscreteProblem::~NonlinearDiscreteProblem(
 void NonlinearVariationalSolver::
 NonlinearDiscreteProblem::F(GenericVector& b, const GenericVector& x)
 {
+  Timer t("Assemble Residual");
   // Get problem data
   dolfin_assert(_problem);
   std::shared_ptr<const Form> F(_problem->residual_form());
@@ -246,6 +248,7 @@ void
 NonlinearVariationalSolver::NonlinearDiscreteProblem::J(GenericMatrix& A,
                                                         const GenericVector& x)
 {
+    Timer t("Assemble Jacobian");
   // Get problem data
   dolfin_assert(_problem);
   std::shared_ptr<const Form> J(_problem->jacobian_form());

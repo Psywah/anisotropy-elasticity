@@ -2,10 +2,10 @@
 #define __NONLINEAR_VARIATIONAL_FORMS_H
 #include <dolfin.h>
 
-#define R (0.01*1)
-#define Thk_med (0.00132*1)
-#define Thk_adv (0.00096*1)
-#define Depth (0.005*1)
+#define R (0.01*1000)
+#define Thk_med (0.00132*1000)
+#define Thk_adv (0.00096*1000)
+#define Depth (0.005*1000)
 
 
 namespace dolfin
@@ -50,6 +50,10 @@ namespace dolfin
     std::shared_ptr<Form> _a;
     std::shared_ptr<Form> _L;
     std::shared_ptr<Function> _p;
+
+    // pseudo time stepping
+    double t, pressure,final_pressure;
+    void set_pseudo_time(double _t){t=_t;pressure=t*final_pressure;}
 
     Parameters para;
 

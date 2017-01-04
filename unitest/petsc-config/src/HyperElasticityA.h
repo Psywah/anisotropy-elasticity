@@ -18,7 +18,7 @@
 //   precision:                      15
 //   precompute_basis_const:         True
 //   precompute_ip_const:            True
-//   quadrature_degree:              '7'
+//   quadrature_degree:              '2'
 //   quadrature_rule:                'auto'
 //   representation:                 'auto'
 //   restrict_keyword:               ''
