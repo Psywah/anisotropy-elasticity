@@ -1,5 +1,6 @@
 #include "VariationalForms.h"
 #include "HyperElasticityC.h"
+#include "HyperElasticityA.h"
 using namespace dolfin;
 
 
@@ -157,6 +158,7 @@ VariationalForms::VariationalForms(
     switch (elas_model[0]) {
         case 'C':
             // FunctionSpace
+            info("inital forms of model C");
             _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(mesh);
             _u = std::make_shared<Function>(_V);
             _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
@@ -168,12 +170,24 @@ VariationalForms::VariationalForms(
             _L = std::make_shared<HyperElasticityC::Form_L_vms>(_VMS);
             break;
         case 'A':
+            info("inital forms of model A");
+            _V = std::make_shared<HyperElasticityA::Form_Res::TestSpace>(mesh);
+            _u = std::make_shared<Function>(_V);
+            _F = std::make_shared<HyperElasticityA::Form_Res>(_V);
+            dolfin_assert(_F);
+            _J = std::make_shared<HyperElasticityA::Form_Jac>(_V, _V);
+            _VMS = std::make_shared<HyperElasticityA::Form_L_vms::TestSpace>(mesh);
+            _p = std::make_shared<Function>(_VMS);
+            _a = std::make_shared<HyperElasticityA::Form_Mass_vms>(_VMS,_VMS);
+            _L = std::make_shared<HyperElasticityA::Form_L_vms>(_VMS);
             break;
         default :
             dolfin_error("VariationalForms.cpp",
                          "Switch Elasticity Model",
                          "Error option for Elasticity Model");
     }
+    info("# of Vertice %d, # of Cells %d, # of Unknowns %d", mesh.num_vertices(),
+         mesh.num_cells(), _V->dim());
     // Set material parameters
     double C1_adv = (double)(para["C1_adv"]),
            C1_med  = (double)(para["C1_med"]),
@@ -226,7 +240,19 @@ VariationalForms::VariationalForms(
             {"epsilon2",coef_epsilon2},
             {"B",       B},
             {"T",       pressure_normal}};
-    _F->set_coefficients(coef_list);
+    // add coef for model A`
+    double Alpha1_adv  = (double)(para["Alpha1_adv"]),
+           Alpha1_med = (double)(para["Alpha1_med"]),
+           Alpha2_adv  = (double)(para["Alpha2_adv"]),
+           Alpha2_med  = (double)(para["Alpha2_med"]);
+    std::shared_ptr<MaterialCoef> coef_alpha1 = std::make_shared<MaterialCoef>(Alpha1_adv, Alpha1_med, 0.0);
+    std::shared_ptr<MaterialCoef> coef_alpha2 = std::make_shared<MaterialCoef>(Alpha2_adv, Alpha2_med, 0.0);
+    coef_list["alpha1"] = coef_alpha1;
+    coef_list["alpha2"] = coef_alpha2;
+    info("number of coefficients %d", coef_list.size());
+
+
+    _F->set_some_coefficients(coef_list);
     _F->ds = boundary_mark;
     _F->dx = sub_domains_mark;
     _J->set_some_coefficients(coef_list);
@@ -265,6 +291,14 @@ void VariationalForms::save_solution()
     // Save solution in VTK format
     File file(std::string("displacement")+idx+std::string(".pvd"));
     file << *_u;
+    File file_backup(std::string("backup_solution")+(".xml"));
+    file_backup << *_u;
+}
+
+void VariationalForms::load_solution(std::string str)
+{
+    File file_backup(str);
+    file_backup >> *_u;
 }
 
 void VariationalForms::save_von_misec_stress()

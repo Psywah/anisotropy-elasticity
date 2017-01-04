@@ -27,7 +27,8 @@ namespace dolfin
     virtual ~VariationalForms() {}
 
     void save_solution();
-    void load_solution(std::string);
+
+    void load_solution(std::string str="backup_solution.xml");
     void save_von_misec_stress();
     void plot_solution();
 

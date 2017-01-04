@@ -32,10 +32,10 @@ int main()
     Parameters para("user_defined_parameters");
     File para_file("../aniso_elas_parameters.xml");
     para_file >> para;
-    info(para("problem_parameters"));
+    info(para("problem_parameters"), true);
     
     // Create mesh and define function space
-    std::string prefix("../../../mesh/tube-4components");
+    std::string prefix("../../../mesh/tube-4components-short");
     Mesh mesh(prefix + std::string(".xml"));
     MeshFunction<std::size_t> sub_domains_mark(mesh, 
             prefix+ std::string("-domains-marker.xml") );
@@ -63,6 +63,7 @@ int main()
     solver.solve();
 
     forms.save_solution();
+
     forms.save_von_misec_stress();
     forms.plot_solution();
 
