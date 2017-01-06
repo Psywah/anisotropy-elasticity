@@ -7,7 +7,7 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// DOLFIN is distributed in the hope that it will be useful,
+//  DOLFIN is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
@@ -26,6 +26,7 @@
 // are the ones used for the Stokes demo programs.
 
 #include <dolfin.h>
+//#include "Cell.h"
 
 using namespace dolfin;
 
@@ -105,7 +106,10 @@ int main()
 
   // Read mesh
   Mesh mesh("../../mesh/tube-4components-short.xml");
+  //info("mesh h:%.2f", mesh.hmax());
+  //mesh.move(Constant(1.0,1.0,1.0));
 
+  //return 0;
   // Create mesh functions over the cells and acets
   MeshFunction<std::size_t> sub_domains_mark(mesh, mesh.topology().dim() );
   MeshFunction<std::size_t> boundary_mark(mesh, mesh.topology().dim() - 1);

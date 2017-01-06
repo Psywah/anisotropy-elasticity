@@ -18,7 +18,7 @@ cmake_policy(SET CMP0004 OLD)
 # DOLFIN_CMAKE_CONFIG_PATH)
 find_package(DOLFIN)
 
-# Need to get VTK config because VTK uses advanced VTK features which
+# Need to get VTK config because VTK uses advanced VTK features whichG
 # mean it's not enough to just link to the DOLFIN target. See
 # http://www.vtk.org/pipermail/vtk-developers/2013-October/014402.html
 find_package(VTK HINTS ${VTK_DIR} $ENV{VTK_DIR} NO_MODULE QUIET)
@@ -40,7 +40,7 @@ include_directories(${DOLFIN_INCLUDE_DIRS})
 include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 
 # Executable
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp ALE.cpp Mesh.cpp)
 
 # Target libraries
 target_link_libraries(${PROJECT_NAME} ${DOLFIN_LIBRARIES})
