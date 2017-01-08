@@ -8,15 +8,32 @@ using namespace dolfin;
 
 void list_petsc_snes_methods()
 {
-  // Get methods
-  //std::map<std::string, std::string> methods = PETScSNESSolver::_methods;
-
   // Pretty-print list of methods
   Table t("PETSc snes method", false);
   for (auto solver : PETScSNESSolver::methods())
     t(solver.first, "Description") = solver.second;
   cout << t.str(true) << endl;
 }
+
+void list_petsc_pre_methods()
+{
+  // Pretty-print list of methods
+  Table t("PETSc preconsitioner method", false);
+  for (auto pre : PETScPreconditioner::preconditioners())
+    t(pre.first, "Description") = pre.second;
+  cout << t.str(true) << endl;
+}
+
+void list_petsc_ksp_methods()
+{
+  // Pretty-print list of methods
+  Table t("PETSc KrylovSolver method", false);
+  for (auto pre : PETScKrylovSolver::methods())
+    t(pre.first, "Description") = pre.second;
+  cout << t.str(true) << endl;
+}
+
+
 void pseudo_time_steping(double dt, VariationalForms& forms, 
                          NonlinearVariationalSolver& solver);
 
@@ -26,7 +43,9 @@ int main()
     // list_krylov_solver_preconditioners();
     #ifdef HAS_PETSC
     info("has PETSc");
-    // list_petsc_snes_methods();
+    list_petsc_snes_methods();
+    list_petsc_ksp_methods();
+    list_petsc_pre_methods();
     parameters["linear_algebra_backend"] = "PETSc";
     #endif
 

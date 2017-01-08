@@ -3,33 +3,34 @@
     <parameters name="nonlinear_solver_parameters">
         <parameter key="dt"    type="double"   value="0.1" />
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
-        <parameter key="NL_res_r"               type="double"   value="1e-1" />
-        <parameter key="NL_infty_r"               type="double"   value="5e-2" />
-        <parameter key="NL_size_r"               type="double"   value="2e-1" />
+        <parameter key="NL_res_r"               type="double"   value="10e-1" />
+        <parameter key="NL_infty_r"               type="double"   value="1.25e-1" />
+        <parameter key="NL_size_r"               type="double"   value="2.5e-1" />
         <parameter key="NL_atol"               type="double"   value="1e-8" />
         <parameter key="NL_rtol"               type="double"   value="1e-2" />
+        <parameter key="NL_report"                     type="bool"     value="false" />
         <parameters name="snes_solver">
-            <parameter key="absolute_tolerance"         type="double"   value="1e-7" />
+            <parameter key="absolute_tolerance"         type="double"   value="1e-6" />
             <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
             <parameter key="line_search"                type="string"   value="bt" />
             <parameter key="linear_solver"              type="string"   value="lu" />
-            <parameter key="maximum_iterations"         type="int"      value="50" />
+            <parameter key="maximum_iterations"         type="int"      value="100" />
             <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
             <parameter key="method"                     type="string"   value="newtonls" />
             <parameter key="options_prefix"             type="string"   value="default" />
-            <parameter key="preconditioner"             type="string"   value="default" />
-            <parameter key="relative_tolerance"         type="double"   value="1e-7" />
+            <parameter key="preconditioner"             type="string"   value="additive_schwarz" />
+            <parameter key="relative_tolerance"         type="double"   value="1e-8" />
             <parameter key="report"                     type="bool"     value="false" />
             <parameter key="sign"                       type="string"   value="default" />
             <parameter key="solution_tolerance"         type="double"   value="1e-7" />
             <parameters name="krylov_solver">
-                <parameter key="absolute_tolerance"     type="double"   value="1e-4" />
+                <parameter key="absolute_tolerance"     type="double"   value="1e-8" />
                 <parameter key="divergence_limit"       type="double"   value="10000" />
                 <parameter key="error_on_nonconvergence" type="bool"    value="true" />
                 <parameter key="maximum_iterations"     type="int"      value="10000" />
                 <parameter key="monitor_convergence"    type="bool"     value="false" />
                 <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
-                <parameter key="relative_tolerance"     type="double"   value="1e-04" />
+                <parameter key="relative_tolerance"     type="double"   value="1e-05" />
                 <parameter key="report"                 type="bool"     value="false" />
                 <parameters name="gmres">
                     <parameter key="restart"            type="int"      value="30" />
@@ -39,10 +40,10 @@
                     <parameter key="shift_nonzero"      type="double"   value="0" />
                     <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
                     <parameters name="ilu">
-                        <parameter key="fill_level"     type="int"      value="0" />
+                        <parameter key="fill_level"     type="int"      value="2" />
                     </parameters>
                     <parameters name="schwarz">
-                        <parameter key="overlap"        type="int" value="1" />
+                        <parameter key="overlap"        type="int" value="5" />
                     </parameters>
                 </parameters>
             </parameters>

@@ -33,11 +33,11 @@
 #include <dolfin/common/Timer.h>
 
 //#define SAVE_RESIDULE_VEC
-#ifdef SAVE_RESIDULE_VEC
-#include <dolfin/io/dolfin_io.h>
-#endif
 
 #define NONLINEAR_ELIMINATION
+#if defined(SAVE_RESIDULE_VEC) || defined(NONLINEAR_ELIMINATION)
+#include <dolfin/io/dolfin_io.h>
+#endif
 
 using namespace dolfin;
 
@@ -193,11 +193,12 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            r_hist << res ;
        }
       #elif defined NONLINEAR_ELIMINATION
+       File r_hist("r_hist.pvd");
        info("begin snes solve with nonlinear elimination");
        Parameters para_coarse = parameters("snes_solver");
        para_coarse["absolute_tolerance"] = (double)(parameters["NL_atol"]);
        para_coarse["relative_tolerance"] = (double)(parameters["NL_rtol"]);
-       para_coarse["report"] = false;
+       para_coarse["report"] = (bool)(parameters["NL_report"]);
        double rho0 = parameters["NL_res_r"];
        double rho1 = parameters["NL_infty_r"];
        double rho2 = parameters["NL_size_r"];
@@ -216,25 +217,26 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            ret = snes_solver->solve(*nonlinear_problem, *u->vector());
            ++iter;
            converged = std::get<1>(ret);
-           if(converged)
-               break;
            nonlinear_problem->F(*res.vector(), *u->vector());
            norm_res =res.vector()->norm("l2");
            info("%d iterations of global nonlinear iteration, last residual:%5.2e, vs current residual:%5.2e",
                    iter, norm_res0, norm_res);
-           begin("Check Nonlinearity.");
+           if(converged)
+               break;
+           //begin("Check Nonlinearity.");
            if(norm_res < norm_res0*rho0)
            {
-               info("Reduction of residual %.2f < rho0(%.2f), No Need for nonlinear elimination",
-                       norm_res/norm_res0, rho0);
+               //info("Reduction of residual %.2f < rho0(%.2f), No Need for nonlinear elimination",
+               //        norm_res/norm_res0, rho0);
                norm_res0 = norm_res;
+               //end();
                continue;
            }
-           info("Reduction of residual %.2f > rho0(%.2f), Need for nonlinear elimination",
-                   norm_res/norm_res0, rho0);
+           //info("Reduction of residual %.2f > rho0(%.2f), Need for nonlinear elimination",
+           //        norm_res/norm_res0, rho0);
            //find all good dof
            double infty = res.vector()->norm("linf");
-           info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty, rho1);
+           //info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty, rho1);
            std::size_t size_total = res.vector()->size();
            std::size_t size_good = 0;
            std::pair<std::size_t, std::size_t> range = res.vector()->local_range();
@@ -251,34 +253,37 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
 
            if( size_total - size_good > rho2*size_total)
            {
-               info("Size of coarse problem %d > %d*%.2f (total_size * rho2), No Need for nonlinear elimination",
-                       size_total-size_good, size_total, rho2);
+               //info("Size of coarse problem %d > %d*%.2f (total_size * rho2), No Need for nonlinear elimination",
+               //        size_total-size_good, size_total, rho2);
                norm_res0 = norm_res;
+               //end();
                continue;
            }
-           info("Size of coarse problem %d < %d * %.2f (total_size * rho_2), Need for nonlinear elimination",
-                   size_total-size_good, size_total, rho2);
+           //info("Size of coarse problem %d < %d * %.2f (total_size * rho_2), Need for nonlinear elimination",
+           //        size_total-size_good, size_total, rho2);
            PETScVector x_copy(u->vector()->down_cast<PETScVector>());
 
            snes_solver->parameters.update(para_coarse);
            ret = snes_solver->solve(*nonlinear_coarse_problem, *u->vector());
            nonlinear_coarse_problem->reset_dofs();
+           //r_hist << res ;
            nonlinear_problem->F(*res.vector(), *u->vector());
+           //r_hist << res ;
            double norm_res_c = res.vector()->norm("l2");
            if(norm_res_c<norm_res)
            {
-               info("Residual norm with correction %f < %f, accept nonlinear elimination",
-                       norm_res_c,norm_res);
+               //info("Residual norm with correction %f < %f, accept nonlinear elimination",
+               //        norm_res_c,norm_res);
                norm_res0 = norm_res_c;
            }
            else {
-               info("Residual norm with correction %f > %f, not accept nonlinear elimination",
-                       norm_res_c,norm_res);
+               //info("Residual norm with correction %f > %f, not accept nonlinear elimination",
+               //        norm_res_c,norm_res);
                norm_res0 =norm_res;
                //*u->vector() = x_copy;
            }
-           info("Solved Coarse Problem");
-           end();
+           //info("Solved Coarse Problem");
+           //end();
        }
       #else
        info("begin snes solve");

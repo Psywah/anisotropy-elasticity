@@ -126,6 +126,8 @@ namespace dolfin
       p.add("NL_res_r", 1e-1);
       p.add("NL_infty_r", 1e-1);
       p.add("NL_size_r", 1e-1);
+      p.add("NL_report", true);
+      p.add("dt", 1e-1);
 
       std::set<std::string> nonlinear_solvers = {"newton"};
       std::string default_nonlinear_solver = "newton";
