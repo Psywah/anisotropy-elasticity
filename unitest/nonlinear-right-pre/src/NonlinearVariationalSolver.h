@@ -31,6 +31,7 @@
 #include <petscmat.h>
 #include "PETScSNESSolver.h"
 #include "NonlinearVariationalProblem.h"
+#include "ColorIO.h"
 
 namespace dolfin
 {
@@ -208,6 +209,7 @@ namespace dolfin
           bad_dofs.clear(); 
           dirichlet_dofs0.clear();
           bad_cell_dofs.clear();
+          bad_cell_ov_dofs.clear();
       }
 
 
@@ -243,7 +245,7 @@ namespace dolfin
                   //info("iterating cell dofs");
                   double value;
                   res.get(&value, 1, &(cell_dofs[i]));
-                  if(tol < value) 
+                  if(tol < std::abs(value)) 
                   {
                       bad_dofs.push_back(cell_dofs[i]);
                       if(!added)// found bad dof
@@ -287,7 +289,9 @@ namespace dolfin
           }
 
           for(dolfin::la_index dof = 0; dof <is_dirichlet_dof.size(); ++dof)
-          { if(is_dirichlet_dof[dof]) add_dirichlet_dof(dof, 0.0);}
+          { if(is_dirichlet_dof[dof]) 
+              add_dirichlet_dof(dof, 0.0);
+          else bad_cell_ov_dofs.push_back(dof);}
 
       }
 
@@ -311,13 +315,34 @@ namespace dolfin
           //u.apply("insert");
           //delete[] value;
           
-          double* value= new double[bad_cell_dofs.size()];
-          u.get(value, bad_cell_dofs.size(), bad_cell_dofs.data());
-          u = u_pre;
-          u.set(value, bad_cell_dofs.size(), bad_cell_dofs.data());
+          //double* value= new double[bad_cell_dofs.size()];
+          //u.get(value, bad_cell_dofs.size(), bad_cell_dofs.data());
+          //u = u_pre;
+          //u.set(value, bad_cell_dofs.size(), bad_cell_dofs.data());
           //info("last updated value%5.2e, #bad_dofs: %d", value[bad_dofs.size()-1], bad_dofs.size());
-          u.apply("insert");
-          delete[] value;
+          //u.apply("insert");
+          //delete[] value;
+          //
+          //u += u_pre;
+          //u *=.5;
+      }
+
+      void save_coarse(std::shared_ptr<File> file_badnode, std::shared_ptr<File> file_badcell, std::shared_ptr<File> file_ov)
+      {
+          Function u(_problem->trial_space());
+          std::vector<double> value;
+          value.resize(bad_dofs.size(),1);
+          u.vector()->set(value.data(), bad_dofs.size(),bad_dofs.data());
+          *file_badnode << u;
+
+          value.resize(bad_cell_dofs.size(),1);
+          u.vector()->set(value.data(), bad_cell_dofs.size(),bad_cell_dofs.data());
+          *file_badcell << u;
+
+          value.resize(bad_cell_ov_dofs.size(),1);
+          u.vector()->set(value.data(), bad_cell_ov_dofs.size(),bad_cell_ov_dofs.data());
+          *file_ov << u;
+
       }
 
     private:
@@ -329,6 +354,7 @@ namespace dolfin
       std::vector<dolfin::la_index> dirichlet_dofs0;
       std::vector<dolfin::la_index> bad_dofs;
       std::vector<dolfin::la_index> bad_cell_dofs;
+      std::vector<dolfin::la_index> bad_cell_ov_dofs;
       std::vector<double> values;
 
     };

@@ -194,7 +194,11 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            r_hist << res ;
        }
       #elif defined NONLINEAR_ELIMINATION
-       File r_hist("r_hist.pvd");
+       std::shared_ptr<File> r_hist = std::make_shared<File>("r_hist.pvd");
+       std::shared_ptr<File> rc_hist = std::make_shared<File>("rc_hist.pvd");
+       std::shared_ptr<File> bad_dof = std::make_shared<File>("bad_dof_hist.pvd");
+       std::shared_ptr<File> bad_cell = std::make_shared<File>("bad_cell_hist.pvd");
+       std::shared_ptr<File> bad_cell_ov = std::make_shared<File>("bad_ov_hist.pvd");
        info("begin snes solve with nonlinear elimination");
        Parameters para_coarse = parameters("snes_solver");
        para_coarse["absolute_tolerance"] = (double)(parameters["NL_atol"]);
@@ -211,6 +215,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
        norm_res0 =res.vector()->norm("l2");
 
        bool converged = false;
+       bool accept = false;
        std::size_t iter = 0, max_iter = parameters("snes_solver")["maximum_iterations"] ;
        parameters("snes_solver")["maximum_iterations"] = 1;
        while(iter< max_iter)
@@ -221,27 +226,32 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            converged = std::get<1>(ret);
            nonlinear_problem->F(*res.vector(), *u->vector());
            norm_res =res.vector()->norm("l2");
-           info("%d iterations of global nonlinear iteration, last residual:%5.2e, vs current residual:%5.2e",
+           info(ANSI_COLOR_MAGENTA "%d iterations " ANSI_COLOR_RESET  "of global nonlinear iteration, last residual:%5.2e, vs current "
+                   ANSI_COLOR_MAGENTA "residual:%5.3e" ANSI_COLOR_RESET,
                    iter, norm_res0, norm_res);
            if(converged)
                break;
            begin("Check Nonlinearity.");
            if(norm_res < norm_res0*rho0)
            {
-               info("Reduction of residual %.2f < rho0(%.2f), No Need for nonlinear elimination",
+               info("Reduction of residual " ANSI_COLOR_GREEN "%.2f " ANSI_COLOR_RESET "< rho0(%.2f), No Need for nonlinear elimination",
                        norm_res/norm_res0, rho0);
                norm_res0 = norm_res;
                end();
                continue;
            }
-           info("Reduction of residual %.2f > rho0(%.2f), Need for nonlinear elimination",
+           info("Reduction of residual " ANSI_COLOR_RED "%.2f " ANSI_COLOR_RESET "> rho0(%.2f), Need for nonlinear elimination",
                    norm_res/norm_res0, rho0);
            // find all good dof
            double infty = res.vector()->norm("linf");
            info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty, rho1);
            PETScMatrix J;
            nonlinear_problem->J(J,*u->vector());
+           *r_hist << res ;
            nonlinear_coarse_problem->construct_coarse_IS(*res.vector(), infty*rho1, J, overlap);
+
+           nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
+
            std::size_t size_total = res.vector()->size();
            std::size_t size_good = nonlinear_coarse_problem->size_dirichlet_dofs();
 
@@ -264,30 +274,32 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                nonlinear_coarse_problem->restricted_update(*u->vector(), x_copy);
            }
 
-           r_hist << res ;
            nonlinear_problem->F(*res.vector(), *u->vector());
-           r_hist << res ;
+           *rc_hist << res ;
            double norm_res_c = res.vector()->norm("l2");
-           if(norm_res_c<norm_res)
+
+           if(iter <10 || !accept || norm_res_c<norm_res)
            {
-               info("Residual norm with correction %f < %f, accept nonlinear elimination",
-                       norm_res_c,norm_res);
                norm_res0 = norm_res_c;
-           }
-           else {
-               info("Residual norm with correction %f > %f, not accept nonlinear elimination",
+               accept=true;
+               info("Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
                        norm_res_c,norm_res);
-               //norm_res0 =norm_res;
-               //*u->vector() = x_copy;
-               //norm_res0 = norm_res_c;
+           }
+           else
+           {
+               norm_res0 =norm_res;
+               *u->vector() = x_copy;
+               accept = false;
+               info("Residual norm with correction %f > %f, " ANSI_COLOR_RED "not accept " ANSI_COLOR_RESET "nonlinear elimination",
+                       norm_res_c,norm_res);
            }
            info("Solved Coarse Problem");
            end();
        }
-      #else
+#else
        info("begin snes solve");
        ret = snes_solver->solve(*nonlinear_problem, *u->vector());
-      #endif
+#endif
     }
   }
   #endif

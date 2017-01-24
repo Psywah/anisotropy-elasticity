@@ -24,6 +24,7 @@
 # a hyperelastic model.
 #
 # Compile this form with FFC: ffc -l dolfin -feliminate_zeros -fprecompute_basis_const -fprecompute_ip_const HyperElasticity.ufl
+# ffc -l dolfin  -fquadrature_degree=1 -feliminate_zeros -fprecompute_basis_const -fprecompute_ip_const -fsplit HyperElasticityA.ufl
 
 # Function spaces
 VecCG = VectorElement("Lagrange", tetrahedron, 1)
