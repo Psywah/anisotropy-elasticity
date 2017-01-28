@@ -194,6 +194,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            r_hist << res ;
        }
       #elif defined NONLINEAR_ELIMINATION
+       std::shared_ptr<File> u_hist = std::make_shared<File>("u_hist.pvd");
        std::shared_ptr<File> r_hist = std::make_shared<File>("r_hist.pvd");
        std::shared_ptr<File> rc_hist = std::make_shared<File>("rc_hist.pvd");
        std::shared_ptr<File> bad_dof = std::make_shared<File>("bad_dof_hist.pvd");
@@ -222,9 +223,11 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
        {
            snes_solver->parameters.update(parameters("snes_solver"));
            ret = snes_solver->solve(*nonlinear_problem, *u->vector());
+           *u_hist << *u;
            ++iter;
            converged = std::get<1>(ret);
            nonlinear_problem->F(*res.vector(), *u->vector());
+           *r_hist << res ;
            norm_res =res.vector()->norm("l2");
            info(ANSI_COLOR_MAGENTA "%d iterations " ANSI_COLOR_RESET  "of global nonlinear iteration, last residual:%5.2e, vs current "
                    ANSI_COLOR_MAGENTA "residual:%5.3e" ANSI_COLOR_RESET,
@@ -247,13 +250,12 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty, rho1);
            PETScMatrix J;
            nonlinear_problem->J(J,*u->vector());
-           *r_hist << res ;
            nonlinear_coarse_problem->construct_coarse_IS(*res.vector(), infty*rho1, J, overlap);
 
            nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
 
            std::size_t size_total = res.vector()->size();
-           std::size_t size_good = nonlinear_coarse_problem->size_dirichlet_dofs();
+           std::size_t size_good = nonlinear_coarse_problem->size_dirichlet_dofs_global();
 
            if( size_total - size_good > rho2*size_total)
            {
@@ -423,7 +425,7 @@ NonlinearCoarseDiscreteProblem::F(GenericVector& b, const GenericVector& x)
     dolfin_assert(bcs[i]);
     bcs[i]->apply(b, x);
   }
-  b.set_local(values.data(), values.size(), dirichlet_dofs.data());
+  b.set(values.data(), values.size(), dirichlet_dofs.data());
   b.apply("insert");
 
   // Print vector
@@ -454,7 +456,7 @@ NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::J(GenericMatrix& A,
     dolfin_assert(bcs[i]);
     bcs[i]->apply(A);
   }
-  A.ident_local(dirichlet_dofs.size(),dirichlet_dofs.data());
+  A.ident(dirichlet_dofs.size(),dirichlet_dofs.data());
   A.apply("insert");
 
   // Print matrix
@@ -465,3 +467,175 @@ NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::J(GenericMatrix& A,
 }
 //-----------------------------------------------------------------------------
 
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::add_dirichlet_dof(dolfin::la_index dof, double value)
+{
+    dirichlet_dofs.push_back(dof); values.push_back(value);
+}
+
+
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::clear_dofs_values()
+{
+    dirichlet_dofs.clear(); 
+    values.clear(); 
+    bad_dofs.clear(); 
+    dirichlet_dofs0.clear();
+    bad_cell_dofs.clear();
+    bad_cell_ov_dofs.clear();
+}
+
+
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::set_all_dofs()
+{
+    clear_dofs_values();
+    std::pair<std::size_t, std::size_t> range = _problem->solution()->vector()->local_range();
+    for(dolfin::la_index dof = range.first; dof<range.second; dof++)
+    {
+        //double value;
+        //u.get(&value, 1, &dof);
+        //add_good_dof(dof, value);
+        add_dirichlet_dof(dof, 0.0);
+    }
+    dirichlet_dofs0 = dirichlet_dofs;
+}
+
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::construct_coarse_IS(const GenericVector& res, double tol, GenericMatrix& _J, dolfin::la_index overlap)
+{
+    std::shared_ptr<const Mesh> _mesh = _problem->trial_space()->mesh();
+    std::shared_ptr<const GenericDofMap> _dofmap = _problem->trial_space()->dofmap();
+
+    clear_dofs_values();
+    PETScVector is_dirichlet_dof(res.down_cast<PETScVector>());
+    is_dirichlet_dof = 1;
+    std::pair<std::size_t, std::size_t> range = is_dirichlet_dof.local_range();
+    //std::vector<bool> is_dirichlet_dof(_dofmap->global_dimension(), true);
+    // Iterate over cells
+    for (CellIterator cell(*_mesh); !cell.end(); ++cell)
+    {
+        //info("iterating cells");
+        const ArrayView<const dolfin::la_index> cell_dofs = _dofmap->cell_dofs(cell->index());
+        bool added=false;
+        for(std::size_t i =0; i<cell_dofs.size(); ++i)
+        {
+            //info("iterating cell dofs");
+            double value, zero=0;
+            res.get(&value, 1, &(cell_dofs[i]));
+            if(tol < std::abs(value)) 
+            {
+                bad_dofs.push_back(cell_dofs[i]);
+                if(!added)// found bad dof
+                {
+                    //info("setting bad dofs");
+                    for(std::size_t j =0; j <cell_dofs.size();++j)
+                    {
+                        is_dirichlet_dof.set(&zero, 1, &cell_dofs[j]);
+                    }
+                    added = true;
+                }
+            }
+        }
+    }
+    is_dirichlet_dof.apply("insert");
+    //info("add dofs");
+
+    for(dolfin::la_index dof = range.first; dof < range.second; ++dof)
+    { 
+        double value;
+        is_dirichlet_dof.get(&value, 1, &dof);
+        if(std::abs(value) > 1./2) 
+            dirichlet_dofs0.push_back(dof);
+        else 
+            bad_cell_dofs.push_back(dof);
+    }
+
+    info("#bad_cell_dofs: %d, #dirichlet_dofs %d", bad_cell_dofs.size(), dirichlet_dofs0.size());
+
+    if(overlap)
+    {
+        PETScMatrix& J= _J.down_cast<PETScMatrix>();
+        IS is;
+        ISCreateGeneral(PETSC_COMM_WORLD, bad_cell_dofs.size(),bad_cell_dofs.data(),PETSC_COPY_VALUES,&is);
+        MatIncreaseOverlap(J.mat(), 1, &is, overlap);
+        PetscInt n;
+        const PetscInt * nidx;
+        ISGetLocalSize(is, &n);
+        ISGetIndices(is, &nidx);
+
+        for(PetscInt i = 0; i <n; i++)
+        {
+            double zero=0;
+            is_dirichlet_dof.set(&zero, 1, &nidx[i]);
+        }
+        ISRestoreIndices(is,&nidx);
+        ISDestroy(&is);
+        info("#coarse_dofs with %d ov: %d", overlap, n);
+    }
+    is_dirichlet_dof.apply("insert");
+
+    for(dolfin::la_index dof = range.first; dof < range.second; ++dof)
+    { 
+        double value;
+        is_dirichlet_dof.get(&value,1,&dof);
+        if(std::abs(value)>1./2) 
+            add_dirichlet_dof(dof, 0.0);
+        else bad_cell_ov_dofs.push_back(dof);
+    }
+
+}
+
+std::size_t NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::size_dirichlet_dofs_global()
+{
+    std::size_t local_size=dirichlet_dofs.size();
+    return dolfin::MPI::sum<std::size_t>(PETSC_COMM_WORLD, local_size);
+}
+
+std::size_t NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::size_bad_dofs()
+{
+    std::size_t local_size=bad_dofs.size();
+    return dolfin::MPI::sum<std::size_t>(PETSC_COMM_WORLD,local_size);
+}
+
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::restricted_update(GenericVector& u, const GenericVector& u_pre)
+{
+    //double* value= new double[bad_dofs.size()];
+    //u.get(value, bad_dofs.size(), bad_dofs.data());
+    //u = u_pre;
+    //u.set(value, bad_dofs.size(), bad_dofs.data());
+    //info("last updated value%5.2e, #bad_dofs: %d", value[bad_dofs.size()-1], bad_dofs.size());
+    //u.apply("insert");
+    //delete[] value;
+
+    //double* value= new double[bad_cell_dofs.size()];
+    //u.get(value, bad_cell_dofs.size(), bad_cell_dofs.data());
+    //u = u_pre;
+    //u.set(value, bad_cell_dofs.size(), bad_cell_dofs.data());
+    //info("last updated value%5.2e, #bad_dofs: %d", value[bad_dofs.size()-1], bad_dofs.size());
+    //u.apply("insert");
+    //delete[] value;
+    //
+    //u += u_pre;
+    //u *=.5;
+}
+
+void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::save_coarse(std::shared_ptr<File> file_badnode, std::shared_ptr<File> file_badcell, std::shared_ptr<File> file_ov)
+{
+    Function u(_problem->trial_space());
+    std::vector<double> value;
+    value.resize(bad_dofs.size(),1);
+    u.vector()->zero();
+    u.vector()->set(value.data(), bad_dofs.size(),bad_dofs.data());
+    u.vector()->apply("insert");
+    *file_badnode << u;
+
+    value.resize(bad_cell_dofs.size(),1);
+    u.vector()->zero();
+    u.vector()->set(value.data(), bad_cell_dofs.size(),bad_cell_dofs.data());
+    u.vector()->apply("insert");
+    *file_badcell << u;
+
+    value.resize(bad_cell_ov_dofs.size(),1);
+    u.vector()->zero();
+    u.vector()->set(value.data(), bad_cell_ov_dofs.size(),bad_cell_ov_dofs.data());
+    u.vector()->apply("insert");
+    *file_ov << u;
+
+}

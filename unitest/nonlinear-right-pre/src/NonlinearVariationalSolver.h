@@ -196,154 +196,23 @@ namespace dolfin
       // Compute J = F' at current point x
       virtual void J(GenericMatrix& A, const GenericVector& x);
 
-      void add_dirichlet_dof(dolfin::la_index dof, double value)
-      {
-          dirichlet_dofs.push_back(dof); values.push_back(value);
-      }
+      void add_dirichlet_dof(dolfin::la_index dof, double value);
 
 
-      void clear_dofs_values()
-      {
-          dirichlet_dofs.clear(); 
-          values.clear(); 
-          bad_dofs.clear(); 
-          dirichlet_dofs0.clear();
-          bad_cell_dofs.clear();
-          bad_cell_ov_dofs.clear();
-      }
+      void clear_dofs_values();
 
 
-      void set_all_dofs(GenericVector& u)
-      {
-          clear_dofs_values();
-          std::pair<std::size_t, std::size_t> range = u.local_range();
-          for(dolfin::la_index dof = range.first; dof<range.second; dof++)
-          {
-              double value;
-              u.get(&value, 1, &dof);
-              //add_good_dof(dof, value);
-              add_dirichlet_dof(dof, 0.0);
-          }
-          dirichlet_dofs0 = dirichlet_dofs;
-      }
+      void set_all_dofs();
 
-      void construct_coarse_IS(const GenericVector& res, double tol, GenericMatrix& _J, dolfin::la_index overlap=0)
-      {
-          std::shared_ptr<const Mesh> _mesh = _problem->trial_space()->mesh();
-          std::shared_ptr<const GenericDofMap> _dofmap = _problem->trial_space()->dofmap();
+      void construct_coarse_IS(const GenericVector& res, double tol, GenericMatrix& _J, dolfin::la_index overlap=0);
 
-          clear_dofs_values();
-          std::vector<bool> is_dirichlet_dof(_dofmap->global_dimension(), true);
-          // Iterate over cells
-          for (CellIterator cell(*_mesh); !cell.end(); ++cell)
-          {
-              //info("iterating cells");
-              const ArrayView<const dolfin::la_index> cell_dofs = _dofmap->cell_dofs(cell->index());
-              bool added=false;
-              for(std::size_t i =0; i<cell_dofs.size(); ++i)
-              {
-                  //info("iterating cell dofs");
-                  double value;
-                  res.get(&value, 1, &(cell_dofs[i]));
-                  if(tol < std::abs(value)) 
-                  {
-                      bad_dofs.push_back(cell_dofs[i]);
-                      if(!added)// found bad dof
-                      {
-                          //info("setting bad dofs");
-                          for(std::size_t j =0; j <cell_dofs.size();++j)
-                          {is_dirichlet_dof[cell_dofs[j]] = false;}
-                          added = true;
-                      }
-                  }
-              }
-          }
-          //info("add dofs");
+      std::size_t size_dirichlet_dofs_global();
 
-          for(dolfin::la_index dof = 0; dof <is_dirichlet_dof.size(); ++dof)
-          { if(is_dirichlet_dof[dof]) 
-                dirichlet_dofs0.push_back(dof);
-            else 
-                bad_cell_dofs.push_back(dof);
-          }
-          info("#bad_cell_dofs: %d, #dirichlet_dofs %d", bad_cell_dofs.size(), dirichlet_dofs0.size());
+      std::size_t size_bad_dofs();
 
-          if(overlap)
-          {
-              PETScMatrix& J= _J.down_cast<PETScMatrix>();
-              IS is;
-              ISCreateGeneral(PETSC_COMM_SELF, bad_cell_dofs.size(),bad_cell_dofs.data(),PETSC_COPY_VALUES,&is);
-              MatIncreaseOverlap(J.mat(), 1, &is, overlap);
-              PetscInt n;
-              const PetscInt * nidx;
-              ISGetLocalSize(is, &n);
-              ISGetIndices(is, &nidx);
+      void restricted_update(GenericVector& u, const GenericVector& u_pre);
 
-              for(PetscInt i = 0; i <n; i++)
-              {
-                  is_dirichlet_dof[nidx[i]] = false;
-              }
-              ISRestoreIndices(is,&nidx);
-              ISDestroy(&is);
-              info("#coarse_dofs with %d ov: %d", overlap, n);
-          }
-
-          for(dolfin::la_index dof = 0; dof <is_dirichlet_dof.size(); ++dof)
-          { if(is_dirichlet_dof[dof]) 
-              add_dirichlet_dof(dof, 0.0);
-          else bad_cell_ov_dofs.push_back(dof);}
-
-      }
-
-      std::size_t size_dirichlet_dofs()
-      {
-          return dirichlet_dofs.size();
-      }
-
-      std::size_t size_bad_dofs()
-      {
-          return bad_dofs.size();
-      }
-
-      void restricted_update(GenericVector& u, const GenericVector& u_pre)
-      {
-          //double* value= new double[bad_dofs.size()];
-          //u.get(value, bad_dofs.size(), bad_dofs.data());
-          //u = u_pre;
-          //u.set(value, bad_dofs.size(), bad_dofs.data());
-          //info("last updated value%5.2e, #bad_dofs: %d", value[bad_dofs.size()-1], bad_dofs.size());
-          //u.apply("insert");
-          //delete[] value;
-          
-          //double* value= new double[bad_cell_dofs.size()];
-          //u.get(value, bad_cell_dofs.size(), bad_cell_dofs.data());
-          //u = u_pre;
-          //u.set(value, bad_cell_dofs.size(), bad_cell_dofs.data());
-          //info("last updated value%5.2e, #bad_dofs: %d", value[bad_dofs.size()-1], bad_dofs.size());
-          //u.apply("insert");
-          //delete[] value;
-          //
-          //u += u_pre;
-          //u *=.5;
-      }
-
-      void save_coarse(std::shared_ptr<File> file_badnode, std::shared_ptr<File> file_badcell, std::shared_ptr<File> file_ov)
-      {
-          Function u(_problem->trial_space());
-          std::vector<double> value;
-          value.resize(bad_dofs.size(),1);
-          u.vector()->set(value.data(), bad_dofs.size(),bad_dofs.data());
-          *file_badnode << u;
-
-          value.resize(bad_cell_dofs.size(),1);
-          u.vector()->set(value.data(), bad_cell_dofs.size(),bad_cell_dofs.data());
-          *file_badcell << u;
-
-          value.resize(bad_cell_ov_dofs.size(),1);
-          u.vector()->set(value.data(), bad_cell_ov_dofs.size(),bad_cell_ov_dofs.data());
-          *file_ov << u;
-
-      }
+      void save_coarse(std::shared_ptr<File> file_badnode, std::shared_ptr<File> file_badcell, std::shared_ptr<File> file_ov);
 
     private:
 
