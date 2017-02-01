@@ -2,45 +2,58 @@
 #
 #     cmake/scripts/generate-cmakefiles
 #
-# Require CMake 2.8
-cmake_minimum_required(VERSION 2.8)
+# Require CMake 3.5
+cmake_minimum_required(VERSION 3.5)
 
 set(PROJECT_NAME demo_subdomains)
 project(${PROJECT_NAME})
 
-# Set verbose output while testing CMake
-#set(CMAKE_VERBOSE_MAKEFILE 1)
-
 # Set CMake behavior
-cmake_policy(SET CMP0004 OLD)
+cmake_policy(SET CMP0004 NEW)
 
 # Get DOLFIN configuration data (DOLFINConfig.cmake must be in
 # DOLFIN_CMAKE_CONFIG_PATH)
-find_package(DOLFIN)
+find_package(DOLFIN REQUIRED)
 
-# Need to get VTK config because VTK uses advanced VTK features whichG
-# mean it's not enough to just link to the DOLFIN target. See
-# http://www.vtk.org/pipermail/vtk-developers/2013-October/014402.html
-find_package(VTK HINTS ${VTK_DIR} $ENV{VTK_DIR} NO_MODULE QUIET)
+if (EXISTS ${DOLFIN_USE_FILE})
+  include(${DOLFIN_USE_FILE})
 
-# Default build type (can be overridden by user)
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
-    "Choose the type of build, options are: Debug MinSizeRel Release RelWithDebInfo." FORCE)
+  # Default build type (can be overridden by user)
+  if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+      "Choose the type of build, options are: Debug MinSizeRel Release RelWithDebInfo." FORCE)
+  endif()
+
+  # Do not throw error for 'multi-line comments' (these are typical in
+  # rst which includes LaTeX)
+  include(CheckCXXCompilerFlag)
+  CHECK_CXX_COMPILER_FLAG("-Wno-comment" HAVE_NO_MULTLINE)
+  if (HAVE_NO_MULTLINE)
+    set(CMAKE_CXX_FLAGS "-Wno-comment ${CMAKE_CXX_FLAGS}")
+  endif()
+
+else()
+  # Compiler definitions
+  add_definitions(${DOLFIN_CXX_DEFINITIONS})
+
+  # Compiler flags
+  set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
+
+  # Do not throw error for 'multi-line comments' (these are typical in
+  # rst which includes LaTeX)
+  include(CheckCXXCompilerFlag)
+  CHECK_CXX_COMPILER_FLAG("-Wno-comment" HAVE_NO_MULTLINE)
+  if (HAVE_NO_MULTLINE)
+    set(CMAKE_CXX_FLAGS "-Wno-comment ${CMAKE_CXX_FLAGS}")
+  endif()
+
+  # Include directories
+  include_directories(${DOLFIN_INCLUDE_DIRS})
+  include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 endif()
 
-# Compiler definitions
-add_definitions(${DOLFIN_CXX_DEFINITIONS})
-
-# Compiler flags
-set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
-
-# Include directories
-include_directories(${DOLFIN_INCLUDE_DIRS})
-include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
-
 # Executable
-add_executable(${PROJECT_NAME} main.cpp ALE.cpp Mesh.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 
 # Target libraries
 target_link_libraries(${PROJECT_NAME} ${DOLFIN_LIBRARIES})
