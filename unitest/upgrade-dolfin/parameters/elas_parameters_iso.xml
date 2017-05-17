@@ -3,9 +3,9 @@
     <parameters name="problem_parameters">
         <parameter key="elas_model"               type="string"   value="B" />
         <parameter key="traction_direction"               type="string"   value="z" />
-        <parameter key="pressure_boundary_condition"    type="double"   value="24e+1" />
-        <parameter key="C1"    type="double"   value="17.5e3" />
-        <parameter key="Epsilon1"    type="double"   value="1.e4" />
+        <parameter key="pressure_boundary_condition"    type="double"   value="1e+2" />
+        <parameter key="C1"    type="double"   value="1.e3" />
+        <parameter key="Epsilon1"    type="double"   value="1.e3" />
         <parameter key="Epsilon2"    type="double"   value="1.0e0" />
     </parameters>
 </dolfin>

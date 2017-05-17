@@ -52,11 +52,11 @@ int main()
 
 
     Parameters para_material("user_defined_parameters");
-    File para_file_material("../iso_elas_parameters.xml");
+    File para_file_material("../parameters/elas_parameters_iso.xml");
     para_file_material >> para_material;
     info(para_material, true);
     Parameters para_nls("nls_parameters");
-    File para_file_nls("../iso_solver_parameters.xml");
+    File para_file_nls("../parameters/solver_parameters_iso.xml");
     para_file_nls >> para_nls;
     
     // Create mesh and define function space
