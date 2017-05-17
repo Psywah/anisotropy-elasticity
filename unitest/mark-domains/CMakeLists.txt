@@ -53,7 +53,7 @@ else()
 endif()
 
 # Executable
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main_carotid.cpp)
 
 # Target libraries
 target_link_libraries(${PROJECT_NAME} ${DOLFIN_LIBRARIES})
