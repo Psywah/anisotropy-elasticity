@@ -1,9 +1,10 @@
 //#define HAS_PETSC
+#include <dolfin/log/log.h>
+#include <dolfin/log/LogManager.h>
 #include "NonlinearVariationalSolver.h"
 #include "VariationalFormsIsoElas.h"
 #include "NonlinearVariationalProblem.h"
 #include <dolfin.h>
-#include <dolfin/log/LogManager.h>
 
 using namespace dolfin;
 
