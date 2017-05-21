@@ -26,6 +26,7 @@
 // are the ones used for the Stokes demo programs.
 
 #include <dolfin.h>
+#include <dolfin/io/HDF5File.h>
 //#include "Cell.h"
 
 using namespace dolfin;

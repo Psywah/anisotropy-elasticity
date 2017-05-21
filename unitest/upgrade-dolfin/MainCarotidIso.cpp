@@ -61,14 +61,27 @@ int main()
     para_file_nls >> para_nls;
     
     // Create mesh and define function space
-    std::string prefix("../../../mesh/carotid_HII");
+    /*std::string prefix("../../../mesh/carotid_HII");
     Mesh mesh(prefix + std::string(".xml"));
     MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), 
             prefix+ std::string("_physical_region.xml") );
     MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), 
             prefix+ std::string("_facet_region.xml"));
+            */
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
+    HDF5File filer(MPI_COMM_WORLD,"../../../mesh/carotidHII.h5","r");
+    Mesh mesh;
+    filer.read(mesh,"mesh",false);
+
+    // Create mesh functions over the cells and acets
+    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
+    MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
+
+    filer.read(sub_domains_mark,"subdomains_mark");
+    filer.read(boundary_mark,"facet_mark");
+    filer.close();
+
     std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
         coord[i]*= 1.e-3;

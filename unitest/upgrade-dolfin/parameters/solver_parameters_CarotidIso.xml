@@ -34,20 +34,6 @@
                 <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
                 <parameter key="relative_tolerance"     type="double"   value="1e-04" />
                 <parameter key="report"                 type="bool"     value="false" />
-                <parameters name="gmres">
-                    <parameter key="restart"            type="int"      value="30" />
-                </parameters>
-                <parameters name="preconditioner">
-                    <parameter key="report"             type="bool"     value="false" />
-                    <parameter key="shift_nonzero"      type="double"   value="0" />
-                    <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
-                    <parameters name="ilu">
-                        <parameter key="fill_level"     type="int"      value="2" />
-                    </parameters>
-                    <parameters name="schwarz">
-                        <parameter key="overlap"        type="int" value="5" />
-                    </parameters>
-                </parameters>
             </parameters>
             <parameters name="lu_solver">
                 <parameter key="report"                 type="bool"     value="true" />
@@ -63,7 +49,6 @@
             <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
             <parameter key="linear_solver"              type="string"   value="lu" />
             <parameter key="maximum_iterations"         type="int"      value="50" />
-            <parameter key="method"                     type="string"   value="full" />
             <parameter key="preconditioner"             type="string"   value="default" />
             <parameter key="relative_tolerance"         type="double"   value="1e-05" />
             <parameter key="relaxation_parameter"       type="double"   value=".5" />
@@ -77,20 +62,6 @@
                 <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
                 <parameter key="relative_tolerance"     type="double"   value="1e-04" />
                 <parameter key="report"                 type="bool"     value="true" />
-                <parameters name="gmres">
-                    <parameter key="restart"            type="int"      value="30" />
-                </parameters>
-                <parameters name="preconditioner">
-                    <parameter key="report"             type="bool"     value="true" />
-                    <parameter key="shift_nonzero"      type="double"   value="0" />
-                    <parameter key="structure"          type="string"   value="different_nonzero_pattern" />
-                    <parameters name="ilu">
-                        <parameter key="fill_level"     type="int"      value="3" />
-                    </parameters>
-                    <parameters name="schwarz">
-                        <parameter key="overlap"        type="int"      value="1" />
-                    </parameters>
-                </parameters>
             </parameters>
             <parameters name="lu_solver">
                 <parameter key="report"                 type="bool"     value="true" />

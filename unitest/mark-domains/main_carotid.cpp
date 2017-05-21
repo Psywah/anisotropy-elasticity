@@ -26,6 +26,7 @@
 // are the ones used for the Stokes demo programs.
 
 #include <dolfin.h>
+#include <dolfin/io/HDF5File.h>
 //#include "Cell.h"
 
 using namespace dolfin;
@@ -97,6 +98,20 @@ class RightSide : public SubDomain
   // Save sub domains to file
   File file_bnd_read("../../mesh/carotid_HII_facet_region.xml");
   file_bnd_read >> boundary_mark;
+
+  HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
+  filew.write(mesh,"mesh");
+  filew.write(sub_domains_mark,"subdomains_mark");
+  filew.write(boundary_mark,"facet_mark");
+  filew.close();
+
+  
+  HDF5File filer(MPI_COMM_WORLD,"carotidHII.h5","r");
+  filer.read(mesh,"mesh",false);
+  filer.read(sub_domains_mark,"subdomains_mark");
+  filer.read(boundary_mark,"facet_mark");
+  filer.close();
+
   
   
   
