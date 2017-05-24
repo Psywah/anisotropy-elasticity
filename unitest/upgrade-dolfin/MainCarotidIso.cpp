@@ -80,7 +80,6 @@ int main()
 
     filer.read(sub_domains_mark,"subdomains_mark");
     filer.read(boundary_mark,"facet_mark");
-    filer.close();
 
     std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
@@ -115,9 +114,10 @@ int main()
     forms.save_von_misec_stress();
 
     std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
-    //list_timings(TimingClear::clear,type); 
+    list_timings(TimingClear::clear,type); 
 
-    forms.plot_solution();
+    //forms.plot_solution();
+    //filer.close();
 
 
     return 0;

@@ -88,6 +88,7 @@ class RightSide : public SubDomain
   
   
   
+  /*
   sub_domains_mark = 0;
   boundary_mark = 0;
 
@@ -98,12 +99,15 @@ class RightSide : public SubDomain
   // Save sub domains to file
   File file_bnd_read("../../mesh/carotid_HII_facet_region.xml");
   file_bnd_read >> boundary_mark;
+  */
 
+  /*
   HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
   filew.write(mesh,"mesh");
   filew.write(sub_domains_mark,"subdomains_mark");
   filew.write(boundary_mark,"facet_mark");
   filew.close();
+  */
 
   
   HDF5File filer(MPI_COMM_WORLD,"carotidHII.h5","r");
@@ -113,14 +117,21 @@ class RightSide : public SubDomain
   filer.close();
 
   
+  /*
+  HDF5File filew(MPI_COMM_WORLD,"carotidHIIdist.h5","w");
+  filew.write(mesh,"mesh");
+  filew.write(sub_domains_mark,"subdomains_mark");
+  filew.write(boundary_mark,"facet_mark");
+  filew.close();
+  */
   
   
 
 
-  plot(mesh);
-  plot(sub_domains_mark);
-  plot(boundary_mark);
-  interactive();
+  //plot(mesh);
+  //plot(sub_domains_mark);
+  //plot(boundary_mark);
+  //interactive();
 
 
   return 0;
