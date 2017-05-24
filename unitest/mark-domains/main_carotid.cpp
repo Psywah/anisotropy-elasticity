@@ -122,7 +122,7 @@ class RightSide : public SubDomain
   filew.write(mesh,"mesh");
   filew.write(sub_domains_mark,"subdomains_mark");
   filew.write(boundary_mark,"facet_mark");
-  filew.close();
+  //filew.close();
   
   
   
