@@ -113,16 +113,22 @@ class RightSide : public SubDomain
   HDF5File filer(MPI_COMM_WORLD,"carotidHII.h5","r");
   filer.read(mesh,"mesh",false);
   filer.read(sub_domains_mark,"subdomains_mark");
+  std::cout<< "finished reading subdomains mark\n"<<std::endl;
   filer.read(boundary_mark,"facet_mark");
-  filer.close();
+  std::cout<< "finished reading\n"<<std::endl;
+  filer.flush();
 
   
   
   HDF5File filew(MPI_COMM_WORLD,"carotidHIIdist.h5","w");
   filew.write(mesh,"mesh");
+  std::cout<< "wrote mesh\n"<<std::endl;
   filew.write(sub_domains_mark,"subdomains_mark");
+  std::cout<< "wrote subdomains mark\n"<<std::endl;
   filew.write(boundary_mark,"facet_mark");
-  filew.close();
+  std::cout<< "wrote facet mark\n"<<std::endl;
+  //filew.close();
+  //filer.close();
   
   
   
