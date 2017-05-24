@@ -117,13 +117,13 @@ class RightSide : public SubDomain
   filer.close();
 
   
-  /*
+  
   HDF5File filew(MPI_COMM_WORLD,"carotidHIIdist.h5","w");
   filew.write(mesh,"mesh");
   filew.write(sub_domains_mark,"subdomains_mark");
   filew.write(boundary_mark,"facet_mark");
   filew.close();
-  */
+  
   
   
 
