@@ -133,11 +133,11 @@ class RightSide : public SubDomain
   
   
   
-  /*
+  
   
   filer.read(boundary_mark,"facet_mark");
   std::cout<< "finished reading\n"<<std::flush<<std::endl;
-  */
+  
   //filer.flush();
 
   
@@ -158,10 +158,10 @@ class RightSide : public SubDomain
   
 
 
-  //plot(mesh);
-  //plot(sub_domains_mark);
-  //plot(boundary_mark);
-  //interactive();
+  plot(mesh);
+  plot(sub_domains_mark);
+  plot(boundary_mark);
+  interactive();
 
 
   return 0;
