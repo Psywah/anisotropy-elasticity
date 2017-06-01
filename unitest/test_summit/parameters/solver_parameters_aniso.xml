@@ -3,37 +3,37 @@
     <parameters name="nonlinear_solver_parameters">
         <parameter key="dt"    type="double"   value="0.1" />
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
-        <parameter key="NL_res_r"               type="double"   value="9.5e-0" />
+        <parameter key="NL_res_r"               type="double"   value="9.5e-1" />
         <parameter key="NL_infty_r"               type="double"   value="9.0e-1" />
-        <parameter key="NL_size_r"               type="double"   value="8.0e-1" />
+        <parameter key="NL_size_r"               type="double"   value="1.00e-1" />
         <parameter key="NL_atol"               type="double"   value="1e-6" />
         <parameter key="NL_rtol"               type="double"   value="1e-1" />
-        <parameter key="NL_overlap"               type="int"   value="1" />
-        <parameter key="NL_line_search"                type="string"   value="basic" />
-        <parameter key="NL_report"                     type="bool"     value="false" />
+        <parameter key="NL_overlap"               type="int"   value="2" />
+        <parameter key="NL_line_search"               type="string"   value="bt" />
+        <parameter key="NL_report"                     type="bool"     value="true" />
         <parameters name="snes_solver">
             <parameter key="absolute_tolerance"         type="double"   value="1e-10" />
             <parameter key="error_on_nonconvergence"    type="bool"     value="false" />
             <parameter key="line_search"                type="string"   value="bt" />
             <parameter key="linear_solver"              type="string"   value="lu" />
-            <parameter key="maximum_iterations"         type="int"      value="2" />
+            <parameter key="maximum_iterations"         type="int"      value="100" />
             <parameter key="maximum_residual_evaluations" type="int"    value="2000" />
             <parameter key="method"                     type="string"   value="newtonls" />
             <parameter key="options_prefix"             type="string"   value="default" />
-            <parameter key="preconditioner"             type="string"   value="additive_schwarz" />
-            <parameter key="relative_tolerance"         type="double"   value="1e-6" />
+            <parameter key="preconditioner"             type="string"   value="ilu" />
+            <parameter key="relative_tolerance"         type="double"   value="1e-8" />
             <parameter key="report"                     type="bool"     value="false" />
             <parameter key="sign"                       type="string"   value="default" />
             <parameter key="solution_tolerance"         type="double"   value="1e-7" />
             <parameters name="krylov_solver">
-                <parameter key="absolute_tolerance"     type="double"   value="1e-10" />
+                <parameter key="absolute_tolerance"     type="double"   value="1e-8" />
                 <parameter key="divergence_limit"       type="double"   value="10000" />
                 <parameter key="error_on_nonconvergence" type="bool"    value="false" />
                 <parameter key="maximum_iterations"     type="int"      value="10000" />
-                <parameter key="monitor_convergence"    type="bool"     value="false" />
+                <parameter key="monitor_convergence"    type="bool"     value="true" />
                 <parameter key="nonzero_initial_guess"  type="bool"     value="false" />
                 <parameter key="relative_tolerance"     type="double"   value="1e-04" />
-                <parameter key="report"                 type="bool"     value="false" />
+                <parameter key="report"                 type="bool"     value="true" />
             </parameters>
             <parameters name="lu_solver">
                 <parameter key="report"                 type="bool"     value="true" />

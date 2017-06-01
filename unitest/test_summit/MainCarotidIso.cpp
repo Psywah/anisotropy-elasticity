@@ -42,16 +42,26 @@ void pseudo_time_steping(double dt, VariationalFormsCarotidIso& forms,
 
 int main()
 {
+    
+    
+    
+    
     #ifdef HAS_PETSC
-    info("has PETSc");
+    //info("has PETSc");
     list_petsc_snes_methods();
     list_petsc_ksp_methods();
     list_petsc_pre_methods();
     parameters["linear_algebra_backend"] = "PETSc";
     #endif
+    
+    
     LogManager::logger().set_log_active(dolfin::MPI::rank(MPI_COMM_WORLD) == 0);
+    
 
+   
 
+    
+    
     Parameters para_material("user_defined_parameters");
     File para_file_material("../parameters/elas_parameters_CarotidIso.xml");
     para_file_material >> para_material;
@@ -59,6 +69,9 @@ int main()
     Parameters para_nls("nls_parameters");
     File para_file_nls("../parameters/solver_parameters_CarotidIso.xml");
     para_file_nls >> para_nls;
+    
+    
+    
     
     // Create mesh and define function space
     /*std::string prefix("../../../mesh/carotid_HII");
@@ -70,18 +83,21 @@ int main()
             */
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
+    
     HDF5File filer(MPI_COMM_WORLD,"../../../mesh/carotidHII.h5","r");
     Mesh mesh;
     filer.read(mesh,"mesh",false);
 
     // Create mesh functions over the cells and acets
-    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
+    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
     MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
 
     filer.read(sub_domains_mark,"subdomains_mark");
     filer.read(boundary_mark,"facet_mark");
     filer.close();
+    
 
+    
     std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
         coord[i]*= 1.e-3;
@@ -103,13 +119,16 @@ int main()
     NonlinearVariationalSolver solver(problem);
     solver.parameters.update(para_nls);
     t3.stop();
+    
 
+    
     Timer t4("Solve Nonlinear Problem"); info("Solve Nonlinear Problem");
     double dt = para_nls["dt"];
     t4.start();
     //pseudo_time_steping(dt, forms, solver);
     solver.solve();
     t4.stop();
+    
 
     forms.save_solution();
     forms.save_von_misec_stress();

@@ -2,7 +2,7 @@
 #include <dolfin/log/LogManager.h>
 #include <dolfin/log/log.h>
 #include "NonlinearVariationalSolver.h"
-#include "VariationalFormsCarotidIso.h"
+#include "VariationalFormsAnisoElas.h"
 #include "NonlinearVariationalProblem.h"
 #include <dolfin.h>
 
@@ -37,11 +37,13 @@ void list_petsc_ksp_methods()
 }
 
 
-void pseudo_time_steping(double dt, VariationalFormsCarotidIso& forms, 
+void pseudo_time_steping(double dt, VariationalForms& forms, 
                          NonlinearVariationalSolver& solver);
 
 int main()
 {
+    // list_linear_solver_methods();
+    // list_krylov_solver_preconditioners();
     #ifdef HAS_PETSC
     info("has PETSc");
     list_petsc_snes_methods();
@@ -53,43 +55,31 @@ int main()
 
 
     Parameters para_material("user_defined_parameters");
-    File para_file_material("../parameters/elas_parameters_CarotidIso.xml");
+    File para_file_material("../parameters/elas_parameters_aniso.xml");
     para_file_material >> para_material;
     info(para_material, true);
     Parameters para_nls("nls_parameters");
-    File para_file_nls("../parameters/solver_parameters_CarotidIso.xml");
+    File para_file_nls("../parameters/solver_parameters_aniso.xml");
     para_file_nls >> para_nls;
     
     // Create mesh and define function space
-    /*std::string prefix("../../../mesh/carotid_HII");
+    std::string prefix("../../../mesh/tube-4components-short-refine0");
     Mesh mesh(prefix + std::string(".xml"));
     MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), 
-            prefix+ std::string("_physical_region.xml") );
+            prefix+ std::string("-domains-marker.xml") );
     MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), 
-            prefix+ std::string("_facet_region.xml"));
-            */
+            prefix+ std::string("-boundary-marker.xml"));
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
-    HDF5File filer(MPI_COMM_WORLD,"../../../mesh/carotidHII.h5","r");
-    Mesh mesh;
-    filer.read(mesh,"mesh",false);
 
-    // Create mesh functions over the cells and acets
-    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
-    MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
-
-    filer.read(sub_domains_mark,"subdomains_mark");
-    filer.read(boundary_mark,"facet_mark");
-    filer.close();
-
-    std::vector<double>& coord = mesh.coordinates();
+    /*std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
-        coord[i]*= 1.e-3;
-    
+        coord[i]*= 1000.;
+        */
 
     Timer t1("Inital Forms"); info("Initial Forms");
     t1.start();
-    VariationalFormsCarotidIso forms(mesh, sub_domains_mark, boundary_mark, para_material);
+    VariationalForms forms(mesh, sub_domains_mark, boundary_mark, para_material);
     t1.stop();
 
     //solve(F == 0, u, bcs, J, para);
@@ -115,7 +105,7 @@ int main()
     forms.save_von_misec_stress();
 
     std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
-    list_timings(TimingClear::clear,type); 
+    //list_timings(TimingClear::clear,type); 
 
     //forms.plot_solution();
 
@@ -124,7 +114,7 @@ int main()
 
 }
 
-void pseudo_time_steping(double dt, VariationalFormsCarotidIso& forms, 
+void pseudo_time_steping(double dt, VariationalForms& forms, 
                          NonlinearVariationalSolver& solver)
 {
     double t = dt;
