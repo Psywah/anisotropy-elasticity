@@ -5,6 +5,7 @@
 #include "VariationalFormsCarotidIso.h"
 #include "NonlinearVariationalProblem.h"
 #include <dolfin.h>
+#include <petscksp.h>
 
 using namespace dolfin;
 
@@ -40,18 +41,22 @@ void list_petsc_ksp_methods()
 void pseudo_time_steping(double dt, VariationalFormsCarotidIso& forms, 
                          NonlinearVariationalSolver& solver);
 
-int main()
+int main(int argc, char** argv)
 {
     
     
     
     
     #ifdef HAS_PETSC
-    //info("has PETSc");
-    list_petsc_snes_methods();
-    list_petsc_ksp_methods();
-    list_petsc_pre_methods();
     parameters["linear_algebra_backend"] = "PETSc";
+    PetscInitialize(&argc,&argv,NULL,NULL);
+    PetscOptionsInsertFile(PETSC_COMM_WORLD,NULL,"../parameters/petsc_options",PETSC_TRUE);
+    if(dolfin::MPI::rank(MPI_COMM_WORLD) == 0){
+        info("has PETSc");
+        list_petsc_snes_methods();
+        list_petsc_ksp_methods();
+        list_petsc_pre_methods();
+    }
     #endif
     
     

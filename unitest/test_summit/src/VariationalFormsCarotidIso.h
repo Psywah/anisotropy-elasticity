@@ -31,6 +31,7 @@ namespace dolfin
 
     // function space and forms
     std::shared_ptr<FunctionSpace> _V;
+    std::shared_ptr<FunctionSpace> _V_p1;
     std::shared_ptr<Form> _J;
     std::shared_ptr<Form> _F;
 
@@ -39,6 +40,7 @@ namespace dolfin
 
     // solution
     std::shared_ptr<Function> _u;
+    std::shared_ptr<Function> _u_p1;
 
     // von Misec Stress
     std::shared_ptr<FunctionSpace> _VMS;

@@ -38,7 +38,7 @@
 
 //#define SAVE_RESIDULE_VEC
 
-#define NONLINEAR_ELIMINATION
+//#define NONLINEAR_ELIMINATION
 #if defined(SAVE_RESIDULE_VEC) || defined(NONLINEAR_ELIMINATION)
 #include <dolfin/io/dolfin_io.h>
 #endif
