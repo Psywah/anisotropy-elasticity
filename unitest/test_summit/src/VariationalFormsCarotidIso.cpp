@@ -8,11 +8,11 @@ class InletXaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466 ) < 1.e-6) &&
-                (std::abs(x[1] + 0.00122233) < 1.e-6) && on_boundary
+        if( (std::abs(x[2] - 0.0085466 ) < 1.e-5) &&
+                (std::abs(x[1] + 0.00122233) < 1.e-5) 
           )
         {   
-            //std::cout<<"found left point"<<std::endl;
+            //std::cout<<"found X point"<<std::endl;
             //std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
             return true;
         }
@@ -23,11 +23,11 @@ class InletYaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466 ) < 1.e-6) &&
-                (std::abs(x[0] - 0.0272064) < 1.e-6) && on_boundary
+        if( (std::abs(x[2] - 0.0085466 ) < 1.e-5) &&
+                (std::abs(x[0] - 0.0272064) < 1.e-5) 
           )
         {   
-            //std::cout<<"found left point"<<std::endl;
+            //std::cout<<"found Y point"<<std::endl;
             //std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
             return true;
         }
@@ -214,19 +214,21 @@ void VariationalFormsCarotidIso::save_solution()
     std::string idx = std::string("Pres") + ss.str();
     // Save solution in VTK format
     File file(std::string("./result/displacement")+idx+std::string(".pvd"));
-    /*if (_V->element()->ufc_element()->degree() != 1)
-      {
-      _u_p1->interpolate(*_u);
-      file << *_u_p1;
-      }
-      else 
-      */    file << *_u;
-    //File file_backup(std::string("backup_solution")+(".xml"));
-    //file_backup << *_u;
+    file << *_u;
+
+    std::string str(std::string("backup_solution")+(".xml"));
+    backup_solution(str);
+}
+
+void VariationalFormsCarotidIso::backup_solution(std::string str)
+{
+    File file_backup(str);
+    file_backup <<*_u;
 }
 
 void VariationalFormsCarotidIso::load_solution(std::string str)
 {
+    if(! File::exists(str)) return;
     File file_backup(str);
     file_backup >> *_u;
 }

@@ -399,6 +399,7 @@ PetscErrorCode PETScSNESSolver::FormFunction(SNES snes, Vec x, Vec f, void* ctx)
 PetscErrorCode PETScSNESSolver::FormObjective(SNES snes, Vec x,
                                               PetscReal* out, void* ctx)
 {
+    
   PetscErrorCode ierr;
   auto snes_ctx = static_cast<struct snes_ctx_t*>(ctx);
 
@@ -415,6 +416,49 @@ PetscErrorCode PETScSNESSolver::FormObjective(SNES snes, Vec x,
     *out = f_norm;
 
   return 0;
+    
+  /* 
+     etscErrorCode ierr;
+  
+  auto snes_ctx = static_cast<struct snes_ctx_t*>(ctx);
+
+  NonlinearProblem* nonlinear_problem = snes_ctx->nonlinear_problem;
+  PETScVector* _x = snes_ctx->x;
+
+  // Wrap the PETSc Vec as DOLFIN PETScVector
+  PETScVector x_wrap(x);
+  PETScVector f_wrap(snes_ctx->f_tmp);
+
+  // Update current solution that is associated with nonlinear
+  // problem. This is required because x is not the solution vector
+  // that was passed to PETSc. PETSc updates the solution vector at
+  // the end of solve. We should find a better solution.
+  *_x = x_wrap;
+
+  // Update ghost values
+  _x ->update_ghost_values();
+
+  // Compute F(u)
+  PETScMatrix A(_x->mpi_comm());
+  PETScMatrix P(_x->mpi_comm());
+  nonlinear_problem->form(A, P, f_wrap, *_x);
+  //nonlinear_problem->F(f_wrap, *_x);
+  double f_norm;
+  nonlinear_problem->Object(f_wrap,f_norm, *_x);
+
+
+
+  //PetscReal f_norm;
+  //ierr = VecNorm(snes_ctx->f_tmp, NORM_2, &f_norm);
+  //if (ierr != 0) petsc_error(ierr, __FILE__, "VecNorm");
+
+  if (std::isnan(f_norm) || std::isinf(f_norm))
+    *out = 1.0e100;
+  else
+    *out = f_norm;
+
+  return 0;
+  */
 }
 //-----------------------------------------------------------------------------
 PetscErrorCode PETScSNESSolver::FormJacobian(SNES snes, Vec x, Mat A, Mat P,

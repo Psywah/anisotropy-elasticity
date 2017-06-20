@@ -24,6 +24,7 @@ namespace dolfin
     void save_solution();
 
     void load_solution(std::string str="backup_solution.xml");
+    void backup_solution(std::string str="backup_solution.xml");
     void save_von_misec_stress();
     void plot_solution();
 

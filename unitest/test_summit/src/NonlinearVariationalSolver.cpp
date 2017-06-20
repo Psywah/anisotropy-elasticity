@@ -199,11 +199,11 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            r_hist << res ;
        }
       #elif defined NONLINEAR_ELIMINATION
-       //if(double(parameters["NL_res_r"]) >1)
-       //{
-       //    info("begin snes solve");
-       //    ret = snes_solver->solve(*nonlinear_problem, *u->vector());
-       //}else
+       if(double(parameters["NL_res_r"]) >1)
+       {
+           info("begin snes solve");
+           ret = snes_solver->solve(*nonlinear_problem, *u->vector());
+       }else
        {
            std::shared_ptr<File> u_hist = std::make_shared<File>("u_hist.pvd");
            std::shared_ptr<File> r_hist = std::make_shared<File>("r_hist.pvd");
@@ -233,15 +233,23 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            parameters("snes_solver")["maximum_iterations"] = 1;
            while(!converged && iter< max_iter)
            {
+               //if(iter!=0 && iter%30==0)
+               //{
+               //    std::string str(std::string("backup_solution")+(".xml"));
+               //    File backup_file(str);
+               //    backup_file << *u;
+               //}
                //parameters("snes_solver")("krylov_solver")["absolute_tolerance"] = std::max(norm_res0*1.e-4,
                //        parameters("snes_solver")("krylov_solver")["absolute_tolerance"]);
                snes_solver->parameters.update(parameters("snes_solver"));
                ret = snes_solver->solve(*nonlinear_problem, *u->vector());
-               //*u_hist << *u;
+
+               /*
+               *u_hist << *u;
                ++iter;
                converged = std::get<1>(ret);
                nonlinear_problem->F(*res.vector(), *u->vector());
-               //*r_hist << res ;
+               *r_hist << res ;
                norm_res =res.vector()->norm("l2");
                info(ANSI_COLOR_MAGENTA "%d iterations " ANSI_COLOR_RESET  "of global nonlinear iteration, last residual:%5.2e, vs current "
                        ANSI_COLOR_MAGENTA "residual:%5.3e" ANSI_COLOR_RESET,
@@ -263,15 +271,15 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                            norm_res/norm_res0, rho0);
                    norm_res0 = norm_res;
                    nonlinear_coarse_problem->clear_dofs_values();
-                   //nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
-//                   *rc_hist << res ;
+                   nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
+                   *rc_hist << res ;
                    end();
                    continue;
                }
                info("Reduction of residual " ANSI_COLOR_RED "%.2f " ANSI_COLOR_RESET "> rho0(%.2f), Need for nonlinear elimination",
                        norm_res/norm_res0, rho0);
 
-               //nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
+               nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
 
                std::size_t size_total = res.vector()->size();
                std::size_t size_good = nonlinear_coarse_problem->size_dirichlet_dofs_global();
@@ -281,7 +289,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    info("Size of coarse problem %d > %d*%.2f (total_size * rho2), No Need for nonlinear elimination",
                            size_total-size_good, size_total, rho2);
                    norm_res0 = norm_res;
-                   //*rc_hist << res ;
+                   *rc_hist << res ;
                    end();
                    continue;
                }
@@ -297,7 +305,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                }
 
                nonlinear_problem->F(*res.vector(), *u->vector());
-               //*rc_hist << res ;
+               *rc_hist << res ;
                double norm_res_c = res.vector()->norm("l2");
 
                if(iter <10 || !accept || norm_res_c<norm_res)
@@ -317,6 +325,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                }
                info("Solved Coarse Problem");
                end();
+               */
            }
        }
 #else
@@ -379,6 +388,36 @@ NonlinearDiscreteProblem::F(GenericVector& b, const GenericVector& x)
     const bool print_rhs = _solver->parameters["print_rhs"];
     if (print_rhs)
         info(b, true);
+}
+//-----------------------------------------------------------------------------
+void NonlinearVariationalSolver::
+NonlinearDiscreteProblem::Object(GenericVector& b,double & val,  const GenericVector& x)
+{
+    Timer t("Assemble Residual");
+    // Get problem data
+    dolfin_assert(_problem);
+    std::shared_ptr<const Form> F(_problem->residual_form());
+    std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
+
+    // Assemble right-hand side
+    dolfin_assert(F);
+    Assembler assembler;
+    assembler.assemble(b, *F);
+
+    // Apply boundary conditions
+    for (std::size_t i = 0; i < bcs.size(); i++)
+    {
+        dolfin_assert(bcs[i]);
+        bcs[i]->apply(b, x);
+    }
+    b.apply("insert");
+
+    // Print vector
+    dolfin_assert(_solver);
+    const bool print_rhs = _solver->parameters["print_rhs"];
+    if (print_rhs)
+        info(b, true);
+    val = b.norm("l2");
 }
 //-----------------------------------------------------------------------------
     void
@@ -455,6 +494,38 @@ NonlinearCoarseDiscreteProblem::F(GenericVector& b, const GenericVector& x)
     if (print_rhs)
         info(b, true);
 }
+//-----------------------------------------------------------------------------
+void NonlinearVariationalSolver::
+NonlinearCoarseDiscreteProblem::Object(GenericVector& b,double & val,  const GenericVector& x)
+{
+    Timer t("Assemble Residual");
+    // Get problem data
+    dolfin_assert(_problem);
+    std::shared_ptr<const Form> F(_problem->residual_form());
+    std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
+
+    // Assemble right-hand side
+    dolfin_assert(F);
+    Assembler assembler;
+    assembler.assemble(b, *F);
+
+    // Apply boundary conditions
+    for (std::size_t i = 0; i < bcs.size(); i++)
+    {
+        dolfin_assert(bcs[i]);
+        bcs[i]->apply(b, x);
+    }
+    b.set(values.data(), values.size(), dirichlet_dofs.data());
+    b.apply("insert");
+
+    // Print vector
+    dolfin_assert(_solver);
+    const bool print_rhs = _solver->parameters["print_rhs"];
+    if (print_rhs)
+        info(b, true);
+    val = b.norm("l2");
+}
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
     void
 NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::J(GenericMatrix& A,

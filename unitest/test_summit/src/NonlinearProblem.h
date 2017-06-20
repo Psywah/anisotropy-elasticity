@@ -78,6 +78,10 @@ namespace dolfin
     /// Compute F at current point x
     virtual void F(GenericVector& b, const GenericVector& x) = 0;
 
+
+    // Compute Object at current point x
+    virtual void Object(GenericVector& b, double& val, const GenericVector& x)=0;
+
     /// Compute J = F' at current point x
     virtual void J(GenericMatrix& A, const GenericVector& x) = 0;
 

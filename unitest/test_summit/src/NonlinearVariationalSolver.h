@@ -173,6 +173,9 @@ namespace dolfin
       // Compute J = F' at current point x
       virtual void J(GenericMatrix& A, const GenericVector& x);
 
+      // Compute Object at current point x
+      virtual void Object(GenericVector& b, double& val, const GenericVector& x);
+
     private:
 
       // Problem and solver objects
@@ -199,6 +202,9 @@ namespace dolfin
 
       // Compute J = F' at current point x
       virtual void J(GenericMatrix& A, const GenericVector& x);
+
+      // Compute Object at current point x
+      virtual void Object(GenericVector& b, double& val, const GenericVector& x);
 
       void add_dirichlet_dof(dolfin::la_index dof, double value);
 

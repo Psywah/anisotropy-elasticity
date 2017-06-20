@@ -111,6 +111,7 @@ int main(int argc, char** argv)
     Timer t1("Inital Forms"); info("Initial Forms");
     t1.start();
     VariationalFormsCarotidIso forms(mesh, sub_domains_mark, boundary_mark, para_material);
+    //forms.load_solution("backup_solution.xml");
     t1.stop();
 
     //solve(F == 0, u, bcs, J, para);
