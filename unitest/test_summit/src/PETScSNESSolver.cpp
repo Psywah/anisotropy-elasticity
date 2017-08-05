@@ -399,7 +399,7 @@ PetscErrorCode PETScSNESSolver::FormFunction(SNES snes, Vec x, Vec f, void* ctx)
 PetscErrorCode PETScSNESSolver::FormObjective(SNES snes, Vec x,
                                               PetscReal* out, void* ctx)
 {
-    
+    /*
   PetscErrorCode ierr;
   auto snes_ctx = static_cast<struct snes_ctx_t*>(ctx);
 
@@ -416,9 +416,8 @@ PetscErrorCode PETScSNESSolver::FormObjective(SNES snes, Vec x,
     *out = f_norm;
 
   return 0;
-    
-  /* 
-     etscErrorCode ierr;
+  */
+  PetscErrorCode ierr;
   
   auto snes_ctx = static_cast<struct snes_ctx_t*>(ctx);
 
@@ -458,7 +457,7 @@ PetscErrorCode PETScSNESSolver::FormObjective(SNES snes, Vec x,
     *out = f_norm;
 
   return 0;
-  */
+  
 }
 //-----------------------------------------------------------------------------
 PetscErrorCode PETScSNESSolver::FormJacobian(SNES snes, Vec x, Mat A, Mat P,

@@ -3,13 +3,14 @@
     <parameters name="nonlinear_solver_parameters">
         <parameter key="dt"    type="double"   value="0.1" />
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
-        <parameter key="NL_res_r"               type="double"   value="9e-0" />
+        <parameter key="NL_res_r"               type="double"   value="9e-1" />
         <parameter key="NL_infty_r"               type="double"   value="9.0e-1" />
-        <parameter key="NL_size_r"               type="double"   value="8.0e-1" />
+        <parameter key="NL_size_r"               type="double"   value="1.0e-1" />
         <parameter key="NL_atol"               type="double"   value="1e-6" />
         <parameter key="NL_rtol"               type="double"   value="1e-1" />
+        <parameter key="NL_maximum_iterations"  type="int"   value="30" />
         <parameter key="NL_overlap"               type="int"   value="3" />
-        <parameter key="NL_line_search"                type="string"   value="bt" />
+        <parameter key="NL_line_search"                type="string"   value="basic" />
         <parameter key="NL_report"                     type="bool"     value="true" />
         <parameters name="snes_solver">
             <parameter key="absolute_tolerance"         type="double"   value="1e-10" />

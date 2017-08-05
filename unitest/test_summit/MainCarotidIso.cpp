@@ -103,9 +103,10 @@ int main(int argc, char** argv)
     
 
     
-    std::vector<double>& coord = mesh.coordinates();
+    /*std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
         coord[i]*= 1.e-3;
+        */
     
 
     Timer t1("Inital Forms"); info("Initial Forms");

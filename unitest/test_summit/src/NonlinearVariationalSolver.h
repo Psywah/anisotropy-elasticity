@@ -25,7 +25,7 @@
 #define __NONLINEAR_VARIATIONAL_SOLVER_H
 //#define HAS_PETSC
 
-#include <dolfin/nls/NonlinearProblem.h>
+#include "NonlinearProblem.h"
 #include <dolfin/nls/NewtonSolver.h>
 #include <dolfin/function/FunctionSpace.h>
 #include <dolfin/fem/GenericDofMap.h>
@@ -134,6 +134,7 @@ namespace dolfin
       p.add("NL_infty_r", 1e-1);
       p.add("NL_size_r", 1e-1);
       p.add("NL_overlap", 0);
+      p.add("NL_maximum_iterations", 30);
       p.add("NL_line_search", "basic");
       p.add("NL_report", true);
       p.add("dt", 1e-1);

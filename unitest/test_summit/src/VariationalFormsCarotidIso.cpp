@@ -8,8 +8,8 @@ class InletXaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466 ) < 1.e-5) &&
-                (std::abs(x[1] + 0.00122233) < 1.e-5) 
+        if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+                (std::abs(x[1] + 0.00122233e3) < 1.e-5) 
           )
         {   
             //std::cout<<"found X point"<<std::endl;
@@ -23,8 +23,8 @@ class InletYaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466 ) < 1.e-5) &&
-                (std::abs(x[0] - 0.0272064) < 1.e-5) 
+        if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+                (std::abs(x[0] - 0.0272064e3) < 1.e-5) 
           )
         {   
             //std::cout<<"found Y point"<<std::endl;

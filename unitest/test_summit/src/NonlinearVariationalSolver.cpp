@@ -38,7 +38,7 @@
 
 //#define SAVE_RESIDULE_VEC
 
-//#define NONLINEAR_ELIMINATION
+#define NONLINEAR_ELIMINATION
 #if defined(SAVE_RESIDULE_VEC) || defined(NONLINEAR_ELIMINATION)
 #include <dolfin/io/dolfin_io.h>
 #endif
@@ -205,18 +205,20 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            ret = snes_solver->solve(*nonlinear_problem, *u->vector());
        }else
        {
-           std::shared_ptr<File> u_hist = std::make_shared<File>("u_hist.pvd");
-           std::shared_ptr<File> r_hist = std::make_shared<File>("r_hist.pvd");
-           std::shared_ptr<File> rc_hist = std::make_shared<File>("rc_hist.pvd");
-           std::shared_ptr<File> bad_dof = std::make_shared<File>("bad_dof_hist.pvd");
-           std::shared_ptr<File> bad_cell = std::make_shared<File>("bad_cell_hist.pvd");
-           std::shared_ptr<File> bad_cell_ov = std::make_shared<File>("bad_ov_hist.pvd");
+           std::string prefixdir("./results/");
+           std::shared_ptr<File> u_hist = std::make_shared<File>(prefixdir+ "u_hist.pvd");
+           std::shared_ptr<File> r_hist = std::make_shared<File>(prefixdir+ "r_hist.pvd");
+           std::shared_ptr<File> rc_hist = std::make_shared<File>(prefixdir+ "rc_hist.pvd");
+           std::shared_ptr<File> bad_dof = std::make_shared<File>(prefixdir+ "bad_dof_hist.pvd");
+           std::shared_ptr<File> bad_cell = std::make_shared<File>(prefixdir+ "bad_cell_hist.pvd");
+           std::shared_ptr<File> bad_cell_ov = std::make_shared<File>(prefixdir+ "bad_ov_hist.pvd");
            info("begin snes solve with nonlinear elimination");
            Parameters para_coarse = parameters("snes_solver");
            para_coarse["absolute_tolerance"] = (double)(parameters["NL_atol"]);
            para_coarse["relative_tolerance"] = (double)(parameters["NL_rtol"]);
            para_coarse["line_search"] = std::string(parameters["NL_line_search"]);
            para_coarse["report"] = (bool)(parameters["NL_report"]);
+           para_coarse["maximum_iterations"] = (int)(parameters["NL_maximum_iterations"]);
            double rho0 = parameters["NL_res_r"];
            double rho1 = parameters["NL_infty_r"];
            double rho2 = parameters["NL_size_r"];
@@ -233,18 +235,16 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            parameters("snes_solver")["maximum_iterations"] = 1;
            while(!converged && iter< max_iter)
            {
-               //if(iter!=0 && iter%30==0)
-               //{
-               //    std::string str(std::string("backup_solution")+(".xml"));
-               //    File backup_file(str);
-               //    backup_file << *u;
-               //}
-               //parameters("snes_solver")("krylov_solver")["absolute_tolerance"] = std::max(norm_res0*1.e-4,
-               //        parameters("snes_solver")("krylov_solver")["absolute_tolerance"]);
+               if(iter!=0 && iter%30==0)
+               {
+                   std::string str(std::string("backup_solution")+(".xml"));
+                   File backup_file(str);
+                   backup_file << *u;
+               }
                snes_solver->parameters.update(parameters("snes_solver"));
                ret = snes_solver->solve(*nonlinear_problem, *u->vector());
 
-               /*
+               
                *u_hist << *u;
                ++iter;
                converged = std::get<1>(ret);
@@ -312,7 +312,12 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                {
                    norm_res0 = norm_res_c;
                    accept=true;
-                   info("Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                   if(iter < 10)
+                       info("elimination at the first 10 steps");
+                   else if(!accept)
+                       info("elimination since last not accept");
+                   else
+                       info("Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
                            norm_res_c,norm_res);
                }
                else
@@ -325,7 +330,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                }
                info("Solved Coarse Problem");
                end();
-               */
+               
            }
        }
 #else

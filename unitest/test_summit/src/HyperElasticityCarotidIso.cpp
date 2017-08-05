@@ -10,7 +10,6 @@
 //   convert_exceptions_to_warnings: False
 //   cpp_optimize:                   True
 //   cpp_optimize_flags:             '-O2'
-//   eliminate_zeros:                True
 //   epsilon:                        1e-14
 //   error_control:                  False
 //   external_include_dirs:          ''
@@ -23,8 +22,6 @@
 //   max_signature_length:           0
 //   optimize:                       True
 //   precision:                      None
-//   precompute_basis_const:         True
-//   precompute_ip_const:            True
 //   quadrature_degree:              4
 //   quadrature_rule:                None
 //   representation:                 'auto'

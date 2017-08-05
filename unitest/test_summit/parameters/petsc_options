@@ -5,7 +5,7 @@
 #   -snes_stol              #- convergence tolerance in terms of the norm of the change in the solution between steps
 #-snes_atol 1e-10        #- absolute tolerance of residual norm
 #-snes_rtol 1e-6         #- relative decrease in tolerance norm from initial
--snes_max_it 500        #- maximum number of iterations
+#-snes_max_it 500        #- maximum number of iterations
 -snes_max_funcs 10000    # - maximum number of function evaluations
 -snes_max_fail  10000    #- maximum number of line search failures allowed before stopping, default is none
 -snes_max_linear_solve_fail 10000 #- number of linear solver failures before SNESSolve() stops
