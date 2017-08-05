@@ -81,17 +81,48 @@ class RightSide : public SubDomain
   //File file_bnd("carotid_HII_facet_region.xml");
   //file_bnd << boundary_mark;
   
+  // serial write a patch of meshes
+  HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
+  for(int i =1;i<5;i++)
+  {
+      // Read mesh
+      std::string prefix("/rc_scratch/shgo7817/mesh/carotid_HII");
+      Mesh mesh(MPI_COMM_WORLD, prefix + std::to_string(i) + std::string(".xml"));
 
-  
-  
+      // Create mesh functions over the cells and acets
+      MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
+      MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
 
-  
-  
-  
+      // Read sub domains from file
+      File file_read(prefix + std::to_string(i) + std::string("_physical_region.xml"));
+      file_read >> sub_domains_mark;
+
+      // Save sub domains to file
+      File file_bnd_read(prefix + std::to_string(i) + std::string("_facet_region.xml"));
+      file_bnd_read >> boundary_mark;
+
+
+      std::string s1("/mesh");
+      s1 = s1 + std::to_string(i);
+      filew.write(mesh,s1.c_str());
+
+      std::string s2("/subdomains_mark");
+      s2 = s2 + std::to_string(i);
+      filew.write(sub_domains_mark,s2.c_str());
+
+      std::string s1("/facet_mark");
+      s3 = s3 + std::to_string(i);
+      filew.write(boundary_mark,s3.c_str());
+  }
+  filew.close();
+
+
+
+
+
+
+// serial write single mesh
   /*
-  sub_domains_mark = 0;
-  boundary_mark = 0;
-
   // Read sub domains from file
   File file_read("../../mesh/carotid_HII_physical_region.xml");
   file_read >> sub_domains_mark;
@@ -99,51 +130,36 @@ class RightSide : public SubDomain
   // Save sub domains to file
   File file_bnd_read("../../mesh/carotid_HII_facet_region.xml");
   file_bnd_read >> boundary_mark;
- 
 
-  
-  
   HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
   filew.write(mesh,"/mesh");
-  
   filew.write(sub_domains_mark,"/subdomains_mark");
-  
   filew.write(boundary_mark,"/facet_mark");
-  
   filew.close();
   */
- 
-  
 
-  
-  
-  
+
+
+
+// parallel write
+/*
   Mesh mesh;
   HDF5File filer(mesh.mpi_comm(),"carotidHII.h5","r");
   filer.read(mesh,"/mesh",false);
   //filer.flush();
-  
-  
+
   MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
   MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh),mesh.topology().dim()-1);
-  
-  
+
   filer.read(sub_domains_mark,"/subdomains_mark");
   std::cout<< "finished reading subdomains mark\n"<<std::flush<<std::endl;
-  
-  
-  
-  
-  
+
   filer.read(boundary_mark,"facet_mark");
   std::cout<< "finished reading\n"<<std::flush<<std::endl;
-    info("has PETSc");
-  
+  info("has PETSc");
+
   //filer.flush();
 
-  
-  
-  /*
   HDF5File filew(MPI_COMM_WORLD,"carotidHIIdist.h5","w");
   filew.write(mesh,"mesh");
   std::cout<< "wrote mesh\n"<<std::endl;
@@ -151,20 +167,21 @@ class RightSide : public SubDomain
   std::cout<< "wrote subdomains mark\n"<<std::endl;
   filew.write(boundary_mark,"facet_mark");
   std::cout<< "wrote facet mark\n"<<std::endl;
-  */
+
   //filew.close();
   //filer.close();
-  
-  
-  
+*/
+
+
+
 
 
   /*
-  plot(mesh);
-  plot(sub_domains_mark);
-  plot(boundary_mark);
-  interactive();
-  */
+     plot(mesh);
+     plot(sub_domains_mark);
+     plot(boundary_mark);
+     interactive();
+     */
 
 
   return 0;
