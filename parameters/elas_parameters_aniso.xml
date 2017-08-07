@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<dolfin xmlns:dolfin="http://fenicsproject.org">
+    <parameters name="problem_parameters">
+        <parameter key="elas_model"               type="string"   value="A3" />
+        <parameter key="pressure_boundary_condition"    type="double"   value="24.e3" />
+        <parameter key="C1_adv"    type="double"   value="7.8e3" />
+        <parameter key="C1_med"    type="double"   value="9.2e3" />
+        <parameter key="C1_pla"    type="double"   value="9.2e3" />
+        <parameter key="Epsilon1_adv"    type="double"   value="70.0e3" />
+        <parameter key="Epsilon1_med"    type="double"   value="360.0e3" />
+        <parameter key="Epsilon1_pla"    type="double"   value="360.0e3" />
+        <parameter key="Epsilon2_adv"    type="double"   value="8.5" />
+        <parameter key="Epsilon2_med"    type="double"   value="9.0" />
+        <parameter key="Epsilon2_pla"    type="double"   value="9.0" />
+        <parameter key="Alpha1_adv"    type="double"   value="1503.0e3" />
+        <parameter key="Alpha1_med"    type="double"   value="30001.9e3" />
+        <parameter key="Alpha2_adv"    type="double"   value="6.3" />
+        <parameter key="Alpha2_med"    type="double"   value="5.1" />
+        <parameter key="Alpha3_adv"    type="double"   value="1005.2e3" />
+        <parameter key="Alpha3_med"    type="double"   value="49999.1e3" />
+        <parameter key="Alpha4_adv"    type="double"   value="6.3" />
+        <parameter key="Alpha4_med"    type="double"   value="4.1" />
+        <parameter key="Beta1"    type="double"   value="80.0e3" />
+        <parameter key="Eta1"    type="double"   value="250.0e3" />
+        <parameter key="Delta1"    type="double"   value="2000.0e3" />
+        <parameter key="Phi_adv"    type="double"   value="57.1" />
+        <parameter key="Phi_med"    type="double"   value="28.8" />
+    </parameters>
+</dolfin>

@@ -1,0 +1,120 @@
+
+# SNES Option
+
+#-snes_type newtonls     #- newtonls, newtontr, ngmres, ncg, nrichardson, qn, vi, fas, SNESType for complete list
+#   -snes_stol              #- convergence tolerance in terms of the norm of the change in the solution between steps
+#-snes_atol 1e-10        #- absolute tolerance of residual norm
+#-snes_rtol 1e-6         #- relative decrease in tolerance norm from initial
+#-snes_max_it 500        #- maximum number of iterations
+-snes_max_funcs 10000    # - maximum number of function evaluations
+-snes_max_fail  10000    #- maximum number of line search failures allowed before stopping, default is none
+-snes_max_linear_solve_fail 10000 #- number of linear solver failures before SNESSolve() stops
+#   -snes_lag_preconditioner <lag>  - how often preconditioner is rebuilt (use -1 to never rebuild)
+#   -snes_lag_jacobian <lag>    - how often Jacobian is rebuilt (use -1 to never rebuild)
+#   -snes_trtol <trtol> - trust region tolerance
+#   -snes_no_convergence_test   - skip convergence test in nonlinear solver; hence iterations will continue until max_it or some other criterion is reached. Saves expense of convergence test
+#   -snes_monitor [ascii][:filename][:viewer format]    - prints residual norm at each iteration. if no filename given prints to stdout
+#   -snes_monitor_solution [ascii binary draw][:filename][:viewer format]   - plots solution at each iteration
+#   -snes_monitor_residual [ascii binary draw][:filename][:viewer format]   - plots residual (not its norm) at each iteration
+#   -snes_monitor_solution_update [ascii binary draw][:filename][:viewer format]    - plots update to solution at each iteration
+#   -snes_monitor_lg_residualnorm   - plots residual norm at each iteration
+#   -snes_monitor_lg_range  - plots residual norm at each iteration
+#   -snes_fd    - use finite differences to compute Jacobian; very slow, only for testing
+#   -snes_fd_color  - use finite differences with coloring to compute Jacobian
+#   -snes_mf_ksp_monitor    - if using matrix-free multiply then print h at each KSP iteration
+#   -snes_converged_reason  - print the reason for convergence/divergence after each solve
+#
+#       -snes_ksp_ew    - use Eisenstat-Walker method for determining linear system convergence
+#       -snes_ksp_ew_version ver    - version of Eisenstat-Walker method
+#       -snes_ksp_ew_rtol0 <rtol0>  - Sets rtol0
+#       -snes_ksp_ew_rtolmax <rtolmax>  - Sets rtolmax
+#       -snes_ksp_ew_gamma <gamma>  - Sets gamma
+#       -snes_ksp_ew_alpha <alpha>  - Sets alpha
+#       -snes_ksp_ew_alpha2 <alpha2>    - Sets alpha2
+#       -snes_ksp_ew_threshold <threshold>  - Sets threshold
+
+# Linesearch option 
+
+-snes_linesearch_type bt  #- basic, bt, l2, cp, nleqerr, shell
+-snes_linesearch_order 3 #<order>    - 1, 2, 3. Most types only support certain orders (bt supports 2 or 3)
+# -snes_linesearch_norms    - Turn on/off the linesearch norms for the basic linesearch type
+# -snes_linesearch_minlambda    - The minimum step length
+# -snes_linesearch_maxstep  - The maximum step size
+# -snes_linesearch_rtol - Relative tolerance for iterative line searches
+# -snes_linesearch_atol - Absolute tolerance for iterative line searches
+# -snes_linesearch_ltol - Change in lambda tolerance for iterative line searches
+# -snes_linesearch_max_it   - The number of iterations for iterative line searches
+-snes_linesearch_monitor # - Print progress of line searches
+# -snes_linesearch_monitor_solution_update [viewer:filename:format] - view each update tried by line search routine
+# -snes_linesearch_damping  - The linesearch damping parameter
+# -snes_linesearch_keeplambda   - Keep the previous search length as the initial guess.
+# -snes_linesearch_precheck_picard  - Use precheck that speeds up convergence of picard method
+# -snes_linesearch_precheck_picard_angle    - Angle used in picard precheck method
+
+# gmres
+-ksp_gmres_restart 200 #<restart>    - the number of Krylov directions to orthogonalize against
+#   -ksp_gmres_haptol <tol> - sets the tolerance for "happy ending" (exact convergence)
+#   -ksp_gmres_preallocate  - preallocate all the Krylov search directions initially (otherwise groups of vectors are allocated as needed)
+#   -ksp_gmres_classicalgramschmidt - use classical (unmodified) Gram-Schmidt to orthogonalize against the Krylov space (fast) (the default)
+#   -ksp_gmres_modifiedgramschmidt  - use modified Gram-Schmidt in the orthogonalization (more stable, but slower)
+#   -ksp_gmres_cgs_refinement_type <never,ifneeded,always>  - determine if iterative refinement is used to increase the stability of the classical Gram-Schmidt orthogonalization.
+#   -ksp_gmres_krylov_monitor   - plot the Krylov space generated
+# fgmres
+#   -ksp_gmres_restart <restart>    - the number of Krylov directions to orthogonalize against
+#   -ksp_gmres_haptol <tol> - sets the tolerance for "happy ending" (exact convergence)
+#   -ksp_gmres_preallocate  - preallocate all the Krylov search directions initially (otherwise groups of vectors are allocated as needed)
+#   -ksp_gmres_classicalgramschmidt - use classical (unmodified) Gram-Schmidt to orthogonalize against the Krylov space (fast) (the default)
+#   -ksp_gmres_modifiedgramschmidt  - use modified Gram-Schmidt in the orthogonalization (more stable, but slower)
+#   -ksp_gmres_cgs_refinement_type <never,ifneeded,always>  - determine if iterative refinement is used to increase the stability of the classical Gram-Schmidt orthogonalization.
+#   -ksp_gmres_krylov_monitor   - plot the Krylov space generated
+#   -ksp_fgmres_modifypcnochange    - do not change the preconditioner between iterations
+#   -ksp_fgmres_modifypcksp - modify the preconditioner using KSPFGMRESModifyPCKSP()
+
+# mg 
+-pc_mg_cycles v #<v>: v or w (PCMGSetCycleType())  - . 
+-pc_mg_smoothup 2 #<1>: Number of post-smoothing steps (PCMGSetNumberSmoothUp)
+-pc_mg_smoothdown 2 #<1>: Number of pre    - smoothing steps (PCMGSetNumberSmoothDown)
+-pc_mg_type  multiplicative #: (one of) additive multiplicative full kascade -
+
+# hypre
+-pc_hypre_type boomeramg # - One of pilut, parasails, boomeramg, ams, ads
+#   Too many others to list, run with   - pc_type hypre -pc_hypre_type XXX -help to see options for the XXX preconditioner
+#
+#
+# KSP option
+-ksp_type preonly #gmres #fgmres #cg #preonly #gmres
+-pc_type lu #asm #hybre #lu #asm
+#-pc_asm_blocks  #<blks>   - Sets total blocks
+-pc_asm_overlap 2 #<ovl>   - Sets overlap
+-pc_asm_type  restrict #[basic,restrict,interpolate,none]  - Sets ASM type
+-pc_factor_mat_solver_package superlu_dist #<stype> - petsc, superlu, superlu_dist, mumps, cusparse
+
+#-ksp_cg_symmetric    #- Indicates symmetric matrix
+-sub_ksp_type preonly #gmres #preonly #gmres
+-sub_ksp_max_it 10    #- maximum number of linear iterations
+#-sub_ksp_monitor_true_residual #<optional filename>    - print residual norm at each iteration
+-sub_pc_type lu 
+-sub_pc_factor_mat_solver_package superlu_dist #<stype> - petsc, superlu, superlu_dist, mumps, cusparse
+#-sub_pc_factor_levels 1
+
+#
+-ksp_max_it 100    #- maximum number of linear iterations
+-ksp_rtol 1e-6      #- relative tolerance used in default determination of convergence, i.e. if residual norm decreases by this factor than convergence is declared
+-ksp_atol 1e-10     #- absolute tolerance used in default convergence test, i.e. if residual norm is less than this then convergence is declared
+-ksp_converged_reason #-print reason for converged or diverged, also prints number of iterations 
+#   -ksp_divtol tol - if residual norm increases by this factor than divergence is declared
+#   -ksp_converged_use_initial_residual_norm    - see KSPConvergedDefaultSetUIRNorm()
+#   -ksp_converged_use_min_initial_residual_norm    - see KSPConvergedDefaultSetUMIRNorm()
+#-ksp_norm_type unpreconditioned #<none,preconditioned,unpreconditioned,natural> #- none - skip norms used in convergence tests (useful only when not using convergence test (say you always want to run with 5 iterations) to save on communication overhead preconditioned - default for left preconditioning unpreconditioned - see KSPSetNormType() natural - see KSPSetNormType()
+#   -ksp_check_norm_iteration it    - do not compute residual norm until iteration number it (does compute at 0th iteration) works only for PCBCGS, PCIBCGS and and PCCG
+#   -ksp_lag_norm   - compute the norm of the residual for the ith iteration on the i+1 iteration; this means that one can use the norm of the residual for convergence test WITHOUT an extra MPI_Allreduce() limiting global synchronizations. This will require 1 more iteration of the solver than usual.
+#   -ksp_fischer_guess <model,size> - uses the Fischer initial guess generator for repeated linear solves
+#   -ksp_constant_null_space    - assume the operator (matrix) has the constant vector in its null space
+#   -ksp_test_null_space    - tests the null space set with MatSetNullSpace() to see if it truly is a null space
+#   -ksp_knoll  - compute initial guess by applying the preconditioner to the right hand side
+#   -ksp_monitor_cancel - cancel all previous convergene monitor routines set
+#-ksp_monitor #<optional filename>    - print residual norm at each iteration
+#-ksp_monitor_true_residual #<optional filename>    - print residual norm at each iteration
+#   -ksp_monitor_lg_residualnorm    - plot residual norm at each iteration
+#   -ksp_monitor_solution [ascii binary or draw][:filename][:format option] - plot solution at each iteration
+#   -ksp_monitor_singular_value - monitor extreme singular values at each iteration
