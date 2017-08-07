@@ -206,12 +206,12 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
        }else
        {
            std::string prefixdir("./results/");
-           std::shared_ptr<File> u_hist = std::make_shared<File>(prefixdir+ "u_hist.pvd");
-           std::shared_ptr<File> r_hist = std::make_shared<File>(prefixdir+ "r_hist.pvd");
-           std::shared_ptr<File> rc_hist = std::make_shared<File>(prefixdir+ "rc_hist.pvd");
-           std::shared_ptr<File> bad_dof = std::make_shared<File>(prefixdir+ "bad_dof_hist.pvd");
-           std::shared_ptr<File> bad_cell = std::make_shared<File>(prefixdir+ "bad_cell_hist.pvd");
-           std::shared_ptr<File> bad_cell_ov = std::make_shared<File>(prefixdir+ "bad_ov_hist.pvd");
+           std::shared_ptr<File> u_hist = std::make_shared<File>(prefixdir+ "u/u_hist.pvd");
+           std::shared_ptr<File> r_hist = std::make_shared<File>(prefixdir+ "r/r_hist.pvd");
+           std::shared_ptr<File> rc_hist = std::make_shared<File>(prefixdir+ "rc/rc_hist.pvd");
+           std::shared_ptr<File> bad_dof = std::make_shared<File>(prefixdir+ "dof/bad_dof_hist.pvd");
+           std::shared_ptr<File> bad_cell = std::make_shared<File>(prefixdir+ "celldof/bad_cell_hist.pvd");
+           std::shared_ptr<File> bad_cell_ov = std::make_shared<File>(prefixdir+ "ovdof/bad_ov_hist.pvd");
            info("begin snes solve with nonlinear elimination");
            Parameters para_coarse = parameters("snes_solver");
            para_coarse["absolute_tolerance"] = (double)(parameters["NL_atol"]);
@@ -313,11 +313,13 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    norm_res0 = norm_res_c;
                    accept=true;
                    if(iter < 10)
-                       info("elimination at the first 10 steps");
+                       info("elimination at the first 10 steps %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                           norm_res_c,norm_res);
                    else if(!accept)
-                       info("elimination since last not accept");
+                       info("elimination since last not accept %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                           norm_res_c,norm_res);
                    else
-                       info("Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                       info("elimination Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
                            norm_res_c,norm_res);
                }
                else
@@ -635,7 +637,7 @@ void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::save_coarse(std
     std::vector<double> value;
     value.resize(bad_dofs.size(),1);
     u.vector()->zero();
-    u.vector()->set(value.data(), bad_dofs.size(),bad_dofs.data());
+    u.vector()->set_local(value.data(), bad_dofs.size(),bad_dofs.data());
     u.vector()->apply("insert");
     *file_badnode << u;
 
