@@ -118,7 +118,8 @@ int main(int argc, char** argv)
     //solve(F == 0, u, bcs, J, para);
     Timer t2("Inital Nonlinear Problem"); info("Initial Nonlinear Problem");
     t2.start();
-    NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J, forms._obj);
+    //NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J, forms._obj);
+    NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
     t2.stop();
 
     Timer t3("Initial Nonlinear Solver"); info("Initial Nonlinear Solver");
