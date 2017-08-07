@@ -5,7 +5,7 @@
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
         <parameter key="NL_res_r"               type="double"   value="9e-1" />
         <parameter key="NL_infty_r"               type="double"   value="9.0e-1" />
-        <parameter key="NL_size_r"               type="double"   value="1.0e-1" />
+        <parameter key="NL_size_r"               type="double"   value="0.0e-1" />
         <parameter key="NL_atol"               type="double"   value="1e-6" />
         <parameter key="NL_rtol"               type="double"   value="1e-1" />
         <parameter key="NL_maximum_iterations"  type="int"   value="30" />

@@ -1,0 +1,23 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+#ml restore my-conf
+module load intel/16.0.3 impi/5.1.3.210 petsc/3.7.6 zlib/1.2.8 
+
+
+export PROJECT=/projects/shgo7817
+export EIGEN3_ROOT=${PROJECT}/include/eigen3
+export BOOST_ROOT=$PETSC_DIR
+export PYTHONPATH=${PROJECT}/lib/python2.7/site-packages:$PYTHONPATH
+
+
+source /projects/shgo7817/share/dolfin/dolfin.conf
+
+
+
+
+

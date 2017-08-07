@@ -122,5 +122,5 @@ L_vms = sqrt((sigma[1,1]**2 +sigma[2,2]**2+sigma[0,0]**2\
     +3*(sigma_i[1,2]**2+sigma_i[1,0]**2+sigma_i[2,0]**2)))*q*dx(1)
 
 elements = [VecCG, DG]
-forms = [Jac, Res, Mass_vms, L_vms]
+forms = [Phi, Jac, Res, Mass_vms, L_vms]
 

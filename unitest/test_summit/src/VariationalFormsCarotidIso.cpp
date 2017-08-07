@@ -116,6 +116,7 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
             _V = std::make_shared<HyperElasticityCarotidIso::Form_Res::TestSpace>(_mesh);
             _u = std::make_shared<Function>(_V);
             _F = std::make_shared<HyperElasticityCarotidIso::Form_Res>(_V);
+            _obj = std::make_shared<HyperElasticityCarotidIso::Form_Pi>(_mesh);
             dolfin_assert(_F);
             _J = std::make_shared<HyperElasticityCarotidIso::Form_Jac>(_V, _V);
             _VMS = std::make_shared<HyperElasticityCarotidIso::Form_L_vms::TestSpace>(_mesh);
@@ -173,6 +174,9 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
     _F->set_some_coefficients(coef_list);
     _F->ds = reference_to_no_delete_pointer(boundary_mark);
     _F->dx = reference_to_no_delete_pointer(sub_domains_mark);
+    _obj->set_some_coefficients(coef_list);
+    _obj->ds = reference_to_no_delete_pointer(boundary_mark);
+    _obj->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _J->set_some_coefficients(coef_list);
     _J->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _L->set_some_coefficients(coef_list);

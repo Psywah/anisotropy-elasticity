@@ -19832,11 +19832,467 @@ hyperelasticitycarotidiso_cell_integral_0_otherwise::~hyperelasticitycarotidiso_
 
 const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_0_otherwise::enabled_coefficients() const
 {
-static const std::vector<bool> enabled({true, true, true, true});
+static const std::vector<bool> enabled({true, true, false, true, true, true});
 return enabled;
 }
 
 void hyperelasticitycarotidiso_cell_integral_0_otherwise::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 12
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE15_C0_D001_Q14[1][14][7] =
+        { { { 1.0, 1.0, 2.0, 0.0, -2.000000000000002, -2.0, 0.0 },
+            { 1.0, 1.0, 0.0, 2.000000000000009, -2.000000000000001, 0.0, -2.000000000000001 },
+            { 1.0, -1.0, 2.000000000000003, 2.000000000000006, 0.0, -1.999999999999999, -1.999999999999998 },
+            { -1.0, -1.0, 0.0, 2.000000000000005, 1.999999999999999, 0.0, -2.000000000000002 },
+            { -1.0, -1.0, 2.000000000000005, 0.0, 1.999999999999999, -2.000000000000002, 0.0 },
+            { -1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+            { 0.5978929390991835, -0.5978929390991861, 0.4021070609008202, 2.793678817297555, 0.0, -0.402107060900818, -2.793678817297546 },
+            { -1.793678817297546, -0.5978929390991861, 0.4021070609008201, 0.4021070609008222, 2.391571756396729, -0.4021070609008185, -0.4021070609008175 },
+            { 0.5978929390991836, 1.793678817297544, 0.4021070609008153, 0.402107060900826, -2.39157175639673, -0.4021070609008163, -0.4021070609008194 },
+            { 0.5978929390991834, -0.5978929390991863, 2.79367881729755, 0.4021070609008223, 0.0, -2.793678817297547, -0.4021070609008178 },
+            { -0.2574914939727679, 0.2574914939727652, 1.25749149397277, 0.2275255180817003, 0.0, -1.257491493972769, -0.2275255180816939 },
+            { 0.772474481918307, 0.2574914939727656, 1.257491493972769, 1.257491493972775, -1.029965975891076, -1.257491493972768, -1.257491493972768 },
+            { -0.2574914939727679, -0.7724744819183106, 1.257491493972772, 1.257491493972775, 1.029965975891074, -1.257491493972769, -1.257491493972769 },
+            { -0.2574914939727683, 0.2574914939727655, 0.2275255180816932, 1.257491493972775, 0.0, -0.2275255180816933, -1.25749149397277 } } };
+    alignas(32) static const double FE15_C0_D010_Q14[1][14][7] =
+        { { { 1.0, 1.0, 2.000000000000002, 0.0, -2.000000000000001, -2.000000000000001, 0.0 },
+            { 1.0, -1.0, 2.000000000000003, 2.000000000000004, -2.000000000000002, 0.0, -2.0 },
+            { 1.0, 1.0, 0.0, 2.000000000000007, 0.0, -2.000000000000004, -1.999999999999998 },
+            { -1.0, -1.0, 0.0, 2.000000000000008, 0.0, 1.999999999999997, -2.000000000000002 },
+            { -1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+            { -1.0, -1.0, 2.000000000000002, 0.0, -2.000000000000001, 2.0, 0.0 },
+            { 0.5978929390991842, -0.5978929390991845, 0.4021070609008187, 2.793678817297554, -0.4021070609008185, 0.0, -2.793678817297547 },
+            { -1.793678817297546, -0.5978929390991848, 0.4021070609008187, 0.4021070609008225, -0.4021070609008185, 2.391571756396729, -0.402107060900818 },
+            { 0.5978929390991847, -0.5978929390991838, 2.793678817297549, 0.4021070609008207, -2.793678817297548, 0.0, -0.4021070609008185 },
+            { 0.5978929390991841, 1.793678817297543, 0.402107060900819, 0.4021070609008253, -0.4021070609008185, -2.39157175639673, -0.4021070609008197 },
+            { -0.2574914939727678, 0.2574914939727657, 1.25749149397277, 0.2275255180816988, -1.25749149397277, 0.0, -0.2275255180816941 },
+            { 0.7724744819183076, 0.2574914939727661, 1.25749149397277, 1.257491493972774, -1.25749149397277, -1.029965975891076, -1.257491493972769 },
+            { -0.2574914939727673, 0.2574914939727654, 0.2275255180816944, 1.257491493972776, -0.2275255180816943, 0.0, -1.25749149397277 },
+            { -0.2574914939727672, -0.7724744819183081, 1.25749149397277, 1.257491493972773, -1.25749149397277, 1.029965975891074, -1.257491493972769 } } };
+    alignas(32) static const double FE15_C0_D100_Q14[1][14][7] =
+        { { { 1.0, -1.0, 2.000000000000002, 2.000000000000001, -2.000000000000002, -2.000000000000002, 0.0 },
+            { 1.0, 1.0, 2.000000000000003, 0.0, -2.000000000000002, 0.0, -1.999999999999996 },
+            { 1.0, 1.0, 0.0, 2.000000000000002, 0.0, -2.000000000000002, -2.000000000000003 },
+            { -1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+            { -1.0, -1.0, 0.0, 2.000000000000003, 0.0, -2.000000000000004, 2.000000000000001 },
+            { -1.0, -1.0, 2.000000000000002, 0.0, -2.000000000000002, 0.0, 1.999999999999996 },
+            { 0.5978929390991843, 1.793678817297546, 0.4021070609008183, 0.4021070609008181, -0.4021070609008182, -0.4021070609008184, -2.391571756396731 },
+            { -1.793678817297545, -0.5978929390991818, 0.4021070609008187, 0.4021070609008185, -0.4021070609008186, -0.4021070609008188, 2.391571756396727 },
+            { 0.5978929390991843, -0.5978929390991823, 2.79367881729755, 0.4021070609008178, -2.793678817297549, -0.4021070609008179, 0.0 },
+            { 0.5978929390991838, -0.5978929390991845, 0.4021070609008183, 2.793678817297549, -0.4021070609008183, -2.79367881729755, 0.0 },
+            { -0.2574914939727669, -0.7724744819183068, 1.25749149397277, 1.25749149397277, -1.25749149397277, -1.25749149397277, 1.029965975891074 },
+            { 0.7724744819183075, 0.2574914939727674, 1.25749149397277, 1.25749149397277, -1.25749149397277, -1.25749149397277, -1.029965975891075 },
+            { -0.2574914939727676, 0.2574914939727681, 0.2275255180816942, 1.25749149397277, -0.2275255180816941, -1.25749149397277, 0.0 },
+            { -0.2574914939727683, 0.2574914939727673, 1.25749149397277, 0.2275255180816939, -1.25749149397277, -0.2275255180816939, 0.0 } } };
+    alignas(32) static const double FE15_C0_Q14[1][14][10] =
+        { { { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 },
+            { -0.08031550417191763, 0.2771604624527405, -0.08031550417191768, -0.0803155041719177, 0.04042252210657349, 0.2808394945810975, 0.2808394945810974, 0.04042252210657362, 0.04042252210657341, 0.2808394945810972 },
+            { 0.2771604624527406, -0.08031550417191766, -0.08031550417191771, -0.08031550417191771, 0.04042252210657353, 0.04042252210657352, 0.04042252210657354, 0.2808394945810975, 0.2808394945810973, 0.2808394945810972 },
+            { -0.08031550417191761, -0.0803155041719177, -0.08031550417191774, 0.2771604624527406, 0.2808394945810973, 0.2808394945810974, 0.04042252210657356, 0.2808394945810972, 0.04042252210657342, 0.04042252210657358 },
+            { -0.08031550417191761, -0.08031550417191767, 0.2771604624527405, -0.08031550417191773, 0.2808394945810974, 0.04042252210657359, 0.2808394945810974, 0.04042252210657361, 0.2808394945810971, 0.04042252210657359 },
+            { -0.1167122663164589, -0.05041039684813044, -0.1167122663164589, -0.116712266316459, 0.3953212143534665, 0.07152785091236927, 0.07152785091236925, 0.3953212143534666, 0.3953212143534665, 0.07152785091236932 },
+            { -0.05041039684813041, -0.1167122663164589, -0.1167122663164588, -0.1167122663164589, 0.3953212143534665, 0.3953212143534666, 0.3953212143534665, 0.07152785091236935, 0.07152785091236906, 0.07152785091236935 },
+            { -0.1167122663164588, -0.1167122663164589, -0.1167122663164588, -0.05041039684813049, 0.07152785091236927, 0.07152785091236931, 0.3953212143534665, 0.07152785091236935, 0.3953212143534663, 0.3953212143534666 },
+            { -0.1167122663164589, -0.1167122663164589, -0.05041039684813052, -0.1167122663164589, 0.0715278509123693, 0.3953212143534665, 0.07152785091236932, 0.3953212143534665, 0.07152785091236921, 0.3953212143534665 } } };
+    alignas(32) static const double FE25_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    // Unstructured piecewise computations
+    const double J_c4 = coordinate_dofs[1] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE25_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE25_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[44];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = sp[2] / sp[13];
+    sp[15] = J_c3 * (-1 * J_c8);
+    sp[16] = sp[4] + sp[15];
+    sp[17] = sp[16] / sp[13];
+    sp[18] = sp[11] / sp[13];
+    sp[19] = J_c2 * J_c7;
+    sp[20] = J_c8 * (-1 * J_c1);
+    sp[21] = sp[19] + sp[20];
+    sp[22] = sp[21] / sp[13];
+    sp[23] = J_c0 * J_c8;
+    sp[24] = J_c6 * (-1 * J_c2);
+    sp[25] = sp[23] + sp[24];
+    sp[26] = sp[25] / sp[13];
+    sp[27] = J_c1 * J_c6;
+    sp[28] = J_c0 * J_c7;
+    sp[29] = sp[27] + -1 * sp[28];
+    sp[30] = sp[29] / sp[13];
+    sp[31] = J_c1 * J_c5;
+    sp[32] = J_c2 * J_c4;
+    sp[33] = sp[31] + -1 * sp[32];
+    sp[34] = sp[33] / sp[13];
+    sp[35] = J_c2 * J_c3;
+    sp[36] = J_c0 * J_c5;
+    sp[37] = sp[35] + -1 * sp[36];
+    sp[38] = sp[37] / sp[13];
+    sp[39] = J_c0 * J_c4;
+    sp[40] = J_c1 * J_c3;
+    sp[41] = sp[39] + -1 * sp[40];
+    sp[42] = sp[41] / sp[13];
+    sp[43] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        const double w0_d0_c0 = w[0][0] * FE15_C0_D100_Q14[0][iq][0] + w[0][1] * FE15_C0_D100_Q14[0][iq][1] + w[0][5] * FE15_C0_D100_Q14[0][iq][2] + w[0][6] * FE15_C0_D100_Q14[0][iq][3] + w[0][7] * FE15_C0_D100_Q14[0][iq][4] + w[0][8] * FE15_C0_D100_Q14[0][iq][5] + w[0][9] * FE15_C0_D100_Q14[0][iq][6];
+        const double w0_d1_c0 = w[0][0] * FE15_C0_D010_Q14[0][iq][0] + w[0][2] * FE15_C0_D010_Q14[0][iq][1] + w[0][4] * FE15_C0_D010_Q14[0][iq][2] + w[0][6] * FE15_C0_D010_Q14[0][iq][3] + w[0][7] * FE15_C0_D010_Q14[0][iq][4] + w[0][8] * FE15_C0_D010_Q14[0][iq][5] + w[0][9] * FE15_C0_D010_Q14[0][iq][6];
+        const double w0_d2_c0 = w[0][0] * FE15_C0_D001_Q14[0][iq][0] + w[0][3] * FE15_C0_D001_Q14[0][iq][1] + w[0][4] * FE15_C0_D001_Q14[0][iq][2] + w[0][5] * FE15_C0_D001_Q14[0][iq][3] + w[0][7] * FE15_C0_D001_Q14[0][iq][4] + w[0][8] * FE15_C0_D001_Q14[0][iq][5] + w[0][9] * FE15_C0_D001_Q14[0][iq][6];
+        const double w0_d0_c1 = w[0][10] * FE15_C0_D100_Q14[0][iq][0] + w[0][11] * FE15_C0_D100_Q14[0][iq][1] + w[0][15] * FE15_C0_D100_Q14[0][iq][2] + w[0][16] * FE15_C0_D100_Q14[0][iq][3] + w[0][17] * FE15_C0_D100_Q14[0][iq][4] + w[0][18] * FE15_C0_D100_Q14[0][iq][5] + w[0][19] * FE15_C0_D100_Q14[0][iq][6];
+        const double w0_d1_c1 = w[0][10] * FE15_C0_D010_Q14[0][iq][0] + w[0][12] * FE15_C0_D010_Q14[0][iq][1] + w[0][14] * FE15_C0_D010_Q14[0][iq][2] + w[0][16] * FE15_C0_D010_Q14[0][iq][3] + w[0][17] * FE15_C0_D010_Q14[0][iq][4] + w[0][18] * FE15_C0_D010_Q14[0][iq][5] + w[0][19] * FE15_C0_D010_Q14[0][iq][6];
+        const double w0_d2_c1 = w[0][10] * FE15_C0_D001_Q14[0][iq][0] + w[0][13] * FE15_C0_D001_Q14[0][iq][1] + w[0][14] * FE15_C0_D001_Q14[0][iq][2] + w[0][15] * FE15_C0_D001_Q14[0][iq][3] + w[0][17] * FE15_C0_D001_Q14[0][iq][4] + w[0][18] * FE15_C0_D001_Q14[0][iq][5] + w[0][19] * FE15_C0_D001_Q14[0][iq][6];
+        const double w0_d0_c2 = w[0][20] * FE15_C0_D100_Q14[0][iq][0] + w[0][21] * FE15_C0_D100_Q14[0][iq][1] + w[0][25] * FE15_C0_D100_Q14[0][iq][2] + w[0][26] * FE15_C0_D100_Q14[0][iq][3] + w[0][27] * FE15_C0_D100_Q14[0][iq][4] + w[0][28] * FE15_C0_D100_Q14[0][iq][5] + w[0][29] * FE15_C0_D100_Q14[0][iq][6];
+        const double w0_d1_c2 = w[0][20] * FE15_C0_D010_Q14[0][iq][0] + w[0][22] * FE15_C0_D010_Q14[0][iq][1] + w[0][24] * FE15_C0_D010_Q14[0][iq][2] + w[0][26] * FE15_C0_D010_Q14[0][iq][3] + w[0][27] * FE15_C0_D010_Q14[0][iq][4] + w[0][28] * FE15_C0_D010_Q14[0][iq][5] + w[0][29] * FE15_C0_D010_Q14[0][iq][6];
+        const double w0_d2_c2 = w[0][20] * FE15_C0_D001_Q14[0][iq][0] + w[0][23] * FE15_C0_D001_Q14[0][iq][1] + w[0][24] * FE15_C0_D001_Q14[0][iq][2] + w[0][25] * FE15_C0_D001_Q14[0][iq][3] + w[0][27] * FE15_C0_D001_Q14[0][iq][4] + w[0][28] * FE15_C0_D001_Q14[0][iq][5] + w[0][29] * FE15_C0_D001_Q14[0][iq][6];
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c0 += w[0][ic] * FE15_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c1 += w[0][ic + 10] * FE15_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c2 += w[0][ic + 20] * FE15_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[104];
+        sv14[0] = w0_d0_c0 * sp[14];
+        sv14[1] = w0_d1_c0 * sp[17];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_d2_c0 * sp[18];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = (1 + sv14[4]) * (1 + sv14[4]);
+        sv14[6] = w0_d0_c1 * sp[14];
+        sv14[7] = w0_d1_c1 * sp[17];
+        sv14[8] = sv14[6] + sv14[7];
+        sv14[9] = w0_d2_c1 * sp[18];
+        sv14[10] = sv14[8] + sv14[9];
+        sv14[11] = sv14[10] * sv14[10];
+        sv14[12] = sv14[5] + sv14[11];
+        sv14[13] = w0_d0_c2 * sp[14];
+        sv14[14] = w0_d1_c2 * sp[17];
+        sv14[15] = sv14[13] + sv14[14];
+        sv14[16] = w0_d2_c2 * sp[18];
+        sv14[17] = sv14[15] + sv14[16];
+        sv14[18] = sv14[17] * sv14[17];
+        sv14[19] = sv14[12] + sv14[18];
+        sv14[20] = w0_d0_c1 * sp[22];
+        sv14[21] = w0_d1_c1 * sp[26];
+        sv14[22] = sv14[20] + sv14[21];
+        sv14[23] = w0_d2_c1 * sp[30];
+        sv14[24] = sv14[22] + sv14[23];
+        sv14[25] = (1 + sv14[24]) * (1 + sv14[24]);
+        sv14[26] = w0_d0_c0 * sp[22];
+        sv14[27] = w0_d1_c0 * sp[26];
+        sv14[28] = sv14[26] + sv14[27];
+        sv14[29] = w0_d2_c0 * sp[30];
+        sv14[30] = sv14[28] + sv14[29];
+        sv14[31] = sv14[30] * sv14[30];
+        sv14[32] = sv14[25] + sv14[31];
+        sv14[33] = w0_d0_c2 * sp[22];
+        sv14[34] = w0_d1_c2 * sp[26];
+        sv14[35] = sv14[33] + sv14[34];
+        sv14[36] = w0_d2_c2 * sp[30];
+        sv14[37] = sv14[35] + sv14[36];
+        sv14[38] = sv14[37] * sv14[37];
+        sv14[39] = sv14[32] + sv14[38];
+        sv14[40] = sv14[19] + sv14[39];
+        sv14[41] = w0_d0_c0 * sp[34];
+        sv14[42] = w0_d1_c0 * sp[38];
+        sv14[43] = sv14[41] + sv14[42];
+        sv14[44] = w0_d2_c0 * sp[42];
+        sv14[45] = sv14[43] + sv14[44];
+        sv14[46] = sv14[45] * sv14[45];
+        sv14[47] = w0_d0_c1 * sp[34];
+        sv14[48] = w0_d1_c1 * sp[38];
+        sv14[49] = sv14[47] + sv14[48];
+        sv14[50] = w0_d2_c1 * sp[42];
+        sv14[51] = sv14[49] + sv14[50];
+        sv14[52] = sv14[51] * sv14[51];
+        sv14[53] = sv14[46] + sv14[52];
+        sv14[54] = w0_d0_c2 * sp[34];
+        sv14[55] = w0_d1_c2 * sp[38];
+        sv14[56] = sv14[54] + sv14[55];
+        sv14[57] = w0_d2_c2 * sp[42];
+        sv14[58] = sv14[56] + sv14[57];
+        sv14[59] = (1 + sv14[58]) * (1 + sv14[58]);
+        sv14[60] = sv14[53] + sv14[59];
+        sv14[61] = sv14[40] + sv14[60];
+        sv14[62] = sv14[60] * sv14[39];
+        sv14[63] = (1 + sv14[24]) * sv14[51];
+        sv14[64] = sv14[45] * sv14[30];
+        sv14[65] = sv14[63] + sv14[64];
+        sv14[66] = (1 + sv14[58]) * sv14[37];
+        sv14[67] = sv14[65] + sv14[66];
+        sv14[68] = sv14[67] * sv14[67];
+        sv14[69] = sv14[62] + -1 * sv14[68];
+        sv14[70] = sv14[19] * sv14[69];
+        sv14[71] = (1 + sv14[24]) * sv14[10];
+        sv14[72] = (1 + sv14[4]) * sv14[30];
+        sv14[73] = sv14[71] + sv14[72];
+        sv14[74] = sv14[17] * sv14[37];
+        sv14[75] = sv14[73] + sv14[74];
+        sv14[76] = (1 + sv14[4]) * sv14[45];
+        sv14[77] = sv14[51] * sv14[10];
+        sv14[78] = sv14[76] + sv14[77];
+        sv14[79] = (1 + sv14[58]) * sv14[17];
+        sv14[80] = sv14[78] + sv14[79];
+        sv14[81] = sv14[80] * sv14[67];
+        sv14[82] = sv14[60] * sv14[75];
+        sv14[83] = sv14[81] + -1 * sv14[82];
+        sv14[84] = sv14[75] * sv14[83];
+        sv14[85] = sv14[70] + sv14[84];
+        sv14[86] = sv14[67] * sv14[75];
+        sv14[87] = sv14[80] * sv14[39];
+        sv14[88] = sv14[86] + -1 * sv14[87];
+        sv14[89] = sv14[80] * sv14[88];
+        sv14[90] = sv14[85] + sv14[89];
+        sv14[91] = sv14[61] / std::pow(sv14[90], 0.3333333333333333);
+        sv14[92] = (-3.0 + sv14[91]) * w[3][0];
+        sv14[93] = std::pow(sv14[90], w[5][0]);
+        sv14[94] = 1.0 / sv14[93] + sv14[93];
+        sv14[95] = (-2.0 + sv14[94]) * w[4][0];
+        sv14[96] = sv14[92] + sv14[95];
+        sv14[97] = w0_c0 * w[1][0];
+        sv14[98] = w0_c1 * w[1][1];
+        sv14[99] = sv14[97] + sv14[98];
+        sv14[100] = w0_c2 * w[1][2];
+        sv14[101] = sv14[99] + sv14[100];
+        sv14[102] = sv14[96] + -1 * sv14[101];
+        sv14[103] = sv14[102] * sp[43];
+        const double fw0 = sv14[103] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitycarotidiso_exterior_facet_integral_0_3::hyperelasticitycarotidiso_exterior_facet_integral_0_3() : ufc::exterior_facet_integral()
+{
+
+}
+
+hyperelasticitycarotidiso_exterior_facet_integral_0_3::~hyperelasticitycarotidiso_exterior_facet_integral_0_3()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitycarotidiso_exterior_facet_integral_0_3::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, false, true, false, false, false});
+return enabled;
+}
+
+void hyperelasticitycarotidiso_exterior_facet_integral_0_3::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    std::size_t facet,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 2
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights6[6] = { 0.054975871827661, 0.054975871827661, 0.054975871827661, 0.1116907948390055, 0.1116907948390055, 0.1116907948390055 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE16_C0_D001_F_Q6[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE6_C0_F_Q6[4][6][10] =
+        { { { 0.0, -0.07480380774819603, 0.5176323419876735, -0.07480380774819671, 0.2992152309927871, 0.03354481152314839, 0.299215230992784, 0.0, 0.0, 0.0 },
+            { 0.0, -0.07480380774819607, -0.0748038077481967, 0.5176323419876735, 0.299215230992787, 0.2992152309927841, 0.0335448115231484, 0.0, 0.0, 0.0 },
+            { 0.0, 0.5176323419876714, -0.0748038077481966, -0.07480380774819667, 0.0335448115231487, 0.2992152309927867, 0.2992152309927867, 0.0, 0.0, 0.0 },
+            { 0.0, -0.04820837781551193, -0.08473049309397783, -0.04820837781551192, 0.1928335112620478, 0.7954802262009063, 0.1928335112620478, 0.0, 0.0, 0.0 },
+            { 0.0, -0.04820837781551193, -0.04820837781551179, -0.08473049309397787, 0.1928335112620478, 0.192833511262048, 0.7954802262009061, 0.0, 0.0, 0.0 },
+            { 0.0, -0.08473049309397782, -0.04820837781551193, -0.04820837781551199, 0.7954802262009062, 0.192833511262048, 0.1928335112620478, 0.0, 0.0, 0.0 } },
+          { { -0.07480380774819598, 0.0, 0.5176323419876735, -0.07480380774819671, 0.2992152309927871, 0.0, 0.0, 0.03354481152314846, 0.2992152309927838, 0.0 },
+            { -0.07480380774819598, 0.0, -0.07480380774819673, 0.5176323419876735, 0.299215230992787, 0.0, 0.0, 0.299215230992784, 0.0335448115231483, 0.0 },
+            { 0.5176323419876713, 0.0, -0.07480380774819667, -0.0748038077481967, 0.03354481152314873, 0.0, 0.0, 0.2992152309927867, 0.2992152309927867, 0.0 },
+            { -0.04820837781551188, 0.0, -0.08473049309397787, -0.048208377815512, 0.1928335112620479, 0.0, 0.0, 0.7954802262009062, 0.1928335112620478, 0.0 },
+            { -0.0482083778155119, 0.0, -0.04820837781551199, -0.0847304930939779, 0.1928335112620479, 0.0, 0.0, 0.192833511262048, 0.7954802262009062, 0.0 },
+            { -0.0847304930939778, 0.0, -0.04820837781551197, -0.04820837781551202, 0.7954802262009062, 0.0, 0.0, 0.192833511262048, 0.1928335112620478, 0.0 } },
+          { { -0.07480380774819595, 0.5176323419876734, 0.0, -0.07480380774819667, 0.0, 0.2992152309927871, 0.0, 0.03354481152314845, 0.0, 0.2992152309927838 },
+            { -0.07480380774819601, -0.07480380774819666, 0.0, 0.5176323419876735, 0.0, 0.2992152309927871, 0.0, 0.2992152309927839, 0.0, 0.03354481152314839 },
+            { 0.5176323419876713, -0.07480380774819663, 0.0, -0.0748038077481967, 0.0, 0.03354481152314868, 0.0, 0.2992152309927868, 0.0, 0.2992152309927867 },
+            { -0.0482083778155119, -0.08473049309397784, 0.0, -0.04820837781551197, 0.0, 0.1928335112620479, 0.0, 0.7954802262009063, 0.0, 0.1928335112620479 },
+            { -0.04820837781551187, -0.04820837781551189, 0.0, -0.08473049309397787, 0.0, 0.1928335112620478, 0.0, 0.192833511262048, 0.0, 0.7954802262009062 },
+            { -0.08473049309397783, -0.04820837781551194, 0.0, -0.0482083778155119, 0.0, 0.7954802262009063, 0.0, 0.192833511262048, 0.0, 0.1928335112620479 } },
+          { { -0.07480380774819596, 0.5176323419876736, -0.07480380774819662, 0.0, 0.0, 0.0, 0.2992152309927871, 0.0, 0.03354481152314816, 0.2992152309927838 },
+            { -0.07480380774819598, -0.07480380774819663, 0.5176323419876736, 0.0, 0.0, 0.0, 0.2992152309927871, 0.0, 0.2992152309927838, 0.03354481152314835 },
+            { 0.5176323419876714, -0.0748038077481966, -0.07480380774819664, 0.0, 0.0, 0.0, 0.03354481152314867, 0.0, 0.2992152309927867, 0.2992152309927867 },
+            { -0.04820837781551188, -0.08473049309397777, -0.04820837781551191, 0.0, 0.0, 0.0, 0.1928335112620479, 0.0, 0.7954802262009061, 0.1928335112620479 },
+            { -0.04820837781551187, -0.04820837781551188, -0.08473049309397783, 0.0, 0.0, 0.0, 0.1928335112620479, 0.0, 0.1928335112620478, 0.7954802262009062 },
+            { -0.08473049309397776, -0.04820837781551189, -0.04820837781551179, 0.0, 0.0, 0.0, 0.7954802262009062, 0.0, 0.1928335112620476, 0.192833511262048 } } };
+    // Unstructured piecewise computations
+    const double J_c3 = coordinate_dofs[1] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[4] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c4 = coordinate_dofs[1] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[7] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[10] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[5] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[8] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[11] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[3] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[6] * FE16_C0_D001_F_Q6[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE16_C0_D001_F_Q6[0][0][0] + coordinate_dofs[9] * FE16_C0_D001_F_Q6[0][0][1];
+    alignas(32) double sp[45];
+    sp[0] = tetrahedron_reference_facet_jacobian[facet][0][0] * J_c3;
+    sp[1] = tetrahedron_reference_facet_jacobian[facet][1][0] * J_c4;
+    sp[2] = sp[0] + sp[1];
+    sp[3] = J_c5 * tetrahedron_reference_facet_jacobian[facet][2][0];
+    sp[4] = sp[2] + sp[3];
+    sp[5] = tetrahedron_reference_facet_jacobian[facet][0][1] * J_c6;
+    sp[6] = tetrahedron_reference_facet_jacobian[facet][1][1] * J_c7;
+    sp[7] = sp[5] + sp[6];
+    sp[8] = tetrahedron_reference_facet_jacobian[facet][2][1] * J_c8;
+    sp[9] = sp[7] + sp[8];
+    sp[10] = sp[4] * sp[9];
+    sp[11] = tetrahedron_reference_facet_jacobian[facet][0][1] * J_c3;
+    sp[12] = J_c4 * tetrahedron_reference_facet_jacobian[facet][1][1];
+    sp[13] = sp[11] + sp[12];
+    sp[14] = J_c5 * tetrahedron_reference_facet_jacobian[facet][2][1];
+    sp[15] = sp[13] + sp[14];
+    sp[16] = tetrahedron_reference_facet_jacobian[facet][0][0] * J_c6;
+    sp[17] = tetrahedron_reference_facet_jacobian[facet][1][0] * J_c7;
+    sp[18] = sp[16] + sp[17];
+    sp[19] = tetrahedron_reference_facet_jacobian[facet][2][0] * J_c8;
+    sp[20] = sp[18] + sp[19];
+    sp[21] = sp[15] * sp[20];
+    sp[22] = sp[10] + -1 * sp[21];
+    sp[23] = sp[22] * sp[22];
+    sp[24] = J_c0 * tetrahedron_reference_facet_jacobian[facet][0][1];
+    sp[25] = J_c1 * tetrahedron_reference_facet_jacobian[facet][1][1];
+    sp[26] = sp[24] + sp[25];
+    sp[27] = J_c2 * tetrahedron_reference_facet_jacobian[facet][2][1];
+    sp[28] = sp[26] + sp[27];
+    sp[29] = sp[28] * sp[20];
+    sp[30] = J_c0 * tetrahedron_reference_facet_jacobian[facet][0][0];
+    sp[31] = J_c1 * tetrahedron_reference_facet_jacobian[facet][1][0];
+    sp[32] = sp[30] + sp[31];
+    sp[33] = J_c2 * tetrahedron_reference_facet_jacobian[facet][2][0];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = sp[34] * sp[9];
+    sp[36] = sp[29] + -1 * sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[23] + sp[37];
+    sp[39] = sp[34] * sp[15];
+    sp[40] = sp[4] * sp[28];
+    sp[41] = sp[39] + -1 * sp[40];
+    sp[42] = sp[41] * sp[41];
+    sp[43] = sp[38] + sp[42];
+    sp[44] = std::sqrt(sp[43]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 6; ++iq)
+    {
+        // Quadrature loop body setup (num_points=6)
+        // Unstructured varying computations for num_points=6
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c0 += w[0][ic] * FE6_C0_F_Q6[facet][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c1 += w[0][ic + 10] * FE6_C0_F_Q6[facet][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 10; ++ic)
+            w0_c2 += w[0][ic + 20] * FE6_C0_F_Q6[facet][iq][ic];
+        alignas(32) double sv6[6];
+        sv6[0] = w0_c0 * w[2][0];
+        sv6[1] = w0_c1 * w[2][1];
+        sv6[2] = sv6[0] + sv6[1];
+        sv6[3] = w0_c2 * w[2][2];
+        sv6[4] = sv6[2] + sv6[3];
+        sv6[5] = -1 * sv6[4] * sp[44];
+        const double fw0 = sv6[5] * weights6[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitycarotidiso_cell_integral_1_otherwise::hyperelasticitycarotidiso_cell_integral_1_otherwise() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitycarotidiso_cell_integral_1_otherwise::~hyperelasticitycarotidiso_cell_integral_1_otherwise()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_1_otherwise::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, true, true, true});
+return enabled;
+}
+
+void hyperelasticitycarotidiso_cell_integral_1_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -25847,23 +26303,23 @@ void hyperelasticitycarotidiso_cell_integral_0_otherwise::tabulate_tensor(double
 }
 
 
-hyperelasticitycarotidiso_cell_integral_1_otherwise::hyperelasticitycarotidiso_cell_integral_1_otherwise() : ufc::cell_integral()
+hyperelasticitycarotidiso_cell_integral_2_otherwise::hyperelasticitycarotidiso_cell_integral_2_otherwise() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitycarotidiso_cell_integral_1_otherwise::~hyperelasticitycarotidiso_cell_integral_1_otherwise()
+hyperelasticitycarotidiso_cell_integral_2_otherwise::~hyperelasticitycarotidiso_cell_integral_2_otherwise()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_1_otherwise::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_2_otherwise::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, false, true, true, true});
 return enabled;
 }
 
-void hyperelasticitycarotidiso_cell_integral_1_otherwise::tabulate_tensor(double * A,
+void hyperelasticitycarotidiso_cell_integral_2_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -26751,23 +27207,23 @@ void hyperelasticitycarotidiso_cell_integral_1_otherwise::tabulate_tensor(double
 }
 
 
-hyperelasticitycarotidiso_exterior_facet_integral_1_3::hyperelasticitycarotidiso_exterior_facet_integral_1_3() : ufc::exterior_facet_integral()
+hyperelasticitycarotidiso_exterior_facet_integral_2_3::hyperelasticitycarotidiso_exterior_facet_integral_2_3() : ufc::exterior_facet_integral()
 {
 
 }
 
-hyperelasticitycarotidiso_exterior_facet_integral_1_3::~hyperelasticitycarotidiso_exterior_facet_integral_1_3()
+hyperelasticitycarotidiso_exterior_facet_integral_2_3::~hyperelasticitycarotidiso_exterior_facet_integral_2_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitycarotidiso_exterior_facet_integral_1_3::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitycarotidiso_exterior_facet_integral_2_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({false, false, true, false, false, false});
 return enabled;
 }
 
-void hyperelasticitycarotidiso_exterior_facet_integral_1_3::tabulate_tensor(double * A,
+void hyperelasticitycarotidiso_exterior_facet_integral_2_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     std::size_t facet,
@@ -26894,23 +27350,23 @@ void hyperelasticitycarotidiso_exterior_facet_integral_1_3::tabulate_tensor(doub
 }
 
 
-hyperelasticitycarotidiso_cell_integral_2_otherwise::hyperelasticitycarotidiso_cell_integral_2_otherwise() : ufc::cell_integral()
+hyperelasticitycarotidiso_cell_integral_3_otherwise::hyperelasticitycarotidiso_cell_integral_3_otherwise() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitycarotidiso_cell_integral_2_otherwise::~hyperelasticitycarotidiso_cell_integral_2_otherwise()
+hyperelasticitycarotidiso_cell_integral_3_otherwise::~hyperelasticitycarotidiso_cell_integral_3_otherwise()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_2_otherwise::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_3_otherwise::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({});
 return enabled;
 }
 
-void hyperelasticitycarotidiso_cell_integral_2_otherwise::tabulate_tensor(double * A,
+void hyperelasticitycarotidiso_cell_integral_3_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -26984,23 +27440,23 @@ void hyperelasticitycarotidiso_cell_integral_2_otherwise::tabulate_tensor(double
 }
 
 
-hyperelasticitycarotidiso_cell_integral_3_otherwise::hyperelasticitycarotidiso_cell_integral_3_otherwise() : ufc::cell_integral()
+hyperelasticitycarotidiso_cell_integral_4_otherwise::hyperelasticitycarotidiso_cell_integral_4_otherwise() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitycarotidiso_cell_integral_3_otherwise::~hyperelasticitycarotidiso_cell_integral_3_otherwise()
+hyperelasticitycarotidiso_cell_integral_4_otherwise::~hyperelasticitycarotidiso_cell_integral_4_otherwise()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_3_otherwise::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitycarotidiso_cell_integral_4_otherwise::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true});
 return enabled;
 }
 
-void hyperelasticitycarotidiso_cell_integral_3_otherwise::tabulate_tensor(double * A,
+void hyperelasticitycarotidiso_cell_integral_4_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -27489,26 +27945,26 @@ hyperelasticitycarotidiso_form_0::~hyperelasticitycarotidiso_form_0()
 
 const char * hyperelasticitycarotidiso_form_0::signature() const
 {
-    return "8b050161c30290bcd3925edbcfe372cee96ac24f27a62f3f16fc4d77e8a29a2de833dd59b4abef432ac8947c4ecc0b4511f3dc0b60176352c64b513138d77ae3";
+    return "291207fb455ee0882d1ec6a005b4caa5dcdd229c1fa7fc85c8280bbadfca3aae9458976e8ad3b094c34ec9340ba0ef149b55d1f38adb79f420ea88cca6440fc9";
 }
 
 std::size_t hyperelasticitycarotidiso_form_0::rank() const
 {
-    return 2;
+    return 0;
 }
 
 std::size_t hyperelasticitycarotidiso_form_0::num_coefficients() const
 {
-    return 4;
+    return 6;
 }
 
 std::size_t hyperelasticitycarotidiso_form_0::original_coefficient_position(std::size_t i) const
 {
-    if (i >= 4)
+    if (i >= 6)
     {
         throw std::runtime_error("Invalid original coefficient index.");
     }
-    static const std::vector<std::size_t> position = {0, 3, 4, 5};
+    static const std::vector<std::size_t> position = {0, 1, 2, 3, 4, 5};
     return position[i];
 }
 
@@ -27534,9 +27990,9 @@ ufc::finite_element * hyperelasticitycarotidiso_form_0::create_finite_element(st
     case 0:
         return new hyperelasticitycarotidiso_finite_element_3();
     case 1:
-        return new hyperelasticitycarotidiso_finite_element_3();
+        return new hyperelasticitycarotidiso_finite_element_1();
     case 2:
-        return new hyperelasticitycarotidiso_finite_element_3();
+        return new hyperelasticitycarotidiso_finite_element_1();
     case 3:
         return new hyperelasticitycarotidiso_finite_element_0();
     case 4:
@@ -27555,9 +28011,9 @@ ufc::dofmap * hyperelasticitycarotidiso_form_0::create_dofmap(std::size_t i) con
     case 0:
         return new hyperelasticitycarotidiso_dofmap_3();
     case 1:
-        return new hyperelasticitycarotidiso_dofmap_3();
+        return new hyperelasticitycarotidiso_dofmap_1();
     case 2:
-        return new hyperelasticitycarotidiso_dofmap_3();
+        return new hyperelasticitycarotidiso_dofmap_1();
     case 3:
         return new hyperelasticitycarotidiso_dofmap_0();
     case 4:
@@ -27576,7 +28032,7 @@ std::size_t hyperelasticitycarotidiso_form_0::max_cell_subdomain_id() const
 
 std::size_t hyperelasticitycarotidiso_form_0::max_exterior_facet_subdomain_id() const
 {
-    return 0;
+    return 4;
 }
 
 std::size_t hyperelasticitycarotidiso_form_0::max_interior_facet_subdomain_id() const
@@ -27616,7 +28072,7 @@ bool hyperelasticitycarotidiso_form_0::has_cell_integrals() const
 
 bool hyperelasticitycarotidiso_form_0::has_exterior_facet_integrals() const
 {
-    return false;
+    return true;
 }
 
 bool hyperelasticitycarotidiso_form_0::has_interior_facet_integrals() const
@@ -27656,7 +28112,13 @@ ufc::cell_integral * hyperelasticitycarotidiso_form_0::create_cell_integral(std:
 
 ufc::exterior_facet_integral * hyperelasticitycarotidiso_form_0::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
-    return nullptr;
+    switch (subdomain_id)
+    {
+    case 3:
+        return new hyperelasticitycarotidiso_exterior_facet_integral_0_3();
+    default:
+        return nullptr;
+    }
 }
 
 ufc::interior_facet_integral * hyperelasticitycarotidiso_form_0::create_interior_facet_integral(std::size_t subdomain_id) const
@@ -27742,26 +28204,26 @@ hyperelasticitycarotidiso_form_1::~hyperelasticitycarotidiso_form_1()
 
 const char * hyperelasticitycarotidiso_form_1::signature() const
 {
-    return "fff03174266b7d2da0147b437c4a2a1087f8578d5493b176f7361cafe8010d49f699fca08ff49b389a123669029faec2d57d1dff49e1f8ebad03fa7489d210ae";
+    return "8b050161c30290bcd3925edbcfe372cee96ac24f27a62f3f16fc4d77e8a29a2de833dd59b4abef432ac8947c4ecc0b4511f3dc0b60176352c64b513138d77ae3";
 }
 
 std::size_t hyperelasticitycarotidiso_form_1::rank() const
 {
-    return 1;
+    return 2;
 }
 
 std::size_t hyperelasticitycarotidiso_form_1::num_coefficients() const
 {
-    return 6;
+    return 4;
 }
 
 std::size_t hyperelasticitycarotidiso_form_1::original_coefficient_position(std::size_t i) const
 {
-    if (i >= 6)
+    if (i >= 4)
     {
         throw std::runtime_error("Invalid original coefficient index.");
     }
-    static const std::vector<std::size_t> position = {0, 1, 2, 3, 4, 5};
+    static const std::vector<std::size_t> position = {0, 3, 4, 5};
     return position[i];
 }
 
@@ -27789,14 +28251,12 @@ ufc::finite_element * hyperelasticitycarotidiso_form_1::create_finite_element(st
     case 1:
         return new hyperelasticitycarotidiso_finite_element_3();
     case 2:
-        return new hyperelasticitycarotidiso_finite_element_1();
+        return new hyperelasticitycarotidiso_finite_element_3();
     case 3:
-        return new hyperelasticitycarotidiso_finite_element_1();
+        return new hyperelasticitycarotidiso_finite_element_0();
     case 4:
         return new hyperelasticitycarotidiso_finite_element_0();
     case 5:
-        return new hyperelasticitycarotidiso_finite_element_0();
-    case 6:
         return new hyperelasticitycarotidiso_finite_element_0();
     default:
         return nullptr;
@@ -27812,14 +28272,12 @@ ufc::dofmap * hyperelasticitycarotidiso_form_1::create_dofmap(std::size_t i) con
     case 1:
         return new hyperelasticitycarotidiso_dofmap_3();
     case 2:
-        return new hyperelasticitycarotidiso_dofmap_1();
+        return new hyperelasticitycarotidiso_dofmap_3();
     case 3:
-        return new hyperelasticitycarotidiso_dofmap_1();
+        return new hyperelasticitycarotidiso_dofmap_0();
     case 4:
         return new hyperelasticitycarotidiso_dofmap_0();
     case 5:
-        return new hyperelasticitycarotidiso_dofmap_0();
-    case 6:
         return new hyperelasticitycarotidiso_dofmap_0();
     default:
         return nullptr;
@@ -27833,7 +28291,7 @@ std::size_t hyperelasticitycarotidiso_form_1::max_cell_subdomain_id() const
 
 std::size_t hyperelasticitycarotidiso_form_1::max_exterior_facet_subdomain_id() const
 {
-    return 4;
+    return 0;
 }
 
 std::size_t hyperelasticitycarotidiso_form_1::max_interior_facet_subdomain_id() const
@@ -27873,7 +28331,7 @@ bool hyperelasticitycarotidiso_form_1::has_cell_integrals() const
 
 bool hyperelasticitycarotidiso_form_1::has_exterior_facet_integrals() const
 {
-    return true;
+    return false;
 }
 
 bool hyperelasticitycarotidiso_form_1::has_interior_facet_integrals() const
@@ -27913,13 +28371,7 @@ ufc::cell_integral * hyperelasticitycarotidiso_form_1::create_cell_integral(std:
 
 ufc::exterior_facet_integral * hyperelasticitycarotidiso_form_1::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
-    switch (subdomain_id)
-    {
-    case 3:
-        return new hyperelasticitycarotidiso_exterior_facet_integral_1_3();
-    default:
-        return nullptr;
-    }
+    return nullptr;
 }
 
 ufc::interior_facet_integral * hyperelasticitycarotidiso_form_1::create_interior_facet_integral(std::size_t subdomain_id) const
@@ -28005,23 +28457,27 @@ hyperelasticitycarotidiso_form_2::~hyperelasticitycarotidiso_form_2()
 
 const char * hyperelasticitycarotidiso_form_2::signature() const
 {
-    return "104035fa1c66a91e444c7311dbeee4d2c48625ff0632f237e2a16f21116b4eaa0711a8b99aa5406543ef5f8a2fc3c8f6ebc6dc81377f2044934a65ffdb234090";
+    return "fff03174266b7d2da0147b437c4a2a1087f8578d5493b176f7361cafe8010d49f699fca08ff49b389a123669029faec2d57d1dff49e1f8ebad03fa7489d210ae";
 }
 
 std::size_t hyperelasticitycarotidiso_form_2::rank() const
 {
-    return 2;
+    return 1;
 }
 
 std::size_t hyperelasticitycarotidiso_form_2::num_coefficients() const
 {
-    return 0;
+    return 6;
 }
 
 std::size_t hyperelasticitycarotidiso_form_2::original_coefficient_position(std::size_t i) const
 {
-    throw std::runtime_error("Invalid original coefficient index.");
-    return i;
+    if (i >= 6)
+    {
+        throw std::runtime_error("Invalid original coefficient index.");
+    }
+    static const std::vector<std::size_t> position = {0, 1, 2, 3, 4, 5};
+    return position[i];
 }
 
 ufc::finite_element * hyperelasticitycarotidiso_form_2::create_coordinate_finite_element() const
@@ -28044,9 +28500,19 @@ ufc::finite_element * hyperelasticitycarotidiso_form_2::create_finite_element(st
     switch (i)
     {
     case 0:
-        return new hyperelasticitycarotidiso_finite_element_4();
+        return new hyperelasticitycarotidiso_finite_element_3();
     case 1:
-        return new hyperelasticitycarotidiso_finite_element_4();
+        return new hyperelasticitycarotidiso_finite_element_3();
+    case 2:
+        return new hyperelasticitycarotidiso_finite_element_1();
+    case 3:
+        return new hyperelasticitycarotidiso_finite_element_1();
+    case 4:
+        return new hyperelasticitycarotidiso_finite_element_0();
+    case 5:
+        return new hyperelasticitycarotidiso_finite_element_0();
+    case 6:
+        return new hyperelasticitycarotidiso_finite_element_0();
     default:
         return nullptr;
     }
@@ -28057,9 +28523,19 @@ ufc::dofmap * hyperelasticitycarotidiso_form_2::create_dofmap(std::size_t i) con
     switch (i)
     {
     case 0:
-        return new hyperelasticitycarotidiso_dofmap_4();
+        return new hyperelasticitycarotidiso_dofmap_3();
     case 1:
-        return new hyperelasticitycarotidiso_dofmap_4();
+        return new hyperelasticitycarotidiso_dofmap_3();
+    case 2:
+        return new hyperelasticitycarotidiso_dofmap_1();
+    case 3:
+        return new hyperelasticitycarotidiso_dofmap_1();
+    case 4:
+        return new hyperelasticitycarotidiso_dofmap_0();
+    case 5:
+        return new hyperelasticitycarotidiso_dofmap_0();
+    case 6:
+        return new hyperelasticitycarotidiso_dofmap_0();
     default:
         return nullptr;
     }
@@ -28072,7 +28548,7 @@ std::size_t hyperelasticitycarotidiso_form_2::max_cell_subdomain_id() const
 
 std::size_t hyperelasticitycarotidiso_form_2::max_exterior_facet_subdomain_id() const
 {
-    return 0;
+    return 4;
 }
 
 std::size_t hyperelasticitycarotidiso_form_2::max_interior_facet_subdomain_id() const
@@ -28112,7 +28588,7 @@ bool hyperelasticitycarotidiso_form_2::has_cell_integrals() const
 
 bool hyperelasticitycarotidiso_form_2::has_exterior_facet_integrals() const
 {
-    return false;
+    return true;
 }
 
 bool hyperelasticitycarotidiso_form_2::has_interior_facet_integrals() const
@@ -28152,7 +28628,13 @@ ufc::cell_integral * hyperelasticitycarotidiso_form_2::create_cell_integral(std:
 
 ufc::exterior_facet_integral * hyperelasticitycarotidiso_form_2::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
-    return nullptr;
+    switch (subdomain_id)
+    {
+    case 3:
+        return new hyperelasticitycarotidiso_exterior_facet_integral_2_3();
+    default:
+        return nullptr;
+    }
 }
 
 ufc::interior_facet_integral * hyperelasticitycarotidiso_form_2::create_interior_facet_integral(std::size_t subdomain_id) const
@@ -28238,27 +28720,23 @@ hyperelasticitycarotidiso_form_3::~hyperelasticitycarotidiso_form_3()
 
 const char * hyperelasticitycarotidiso_form_3::signature() const
 {
-    return "4add83c698c8abf262329c35b871dc41c22ba75fc5d8e7c348d2c177e9a9a7998db8282d0fc40f936876cf5b8b7f596fb180ab782050d95ae9ff27c3a4c5d671";
+    return "104035fa1c66a91e444c7311dbeee4d2c48625ff0632f237e2a16f21116b4eaa0711a8b99aa5406543ef5f8a2fc3c8f6ebc6dc81377f2044934a65ffdb234090";
 }
 
 std::size_t hyperelasticitycarotidiso_form_3::rank() const
 {
-    return 1;
+    return 2;
 }
 
 std::size_t hyperelasticitycarotidiso_form_3::num_coefficients() const
 {
-    return 4;
+    return 0;
 }
 
 std::size_t hyperelasticitycarotidiso_form_3::original_coefficient_position(std::size_t i) const
 {
-    if (i >= 4)
-    {
-        throw std::runtime_error("Invalid original coefficient index.");
-    }
-    static const std::vector<std::size_t> position = {0, 1, 2, 3};
-    return position[i];
+    throw std::runtime_error("Invalid original coefficient index.");
+    return i;
 }
 
 ufc::finite_element * hyperelasticitycarotidiso_form_3::create_coordinate_finite_element() const
@@ -28283,13 +28761,7 @@ ufc::finite_element * hyperelasticitycarotidiso_form_3::create_finite_element(st
     case 0:
         return new hyperelasticitycarotidiso_finite_element_4();
     case 1:
-        return new hyperelasticitycarotidiso_finite_element_3();
-    case 2:
-        return new hyperelasticitycarotidiso_finite_element_0();
-    case 3:
-        return new hyperelasticitycarotidiso_finite_element_0();
-    case 4:
-        return new hyperelasticitycarotidiso_finite_element_0();
+        return new hyperelasticitycarotidiso_finite_element_4();
     default:
         return nullptr;
     }
@@ -28302,13 +28774,7 @@ ufc::dofmap * hyperelasticitycarotidiso_form_3::create_dofmap(std::size_t i) con
     case 0:
         return new hyperelasticitycarotidiso_dofmap_4();
     case 1:
-        return new hyperelasticitycarotidiso_dofmap_3();
-    case 2:
-        return new hyperelasticitycarotidiso_dofmap_0();
-    case 3:
-        return new hyperelasticitycarotidiso_dofmap_0();
-    case 4:
-        return new hyperelasticitycarotidiso_dofmap_0();
+        return new hyperelasticitycarotidiso_dofmap_4();
     default:
         return nullptr;
     }
@@ -28470,6 +28936,255 @@ ufc::interface_integral * hyperelasticitycarotidiso_form_3::create_default_inter
 }
 
 ufc::overlap_integral * hyperelasticitycarotidiso_form_3::create_default_overlap_integral() const
+{
+    return nullptr;
+}
+
+
+hyperelasticitycarotidiso_form_4::hyperelasticitycarotidiso_form_4() : ufc::form()
+{
+    // Do nothing
+}
+
+hyperelasticitycarotidiso_form_4::~hyperelasticitycarotidiso_form_4()
+{
+    // Do nothing
+}
+
+const char * hyperelasticitycarotidiso_form_4::signature() const
+{
+    return "4add83c698c8abf262329c35b871dc41c22ba75fc5d8e7c348d2c177e9a9a7998db8282d0fc40f936876cf5b8b7f596fb180ab782050d95ae9ff27c3a4c5d671";
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::rank() const
+{
+    return 1;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::num_coefficients() const
+{
+    return 4;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::original_coefficient_position(std::size_t i) const
+{
+    if (i >= 4)
+    {
+        throw std::runtime_error("Invalid original coefficient index.");
+    }
+    static const std::vector<std::size_t> position = {0, 1, 2, 3};
+    return position[i];
+}
+
+ufc::finite_element * hyperelasticitycarotidiso_form_4::create_coordinate_finite_element() const
+{
+    return new hyperelasticitycarotidiso_finite_element_5();
+}
+
+ufc::dofmap * hyperelasticitycarotidiso_form_4::create_coordinate_dofmap() const
+{
+    return new hyperelasticitycarotidiso_dofmap_5();
+}
+
+ufc::coordinate_mapping * hyperelasticitycarotidiso_form_4::create_coordinate_mapping() const
+{
+    return new hyperelasticitycarotidiso_coordinate_mapping_5();
+}
+
+ufc::finite_element * hyperelasticitycarotidiso_form_4::create_finite_element(std::size_t i) const
+{
+    switch (i)
+    {
+    case 0:
+        return new hyperelasticitycarotidiso_finite_element_4();
+    case 1:
+        return new hyperelasticitycarotidiso_finite_element_3();
+    case 2:
+        return new hyperelasticitycarotidiso_finite_element_0();
+    case 3:
+        return new hyperelasticitycarotidiso_finite_element_0();
+    case 4:
+        return new hyperelasticitycarotidiso_finite_element_0();
+    default:
+        return nullptr;
+    }
+}
+
+ufc::dofmap * hyperelasticitycarotidiso_form_4::create_dofmap(std::size_t i) const
+{
+    switch (i)
+    {
+    case 0:
+        return new hyperelasticitycarotidiso_dofmap_4();
+    case 1:
+        return new hyperelasticitycarotidiso_dofmap_3();
+    case 2:
+        return new hyperelasticitycarotidiso_dofmap_0();
+    case 3:
+        return new hyperelasticitycarotidiso_dofmap_0();
+    case 4:
+        return new hyperelasticitycarotidiso_dofmap_0();
+    default:
+        return nullptr;
+    }
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_cell_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_exterior_facet_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_interior_facet_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_vertex_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_custom_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_cutcell_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_interface_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitycarotidiso_form_4::max_overlap_subdomain_id() const
+{
+    return 0;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_cell_integrals() const
+{
+    return true;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_exterior_facet_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_interior_facet_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_vertex_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_custom_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_cutcell_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_interface_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitycarotidiso_form_4::has_overlap_integrals() const
+{
+    return false;
+}
+
+ufc::cell_integral * hyperelasticitycarotidiso_form_4::create_cell_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::exterior_facet_integral * hyperelasticitycarotidiso_form_4::create_exterior_facet_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::interior_facet_integral * hyperelasticitycarotidiso_form_4::create_interior_facet_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::vertex_integral * hyperelasticitycarotidiso_form_4::create_vertex_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::custom_integral * hyperelasticitycarotidiso_form_4::create_custom_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::cutcell_integral * hyperelasticitycarotidiso_form_4::create_cutcell_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::interface_integral * hyperelasticitycarotidiso_form_4::create_interface_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::overlap_integral * hyperelasticitycarotidiso_form_4::create_overlap_integral(std::size_t subdomain_id) const
+{
+    return nullptr;
+}
+
+ufc::cell_integral * hyperelasticitycarotidiso_form_4::create_default_cell_integral() const
+{
+    return new hyperelasticitycarotidiso_cell_integral_4_otherwise();
+}
+
+ufc::exterior_facet_integral * hyperelasticitycarotidiso_form_4::create_default_exterior_facet_integral() const
+{
+    return nullptr;
+}
+
+ufc::interior_facet_integral * hyperelasticitycarotidiso_form_4::create_default_interior_facet_integral() const
+{
+    return nullptr;
+}
+
+ufc::vertex_integral * hyperelasticitycarotidiso_form_4::create_default_vertex_integral() const
+{
+    return nullptr;
+}
+
+ufc::custom_integral * hyperelasticitycarotidiso_form_4::create_default_custom_integral() const
+{
+    return nullptr;
+}
+
+ufc::cutcell_integral * hyperelasticitycarotidiso_form_4::create_default_cutcell_integral() const
+{
+    return nullptr;
+}
+
+ufc::interface_integral * hyperelasticitycarotidiso_form_4::create_default_interface_integral() const
+{
+    return nullptr;
+}
+
+ufc::overlap_integral * hyperelasticitycarotidiso_form_4::create_default_overlap_integral() const
 {
     return nullptr;
 }

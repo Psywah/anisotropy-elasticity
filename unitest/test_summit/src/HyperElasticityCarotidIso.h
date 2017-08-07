@@ -1165,6 +1165,25 @@ public:
 };
 
 
+class hyperelasticitycarotidiso_exterior_facet_integral_0_3: public ufc::exterior_facet_integral
+{
+public:
+
+  hyperelasticitycarotidiso_exterior_facet_integral_0_3();
+
+  ~hyperelasticitycarotidiso_exterior_facet_integral_0_3() override;
+
+  const std::vector<bool> & enabled_coefficients() const final override;
+
+  void tabulate_tensor(double * A,
+                       const double * const * w,
+                       const double * coordinate_dofs,
+                       std::size_t facet,
+                       int cell_orientation) const final override;
+
+};
+
+
 class hyperelasticitycarotidiso_cell_integral_1_otherwise: public ufc::cell_integral
 {
 public:
@@ -1178,25 +1197,6 @@ public:
   void tabulate_tensor(double * A,
                        const double * const * w,
                        const double * coordinate_dofs,
-                       int cell_orientation) const final override;
-
-};
-
-
-class hyperelasticitycarotidiso_exterior_facet_integral_1_3: public ufc::exterior_facet_integral
-{
-public:
-
-  hyperelasticitycarotidiso_exterior_facet_integral_1_3();
-
-  ~hyperelasticitycarotidiso_exterior_facet_integral_1_3() override;
-
-  const std::vector<bool> & enabled_coefficients() const final override;
-
-  void tabulate_tensor(double * A,
-                       const double * const * w,
-                       const double * coordinate_dofs,
-                       std::size_t facet,
                        int cell_orientation) const final override;
 
 };
@@ -1220,6 +1220,25 @@ public:
 };
 
 
+class hyperelasticitycarotidiso_exterior_facet_integral_2_3: public ufc::exterior_facet_integral
+{
+public:
+
+  hyperelasticitycarotidiso_exterior_facet_integral_2_3();
+
+  ~hyperelasticitycarotidiso_exterior_facet_integral_2_3() override;
+
+  const std::vector<bool> & enabled_coefficients() const final override;
+
+  void tabulate_tensor(double * A,
+                       const double * const * w,
+                       const double * coordinate_dofs,
+                       std::size_t facet,
+                       int cell_orientation) const final override;
+
+};
+
+
 class hyperelasticitycarotidiso_cell_integral_3_otherwise: public ufc::cell_integral
 {
 public:
@@ -1227,6 +1246,24 @@ public:
   hyperelasticitycarotidiso_cell_integral_3_otherwise();
 
   ~hyperelasticitycarotidiso_cell_integral_3_otherwise() override;
+
+  const std::vector<bool> & enabled_coefficients() const final override;
+
+  void tabulate_tensor(double * A,
+                       const double * const * w,
+                       const double * coordinate_dofs,
+                       int cell_orientation) const final override;
+
+};
+
+
+class hyperelasticitycarotidiso_cell_integral_4_otherwise: public ufc::cell_integral
+{
+public:
+
+  hyperelasticitycarotidiso_cell_integral_4_otherwise();
+
+  ~hyperelasticitycarotidiso_cell_integral_4_otherwise() override;
 
   const std::vector<bool> & enabled_coefficients() const final override;
 
@@ -1609,6 +1646,99 @@ public:
 
 };
 
+
+class hyperelasticitycarotidiso_form_4: public ufc::form
+{
+public:
+
+  hyperelasticitycarotidiso_form_4();
+
+  ~hyperelasticitycarotidiso_form_4() override;
+
+  const char * signature() const final override;
+
+  std::size_t rank() const final override;
+
+  std::size_t num_coefficients() const final override;
+
+  std::size_t original_coefficient_position(std::size_t i) const final override;
+
+  ufc::finite_element * create_coordinate_finite_element() const final override;
+
+  ufc::dofmap * create_coordinate_dofmap() const final override;
+
+  ufc::coordinate_mapping * create_coordinate_mapping() const final override;
+
+  ufc::finite_element * create_finite_element(std::size_t i) const final override;
+
+  ufc::dofmap * create_dofmap(std::size_t i) const final override;
+
+  std::size_t max_cell_subdomain_id() const final override;
+
+  std::size_t max_exterior_facet_subdomain_id() const final override;
+
+  std::size_t max_interior_facet_subdomain_id() const final override;
+
+  std::size_t max_vertex_subdomain_id() const final override;
+
+  std::size_t max_custom_subdomain_id() const final override;
+
+  std::size_t max_cutcell_subdomain_id() const final override;
+
+  std::size_t max_interface_subdomain_id() const final override;
+
+  std::size_t max_overlap_subdomain_id() const final override;
+
+  bool has_cell_integrals() const final override;
+
+  bool has_exterior_facet_integrals() const final override;
+
+  bool has_interior_facet_integrals() const final override;
+
+  bool has_vertex_integrals() const final override;
+
+  bool has_custom_integrals() const final override;
+
+  bool has_cutcell_integrals() const final override;
+
+  bool has_interface_integrals() const final override;
+
+  bool has_overlap_integrals() const final override;
+
+  ufc::cell_integral * create_cell_integral(std::size_t i) const final override;
+
+  ufc::exterior_facet_integral * create_exterior_facet_integral(std::size_t i) const final override;
+
+  ufc::interior_facet_integral * create_interior_facet_integral(std::size_t i) const final override;
+
+  ufc::vertex_integral * create_vertex_integral(std::size_t i) const final override;
+
+  ufc::custom_integral * create_custom_integral(std::size_t i) const final override;
+
+  ufc::cutcell_integral * create_cutcell_integral(std::size_t i) const final override;
+
+  ufc::interface_integral * create_interface_integral(std::size_t i) const final override;
+
+  ufc::overlap_integral * create_overlap_integral(std::size_t i) const final override;
+
+  ufc::cell_integral * create_default_cell_integral() const final override;
+
+  ufc::exterior_facet_integral * create_default_exterior_facet_integral() const final override;
+
+  ufc::interior_facet_integral * create_default_interior_facet_integral() const final override;
+
+  ufc::vertex_integral * create_default_vertex_integral() const final override;
+
+  ufc::custom_integral * create_default_custom_integral() const final override;
+
+  ufc::cutcell_integral * create_default_cutcell_integral() const final override;
+
+  ufc::interface_integral * create_default_interface_integral() const final override;
+
+  ufc::overlap_integral * create_default_overlap_integral() const final override;
+
+};
+
 // DOLFIN wrappers
 
 // Standard library includes
@@ -1778,6 +1908,220 @@ public:
 
 };
 
+typedef CoefficientSpace_u Form_Pi_FunctionSpace_0;
+
+typedef CoefficientSpace_B Form_Pi_FunctionSpace_1;
+
+typedef CoefficientSpace_T Form_Pi_FunctionSpace_2;
+
+typedef CoefficientSpace_c1 Form_Pi_FunctionSpace_3;
+
+typedef CoefficientSpace_epsilon1 Form_Pi_FunctionSpace_4;
+
+typedef CoefficientSpace_epsilon2 Form_Pi_FunctionSpace_5;
+
+class Form_Pi: public dolfin::Form
+{
+public:
+
+  // Constructor
+  Form_Pi(std::shared_ptr<const dolfin::Mesh> mesh):
+    dolfin::Form(0, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  {
+    _mesh = mesh;
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_0>();
+  }
+
+  // Constructor
+  Form_Pi(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
+    dolfin::Form(0, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  {
+    _mesh = mesh;
+    this->u = u;
+    this->B = B;
+    this->T = T;
+    this->c1 = c1;
+    this->epsilon1 = epsilon1;
+    this->epsilon2 = epsilon2;
+
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_0>();
+  }
+
+  // Destructor
+  ~Form_Pi()
+  {}
+
+  /// Return the number of the coefficient with this name
+  virtual std::size_t coefficient_number(const std::string& name) const
+  {
+    if (name == "u")
+      return 0;
+    else if (name == "B")
+      return 1;
+    else if (name == "T")
+      return 2;
+    else if (name == "c1")
+      return 3;
+    else if (name == "epsilon1")
+      return 4;
+    else if (name == "epsilon2")
+      return 5;
+
+    dolfin::dolfin_error("generated code for class Form",
+                         "access coefficient data",
+                         "Invalid coefficient");
+    return 0;
+  }
+
+  /// Return the name of the coefficient with this number
+  virtual std::string coefficient_name(std::size_t i) const
+  {
+    switch (i)
+    {
+    case 0:
+      return "u";
+    case 1:
+      return "B";
+    case 2:
+      return "T";
+    case 3:
+      return "c1";
+    case 4:
+      return "epsilon1";
+    case 5:
+      return "epsilon2";
+    }
+
+    dolfin::dolfin_error("generated code for class Form",
+                         "access coefficient data",
+                         "Invalid coefficient");
+    return "unnamed";
+  }
+
+  // Typedefs
+  typedef Form_Pi_FunctionSpace_0 CoefficientSpace_u;
+  typedef Form_Pi_FunctionSpace_1 CoefficientSpace_B;
+  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_T;
+  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_c1;
+  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon1;
+  typedef Form_Pi_FunctionSpace_5 CoefficientSpace_epsilon2;
+
+  // Coefficients
+  dolfin::CoefficientAssigner u;
+  dolfin::CoefficientAssigner B;
+  dolfin::CoefficientAssigner T;
+  dolfin::CoefficientAssigner c1;
+  dolfin::CoefficientAssigner epsilon1;
+  dolfin::CoefficientAssigner epsilon2;
+};
+
+class MultiMeshForm_Pi: public dolfin::MultiMeshForm
+{
+public:
+
+  // Constructor
+  MultiMeshForm_Pi(std::shared_ptr<const dolfin::MultiMesh> mesh):
+    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  {
+    // Creating a form for each part of the mesh
+    for (std::size_t i=0; i< mesh->num_parts(); i++)
+    {
+      std::shared_ptr<dolfin::Form> a(new Form_Pi(mesh->part(i)));       add(a);    }
+    // Build multimesh form
+    build();
+
+    /// Assign coefficients
+
+  }
+
+  // Constructor
+  MultiMeshForm_Pi(std::shared_ptr<const dolfin::MultiMesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
+    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  {
+    // Creating a form for each part of the mesh
+    for (std::size_t i=0; i< mesh->num_parts(); i++)
+    {
+      std::shared_ptr<dolfin::Form> a(new Form_Pi(mesh->part(i)));       add(a);    }
+    // Build multimesh form
+    build();
+
+    /// Assign coefficients    this->u = u;
+    this->B = B;
+    this->T = T;
+    this->c1 = c1;
+    this->epsilon1 = epsilon1;
+    this->epsilon2 = epsilon2;
+
+  }
+
+  // Destructor
+  ~MultiMeshForm_Pi()
+  {}
+
+  /// Return the number of the coefficient with this name
+  virtual std::size_t coefficient_number(const std::string& name) const
+  {
+    if (name == "u")
+      return 0;
+    else if (name == "B")
+      return 1;
+    else if (name == "T")
+      return 2;
+    else if (name == "c1")
+      return 3;
+    else if (name == "epsilon1")
+      return 4;
+    else if (name == "epsilon2")
+      return 5;
+
+    dolfin::dolfin_error("generated code for class Form",
+                         "access coefficient data",
+                         "Invalid coefficient");
+    return 0;
+  }
+
+  /// Return the name of the coefficient with this number
+  virtual std::string coefficient_name(std::size_t i) const
+  {
+    switch (i)
+    {
+    case 0:
+      return "u";
+    case 1:
+      return "B";
+    case 2:
+      return "T";
+    case 3:
+      return "c1";
+    case 4:
+      return "epsilon1";
+    case 5:
+      return "epsilon2";
+    }
+
+    dolfin::dolfin_error("generated code for class Form",
+                         "access coefficient data",
+                         "Invalid coefficient");
+    return "unnamed";
+  }
+
+  // Typedefs
+  typedef Form_Pi_FunctionSpace_0 CoefficientSpace_u;
+  typedef Form_Pi_FunctionSpace_1 CoefficientSpace_B;
+  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_T;
+  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_c1;
+  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon1;
+  typedef Form_Pi_FunctionSpace_5 CoefficientSpace_epsilon2;
+
+  // Coefficients
+  dolfin::MultiMeshCoefficientAssigner u;
+  dolfin::MultiMeshCoefficientAssigner B;
+  dolfin::MultiMeshCoefficientAssigner T;
+  dolfin::MultiMeshCoefficientAssigner c1;
+  dolfin::MultiMeshCoefficientAssigner epsilon1;
+  dolfin::MultiMeshCoefficientAssigner epsilon2;
+};
+
 class Form_Jac_FunctionSpace_0: public dolfin::FunctionSpace
 {
 public:
@@ -1885,7 +2229,7 @@ public:
     _function_spaces[0] = V0;
     _function_spaces[1] = V1;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_0>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_1>();
   }
 
   // Constructor
@@ -1900,7 +2244,7 @@ public:
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_0>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_1>();
   }
 
   // Destructor
@@ -2135,7 +2479,7 @@ public:
   {
     _function_spaces[0] = V0;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_1>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_2>();
   }
 
   // Constructor
@@ -2151,7 +2495,7 @@ public:
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_1>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_2>();
   }
 
   // Destructor
@@ -2441,7 +2785,7 @@ public:
     _function_spaces[0] = V0;
     _function_spaces[1] = V1;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_2>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_3>();
   }
 
   // Destructor
@@ -2595,7 +2939,7 @@ public:
   {
     _function_spaces[0] = V0;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_3>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_4>();
   }
 
   // Constructor
@@ -2609,7 +2953,7 @@ public:
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
 
-    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_3>();
+    _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_4>();
   }
 
   // Destructor
@@ -2774,6 +3118,9 @@ public:
   dolfin::MultiMeshCoefficientAssigner epsilon2;
 };
 
+// Class typedefs
+typedef Form_Pi Functional;
+typedef MultiMeshForm_Pi MultiMeshFunctional;
 
 }
 
