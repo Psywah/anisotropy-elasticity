@@ -139,6 +139,22 @@ NonlinearVariationalProblem::NonlinearVariationalProblem(
   check_forms();
 }
 //-----------------------------------------------------------------------------
+NonlinearVariationalProblem::NonlinearVariationalProblem(
+  std::shared_ptr<const Form> F,
+  std::shared_ptr<Function> u,
+  std::vector<std::shared_ptr<const DirichletBC>> bcs,
+  std::shared_ptr<const Form> J,
+  std::shared_ptr<const Form> obj)
+  : Hierarchical<NonlinearVariationalProblem>(*this), _residual(F), _jacobian(J), _u(u), _obj(obj)
+{
+  // Store boundary conditions
+  for (std::size_t i = 0; i < bcs.size(); ++i)
+    _bcs.push_back(bcs[i]);
+
+  // Check forms
+  check_forms();
+}
+//-----------------------------------------------------------------------------
 void NonlinearVariationalProblem::set_bounds(
   std::shared_ptr<const Function> lb_func,
   std::shared_ptr<const Function> ub_func)
@@ -177,6 +193,11 @@ std::shared_ptr<const Form> NonlinearVariationalProblem::residual_form() const
 std::shared_ptr<const Form> NonlinearVariationalProblem::jacobian_form() const
 {
   return _jacobian;
+}
+//-----------------------------------------------------------------------------
+std::shared_ptr<const Form> NonlinearVariationalProblem::object_form() const
+{
+  return _obj;
 }
 //-----------------------------------------------------------------------------
 std::shared_ptr<Function> NonlinearVariationalProblem::solution()
@@ -226,6 +247,11 @@ NonlinearVariationalProblem::upper_bound() const
 bool NonlinearVariationalProblem::has_jacobian() const
 {
   return _jacobian ?  true : false;
+}
+//-----------------------------------------------------------------------------
+bool NonlinearVariationalProblem::has_object() const
+{
+  return _obj ?  true : false;
 }
 //-----------------------------------------------------------------------------
 bool NonlinearVariationalProblem::has_lower_bound() const

@@ -29,6 +29,7 @@
 #include <dolfin/la/GenericMatrix.h>
 #include <dolfin/function/Function.h>
 #include <dolfin/fem/Assembler.h>
+#include <dolfin/fem/assemble.h>
 #include <dolfin/fem/Form.h>
 #include <dolfin/la/PETScMatrix.h>
 #include <dolfin/la/PETScVector.h>
@@ -226,6 +227,9 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
 
            Function res(u->function_space());
            double norm_res0,norm_res;
+           double obj0,obj;
+           if(_problem->has_object())
+               nonlinear_problem->Object(*res.vector(),obj0, *u->vector());
            nonlinear_problem->F(*res.vector(), *u->vector());
            norm_res0 =res.vector()->norm("l2");
 
@@ -248,12 +252,17 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                *u_hist << *u;
                ++iter;
                converged = std::get<1>(ret);
+               if(_problem->has_object())
+                   nonlinear_problem->Object(*res.vector(),obj, *u->vector());
                nonlinear_problem->F(*res.vector(), *u->vector());
                *r_hist << res ;
                norm_res =res.vector()->norm("l2");
-               info(ANSI_COLOR_MAGENTA "%d iterations " ANSI_COLOR_RESET  "of global nonlinear iteration, last residual:%5.2e, vs current "
-                       ANSI_COLOR_MAGENTA "residual:%5.3e" ANSI_COLOR_RESET,
-                       iter, norm_res0, norm_res);
+               info(ANSI_COLOR_MAGENTA "%d iterations " ANSI_COLOR_RESET  "of global nonlinear iteration:", iter);
+               info("       last residual: %5.2e, vs current " ANSI_COLOR_MAGENTA "residual: %5.3e " ANSI_COLOR_RESET,
+                       norm_res0, norm_res);
+               if(_problem->has_object())
+                   info("       last object: %5.2e, vs current " ANSI_COLOR_MAGENTA "object: %5.3e " ANSI_COLOR_RESET,
+                           obj0, obj);
                if(converged)
                    break;
                begin("Check Nonlinearity.");
@@ -270,6 +279,8 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    info("Reduction of residual " ANSI_COLOR_GREEN "%.2f " ANSI_COLOR_RESET "< rho0(%.2f), No Need for nonlinear elimination",
                            norm_res/norm_res0, rho0);
                    norm_res0 = norm_res;
+                   if(_problem->has_object())
+                       obj0 = obj;
                    nonlinear_coarse_problem->clear_dofs_values();
                    nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
                    *rc_hist << res ;
@@ -289,6 +300,8 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    info("Size of coarse problem %d > %d*%.2f (total_size * rho2), No Need for nonlinear elimination",
                            size_total-size_good, size_total, rho2);
                    norm_res0 = norm_res;
+                   if(_problem->has_object())
+                       obj0 = obj;
                    *rc_hist << res ;
                    end();
                    continue;
@@ -304,35 +317,46 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    nonlinear_coarse_problem->restricted_update(*u->vector(), x_copy);
                }
 
+               double obj_c;
+               if(_problem->has_object())
+                   nonlinear_problem->Object(*res.vector(),obj_c, *u->vector());
                nonlinear_problem->F(*res.vector(), *u->vector());
                *rc_hist << res ;
                double norm_res_c = res.vector()->norm("l2");
 
-               if(iter <10 || !accept || norm_res_c<norm_res)
+               if(_problem->has_object())
                {
                    norm_res0 = norm_res_c;
-                   accept=true;
-                   if(iter < 10)
-                       info("elimination at the first 10 steps %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                           norm_res_c,norm_res);
-                   else if(!accept)
-                       info("elimination since last not accept %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                           norm_res_c,norm_res);
-                   else
-                       info("elimination Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                           norm_res_c,norm_res);
+                   obj0 = obj_c;
+                   info("elimination result: residual %f --> %f , object %f --> %f", norm_res, norm_res_c, obj, obj_c);
                }
-               else
-               {
-                   norm_res0 =norm_res;
-                   *u->vector() = x_copy;
-                   accept = false;
-                   info("Residual norm with correction %f > %f, " ANSI_COLOR_RED "not accept " ANSI_COLOR_RESET "nonlinear elimination",
-                           norm_res_c,norm_res);
+               else{
+                   if(iter <10 || !accept || norm_res_c<norm_res)
+                   {
+                       norm_res0 = norm_res_c;
+                       accept=true;
+                       if(iter < 10)
+                           info("elimination at the first 10 steps %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                                   norm_res_c,norm_res);
+                       else if(!accept)
+                           info("elimination since last not accept %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                                   norm_res_c,norm_res);
+                       else
+                           info("elimination Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
+                                   norm_res_c,norm_res);
+                   }
+                   else
+                   {
+                       norm_res0 =norm_res;
+                       *u->vector() = x_copy;
+                       accept = false;
+                       info("Residual norm with correction %f > %f, " ANSI_COLOR_RED "not accept " ANSI_COLOR_RESET "nonlinear elimination",
+                               norm_res_c,norm_res);
+                   }
                }
                info("Solved Coarse Problem");
                end();
-               
+
            }
        }
 #else
@@ -400,31 +424,44 @@ NonlinearDiscreteProblem::F(GenericVector& b, const GenericVector& x)
 void NonlinearVariationalSolver::
 NonlinearDiscreteProblem::Object(GenericVector& b,double & val,  const GenericVector& x)
 {
-    Timer t("Assemble Residual");
-    // Get problem data
-    dolfin_assert(_problem);
-    std::shared_ptr<const Form> F(_problem->residual_form());
-    std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
-
-    // Assemble right-hand side
-    dolfin_assert(F);
-    Assembler assembler;
-    assembler.assemble(b, *F);
-
-    // Apply boundary conditions
-    for (std::size_t i = 0; i < bcs.size(); i++)
+    if(_problem->has_object())
     {
-        dolfin_assert(bcs[i]);
-        bcs[i]->apply(b, x);
-    }
-    b.apply("insert");
+        Timer t("Assemble Object");
+        // Get problem data
+        dolfin_assert(_problem);
+        std::shared_ptr<const Form> obj(_problem->object_form());
 
-    // Print vector
-    dolfin_assert(_solver);
-    const bool print_rhs = _solver->parameters["print_rhs"];
-    if (print_rhs)
-        info(b, true);
-    val = b.norm("l2");
+        // Assemble right-hand side
+        dolfin_assert(obj);
+        val = dolfin::assemble(*obj);
+    }
+    else{
+        Timer t("Assemble Residual");
+        // Get problem data
+        dolfin_assert(_problem);
+        std::shared_ptr<const Form> F(_problem->residual_form());
+        std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
+
+        // Assemble right-hand side
+        dolfin_assert(F);
+        Assembler assembler;
+        assembler.assemble(b, *F);
+
+        // Apply boundary conditions
+        for (std::size_t i = 0; i < bcs.size(); i++)
+        {
+            dolfin_assert(bcs[i]);
+            bcs[i]->apply(b, x);
+        }
+        b.apply("insert");
+
+        // Print vector
+        dolfin_assert(_solver);
+        const bool print_rhs = _solver->parameters["print_rhs"];
+        if (print_rhs)
+            info(b, true);
+        val = b.norm("l2");
+    }
 }
 //-----------------------------------------------------------------------------
     void
@@ -505,32 +542,45 @@ NonlinearCoarseDiscreteProblem::F(GenericVector& b, const GenericVector& x)
 void NonlinearVariationalSolver::
 NonlinearCoarseDiscreteProblem::Object(GenericVector& b,double & val,  const GenericVector& x)
 {
-    Timer t("Assemble Residual");
-    // Get problem data
-    dolfin_assert(_problem);
-    std::shared_ptr<const Form> F(_problem->residual_form());
-    std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
-
-    // Assemble right-hand side
-    dolfin_assert(F);
-    Assembler assembler;
-    assembler.assemble(b, *F);
-
-    // Apply boundary conditions
-    for (std::size_t i = 0; i < bcs.size(); i++)
+    if(_problem->has_object())
     {
-        dolfin_assert(bcs[i]);
-        bcs[i]->apply(b, x);
-    }
-    b.set(values.data(), values.size(), dirichlet_dofs.data());
-    b.apply("insert");
+        Timer t("Assemble Object");
+        // Get problem data
+        dolfin_assert(_problem);
+        std::shared_ptr<const Form> obj(_problem->object_form());
 
-    // Print vector
-    dolfin_assert(_solver);
-    const bool print_rhs = _solver->parameters["print_rhs"];
-    if (print_rhs)
-        info(b, true);
-    val = b.norm("l2");
+        // Assemble right-hand side
+        dolfin_assert(obj);
+        val = dolfin::assemble(*obj);
+    }
+    else{
+        Timer t("Assemble Residual");
+        // Get problem data
+        dolfin_assert(_problem);
+        std::shared_ptr<const Form> F(_problem->residual_form());
+        std::vector<std::shared_ptr<const DirichletBC>> bcs(_problem->bcs());
+
+        // Assemble right-hand side
+        dolfin_assert(F);
+        Assembler assembler;
+        assembler.assemble(b, *F);
+
+        // Apply boundary conditions
+        for (std::size_t i = 0; i < bcs.size(); i++)
+        {
+            dolfin_assert(bcs[i]);
+            bcs[i]->apply(b, x);
+        }
+        b.set(values.data(), values.size(), dirichlet_dofs.data());
+        b.apply("insert");
+
+        // Print vector
+        dolfin_assert(_solver);
+        const bool print_rhs = _solver->parameters["print_rhs"];
+        if (print_rhs)
+            info(b, true);
+        val = b.norm("l2");
+    }
 }
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

@@ -35,6 +35,7 @@ namespace dolfin
     std::shared_ptr<FunctionSpace> _V_p1;
     std::shared_ptr<Form> _J;
     std::shared_ptr<Form> _F;
+    std::shared_ptr<Form> _obj;
 
     // boundary conditions
     std::vector<std::shared_ptr<const DirichletBC>> bcs;

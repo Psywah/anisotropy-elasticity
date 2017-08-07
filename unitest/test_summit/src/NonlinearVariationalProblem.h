@@ -108,6 +108,17 @@ namespace dolfin
                                 std::vector<std::shared_ptr<const DirichletBC> > bcs,
                                 std::shared_ptr<const Form> J);
 
+    /// Create nonlinear variational problem, shared pointer version.
+    /// The Jacobian form is specified which allows the use of a
+    /// nonlinear solver that relies on the Jacobian (using Newton's
+    /// method).
+    NonlinearVariationalProblem(std::shared_ptr<const Form> F,
+                                std::shared_ptr<Function> u,
+                                std::vector<std::shared_ptr<const DirichletBC> > bcs,
+                                std::shared_ptr<const Form> J,
+                                std::shared_ptr<const Form> obj);
+
+
     /// Set the bounds for bound constrained solver
     void set_bounds(std::shared_ptr<const GenericVector> lb,
                     std::shared_ptr<const GenericVector> ub);
@@ -129,6 +140,9 @@ namespace dolfin
 
     /// Return Jacobian form
     std::shared_ptr<const Form> jacobian_form() const;
+
+    /// Return object form
+    std::shared_ptr<const Form> object_form() const;
 
     /// Return solution variable
     std::shared_ptr<Function> solution();
@@ -154,6 +168,9 @@ namespace dolfin
     /// Check whether Jacobian has been defined
     bool has_jacobian() const;
 
+    /// Check whether object has been defined
+    bool has_object() const;
+
     /// Check whether lower bound has been defined
     bool has_lower_bound() const;
 
@@ -170,6 +187,9 @@ namespace dolfin
 
     // The Jacobian form (pointer may be zero if not provided)
     std::shared_ptr<const Form> _jacobian;
+
+    // The object form (pointer may be zero if not provided)
+    std::shared_ptr<const Form> _obj;
 
     // The solution
     std::shared_ptr<Function> _u;
