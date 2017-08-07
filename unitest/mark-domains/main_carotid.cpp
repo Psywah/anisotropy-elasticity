@@ -86,7 +86,7 @@ class RightSide : public SubDomain
   for(int i =1;i<5;i++)
   {
       // Read mesh
-      std::string prefix("/rc_scratch/shgo7817/mesh/carotid_HII");
+      std::string prefix("/scratch/summit/shgo7817/mesh/carotid_HII");
       Mesh mesh(MPI_COMM_WORLD, prefix + std::to_string(i) + std::string(".xml"));
 
       // Create mesh functions over the cells and acets
@@ -110,7 +110,7 @@ class RightSide : public SubDomain
       s2 = s2 + std::to_string(i);
       filew.write(sub_domains_mark,s2.c_str());
 
-      std::string s1("/facet_mark");
+      std::string s3("/facet_mark");
       s3 = s3 + std::to_string(i);
       filew.write(boundary_mark,s3.c_str());
   }

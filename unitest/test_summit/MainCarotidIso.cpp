@@ -89,24 +89,24 @@ int main(int argc, char** argv)
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
     
-    HDF5File filer(MPI_COMM_WORLD,"../../../mesh/carotidHII.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
     Mesh mesh;
-    filer.read(mesh,"mesh",false);
+    filer.read(mesh,"mesh2",false);
 
     // Create mesh functions over the cells and acets
     MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
     MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
 
-    filer.read(sub_domains_mark,"subdomains_mark");
-    filer.read(boundary_mark,"facet_mark");
+    filer.read(sub_domains_mark,"subdomains_mark2");
+    filer.read(boundary_mark,"facet_mark2");
     filer.close();
     
 
     
-    /*std::vector<double>& coord = mesh.coordinates();
+    std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
         coord[i]*= 1.e-3;
-        */
+        
     
 
     Timer t1("Inital Forms"); info("Initial Forms");
