@@ -131,8 +131,8 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
                     "Switch Elasticity Model",
                     "Error option for Elasticity Model");
     }
-    info("# of Vertices %d, # of Cells %d, # of Unknowns %d", mesh.num_vertices(),
-            mesh.num_cells(), _V->dim());
+    int num_v = mesh.num_vertices(), num_c = mesh.num_cells();
+    info("# of Vertices %d, # of Cells %d, # of Unknowns %d", dolfin::MPI::sum(MPI_COMM_WORLD,num_v), dolfin::MPI::sum(MPI_COMM_WORLD,num_c), _V->dim());
     // Set material parameters
     double C1 = (double)(para["C1"]),
            Epsilon1  = (double)(para["Epsilon1"]),

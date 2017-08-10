@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     #ifdef HAS_PETSC
     parameters["linear_algebra_backend"] = "PETSc";
     PetscInitialize(&argc,&argv,NULL,NULL);
-    PetscOptionsInsertFile(PETSC_COMM_WORLD,NULL,"../parameters/petsc_options",PETSC_TRUE);
+    PetscOptionsInsertFile(PETSC_COMM_WORLD,NULL,"./petsc_options",PETSC_TRUE);
     if(dolfin::MPI::rank(MPI_COMM_WORLD) == 0){
         info("has PETSc");
         list_petsc_snes_methods();
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     para_file_material >> para_material;
     info(para_material, true);
     Parameters para_nls("nls_parameters");
-    File para_file_nls("../parameters/solver_parameters_CarotidIso.xml");
+    File para_file_nls("./solver_parameters_CarotidIso.xml");
     para_file_nls >> para_nls;
     
     
@@ -89,17 +89,18 @@ int main(int argc, char** argv)
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
     
-    //HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
-    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/anisotropy-elasticity/mesh/carotidHII.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
+    //HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/anisotropy-elasticity/mesh/carotidHII.h5","r");
     Mesh mesh;
-    filer.read(mesh,"mesh",false);
+    int meshID  = (int)para_material["meshID"];
+    filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
 
     // Create mesh functions over the cells and acets
     MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
     MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
 
-    filer.read(sub_domains_mark,"subdomains_mark");
-    filer.read(boundary_mark,"facet_mark");
+    filer.read(sub_domains_mark,std::string("subdomains_mark") + std::to_string(meshID) );
+    filer.read(boundary_mark,std::string("facet_mark") + std::to_string(meshID) );
     filer.close();
     
 

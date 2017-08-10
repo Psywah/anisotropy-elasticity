@@ -82,8 +82,8 @@
 #
 #
 # KSP option
--ksp_type preonly #gmres #fgmres #cg #preonly #gmres
--pc_type lu #asm #hybre #lu #asm
+-ksp_type gmres #fgmres #cg #preonly #gmres
+-pc_type asm #asm #hybre #lu #asm
 #-pc_asm_blocks  #<blks>   - Sets total blocks
 -pc_asm_overlap 2 #<ovl>   - Sets overlap
 -pc_asm_type  restrict #[basic,restrict,interpolate,none]  - Sets ASM type
@@ -113,8 +113,8 @@
 #   -ksp_test_null_space    - tests the null space set with MatSetNullSpace() to see if it truly is a null space
 #   -ksp_knoll  - compute initial guess by applying the preconditioner to the right hand side
 #   -ksp_monitor_cancel - cancel all previous convergene monitor routines set
-#-ksp_monitor #<optional filename>    - print residual norm at each iteration
-#-ksp_monitor_true_residual #<optional filename>    - print residual norm at each iteration
+-ksp_monitor ksp_res.txt #<optional filename>    - print residual norm at each iteration
+-ksp_monitor_true_residual ksp_true_res.txt # <optional filename>    - print residual norm at each iteration
 #   -ksp_monitor_lg_residualnorm    - plot residual norm at each iteration
 #   -ksp_monitor_solution [ascii binary or draw][:filename][:format option] - plot solution at each iteration
 #   -ksp_monitor_singular_value - monitor extreme singular values at each iteration
