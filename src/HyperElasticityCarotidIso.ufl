@@ -95,12 +95,11 @@ P = 2*(psi_1 *F + psi_3 * I3 * invF.T)
 Res = inner(P, grad(v))*dx - inner(B,v)*dx - inner(T,v)*ds(3) 
 
 #Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
-#  + psi_3 * J**2 * (2. * inner(grad(du)*invF, grad(v)*invF)\
-#                    + 4.*inner(invF.T, grad(du)) * inner(invF.T, grad(v))\
-#                    - 2. *inner(invF*grad(du), grad(v).T*invF.T + invF*grad(v)))*dx\
-#  + psi_13 * 4. * inner(F, grad(du)) *inner(invF.T, grad(v))*J**2*dx\
-#  + psi_31 * 4. * inner(F, grad(v)) *inner(invF.T, grad(du))*J**2*dx\
-#  + psi_33 * 4. * inner(invF.T,grad(v))*inner(invF.T, grad(du))*J**4*dx\
+#  + psi_3 * I3 * (4.*inner(invF.T, grad(du)) * inner(invF.T, grad(v))\
+#                    - 2. *inner(invF*grad(du), grad(v).T*invF.T) )*dx\
+#  + psi_13 * 4. * I3 * inner(F, grad(du)) *inner(invF.T, grad(v))*dx\
+#  + psi_31 * 4. * I3 * inner(F, grad(v)) *inner(invF.T, grad(du))*dx\
+#  + psi_33 * 4. * I3**2 * inner(invF.T,grad(v))*inner(invF.T, grad(du))*dx\
 ##  + psi_11 *4. * inner(F, grad(du)) * inner(F, grad(v))*dx
 Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
     - 4./3. * c1 * I3**(-1./3.) * (inner(invF.T, grad(du)) * inner(F, grad(v))\
