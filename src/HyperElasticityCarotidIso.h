@@ -1165,25 +1165,6 @@ public:
 };
 
 
-class hyperelasticitycarotidiso_exterior_facet_integral_0_3: public ufc::exterior_facet_integral
-{
-public:
-
-  hyperelasticitycarotidiso_exterior_facet_integral_0_3();
-
-  ~hyperelasticitycarotidiso_exterior_facet_integral_0_3() override;
-
-  const std::vector<bool> & enabled_coefficients() const final override;
-
-  void tabulate_tensor(double * A,
-                       const double * const * w,
-                       const double * coordinate_dofs,
-                       std::size_t facet,
-                       int cell_orientation) const final override;
-
-};
-
-
 class hyperelasticitycarotidiso_cell_integral_1_otherwise: public ufc::cell_integral
 {
 public:
@@ -1788,30 +1769,6 @@ public:
 
 };
 
-class CoefficientSpace_T: public dolfin::FunctionSpace
-{
-public:
-
-  // Constructor for standard function space
-  CoefficientSpace_T(std::shared_ptr<const dolfin::Mesh> mesh):
-    dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitycarotidiso_finite_element_1>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitycarotidiso_dofmap_1>(), *mesh))
-  {
-    // Do nothing
-  }
-
-  // Constructor for constrained function space
-  CoefficientSpace_T(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::SubDomain> constrained_domain):
-    dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitycarotidiso_finite_element_1>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitycarotidiso_dofmap_1>(), *mesh, constrained_domain))
-  {
-    // Do nothing
-  }
-
-};
-
 class CoefficientSpace_c1: public dolfin::FunctionSpace
 {
 public:
@@ -1884,6 +1841,30 @@ public:
 
 };
 
+class CoefficientSpace_pressure: public dolfin::FunctionSpace
+{
+public:
+
+  // Constructor for standard function space
+  CoefficientSpace_pressure(std::shared_ptr<const dolfin::Mesh> mesh):
+    dolfin::FunctionSpace(mesh,
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitycarotidiso_finite_element_0>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitycarotidiso_dofmap_0>(), *mesh))
+  {
+    // Do nothing
+  }
+
+  // Constructor for constrained function space
+  CoefficientSpace_pressure(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::SubDomain> constrained_domain):
+    dolfin::FunctionSpace(mesh,
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitycarotidiso_finite_element_0>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitycarotidiso_dofmap_0>(), *mesh, constrained_domain))
+  {
+    // Do nothing
+  }
+
+};
+
 class CoefficientSpace_u: public dolfin::FunctionSpace
 {
 public:
@@ -1912,13 +1893,11 @@ typedef CoefficientSpace_u Form_Pi_FunctionSpace_0;
 
 typedef CoefficientSpace_B Form_Pi_FunctionSpace_1;
 
-typedef CoefficientSpace_T Form_Pi_FunctionSpace_2;
+typedef CoefficientSpace_c1 Form_Pi_FunctionSpace_2;
 
-typedef CoefficientSpace_c1 Form_Pi_FunctionSpace_3;
+typedef CoefficientSpace_epsilon1 Form_Pi_FunctionSpace_3;
 
-typedef CoefficientSpace_epsilon1 Form_Pi_FunctionSpace_4;
-
-typedef CoefficientSpace_epsilon2 Form_Pi_FunctionSpace_5;
+typedef CoefficientSpace_epsilon2 Form_Pi_FunctionSpace_4;
 
 class Form_Pi: public dolfin::Form
 {
@@ -1926,20 +1905,19 @@ public:
 
   // Constructor
   Form_Pi(std::shared_ptr<const dolfin::Mesh> mesh):
-    dolfin::Form(0, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+    dolfin::Form(0, 5), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4)
   {
     _mesh = mesh;
     _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_0>();
   }
 
   // Constructor
-  Form_Pi(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
-    dolfin::Form(0, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  Form_Pi(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
+    dolfin::Form(0, 5), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4)
   {
     _mesh = mesh;
     this->u = u;
     this->B = B;
-    this->T = T;
     this->c1 = c1;
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
@@ -1958,14 +1936,12 @@ public:
       return 0;
     else if (name == "B")
       return 1;
-    else if (name == "T")
-      return 2;
     else if (name == "c1")
-      return 3;
+      return 2;
     else if (name == "epsilon1")
-      return 4;
+      return 3;
     else if (name == "epsilon2")
-      return 5;
+      return 4;
 
     dolfin::dolfin_error("generated code for class Form",
                          "access coefficient data",
@@ -1983,12 +1959,10 @@ public:
     case 1:
       return "B";
     case 2:
-      return "T";
-    case 3:
       return "c1";
-    case 4:
+    case 3:
       return "epsilon1";
-    case 5:
+    case 4:
       return "epsilon2";
     }
 
@@ -2001,15 +1975,13 @@ public:
   // Typedefs
   typedef Form_Pi_FunctionSpace_0 CoefficientSpace_u;
   typedef Form_Pi_FunctionSpace_1 CoefficientSpace_B;
-  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_T;
-  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_c1;
-  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon1;
-  typedef Form_Pi_FunctionSpace_5 CoefficientSpace_epsilon2;
+  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_c1;
+  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_epsilon1;
+  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon2;
 
   // Coefficients
   dolfin::CoefficientAssigner u;
   dolfin::CoefficientAssigner B;
-  dolfin::CoefficientAssigner T;
   dolfin::CoefficientAssigner c1;
   dolfin::CoefficientAssigner epsilon1;
   dolfin::CoefficientAssigner epsilon2;
@@ -2021,7 +1993,7 @@ public:
 
   // Constructor
   MultiMeshForm_Pi(std::shared_ptr<const dolfin::MultiMesh> mesh):
-    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4)
   {
     // Creating a form for each part of the mesh
     for (std::size_t i=0; i< mesh->num_parts(); i++)
@@ -2035,8 +2007,8 @@ public:
   }
 
   // Constructor
-  MultiMeshForm_Pi(std::shared_ptr<const dolfin::MultiMesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
-    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  MultiMeshForm_Pi(std::shared_ptr<const dolfin::MultiMesh> mesh, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
+    dolfin::MultiMeshForm(mesh), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4)
   {
     // Creating a form for each part of the mesh
     for (std::size_t i=0; i< mesh->num_parts(); i++)
@@ -2047,7 +2019,6 @@ public:
 
     /// Assign coefficients    this->u = u;
     this->B = B;
-    this->T = T;
     this->c1 = c1;
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
@@ -2065,14 +2036,12 @@ public:
       return 0;
     else if (name == "B")
       return 1;
-    else if (name == "T")
-      return 2;
     else if (name == "c1")
-      return 3;
+      return 2;
     else if (name == "epsilon1")
-      return 4;
+      return 3;
     else if (name == "epsilon2")
-      return 5;
+      return 4;
 
     dolfin::dolfin_error("generated code for class Form",
                          "access coefficient data",
@@ -2090,12 +2059,10 @@ public:
     case 1:
       return "B";
     case 2:
-      return "T";
-    case 3:
       return "c1";
-    case 4:
+    case 3:
       return "epsilon1";
-    case 5:
+    case 4:
       return "epsilon2";
     }
 
@@ -2108,15 +2075,13 @@ public:
   // Typedefs
   typedef Form_Pi_FunctionSpace_0 CoefficientSpace_u;
   typedef Form_Pi_FunctionSpace_1 CoefficientSpace_B;
-  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_T;
-  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_c1;
-  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon1;
-  typedef Form_Pi_FunctionSpace_5 CoefficientSpace_epsilon2;
+  typedef Form_Pi_FunctionSpace_2 CoefficientSpace_c1;
+  typedef Form_Pi_FunctionSpace_3 CoefficientSpace_epsilon1;
+  typedef Form_Pi_FunctionSpace_4 CoefficientSpace_epsilon2;
 
   // Coefficients
   dolfin::MultiMeshCoefficientAssigner u;
   dolfin::MultiMeshCoefficientAssigner B;
-  dolfin::MultiMeshCoefficientAssigner T;
   dolfin::MultiMeshCoefficientAssigner c1;
   dolfin::MultiMeshCoefficientAssigner epsilon1;
   dolfin::MultiMeshCoefficientAssigner epsilon2;
@@ -2461,13 +2426,13 @@ typedef CoefficientSpace_u Form_Res_FunctionSpace_1;
 
 typedef CoefficientSpace_B Form_Res_FunctionSpace_2;
 
-typedef CoefficientSpace_T Form_Res_FunctionSpace_3;
+typedef CoefficientSpace_c1 Form_Res_FunctionSpace_3;
 
-typedef CoefficientSpace_c1 Form_Res_FunctionSpace_4;
+typedef CoefficientSpace_epsilon1 Form_Res_FunctionSpace_4;
 
-typedef CoefficientSpace_epsilon1 Form_Res_FunctionSpace_5;
+typedef CoefficientSpace_epsilon2 Form_Res_FunctionSpace_5;
 
-typedef CoefficientSpace_epsilon2 Form_Res_FunctionSpace_6;
+typedef CoefficientSpace_pressure Form_Res_FunctionSpace_6;
 
 class Form_Res: public dolfin::Form
 {
@@ -2475,7 +2440,7 @@ public:
 
   // Constructor
   Form_Res(std::shared_ptr<const dolfin::FunctionSpace> V0):
-    dolfin::Form(1, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+    dolfin::Form(1, 6), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4), pressure(*this, 5)
   {
     _function_spaces[0] = V0;
 
@@ -2483,17 +2448,17 @@ public:
   }
 
   // Constructor
-  Form_Res(std::shared_ptr<const dolfin::FunctionSpace> V0, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
-    dolfin::Form(1, 6), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  Form_Res(std::shared_ptr<const dolfin::FunctionSpace> V0, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2, std::shared_ptr<const dolfin::GenericFunction> pressure):
+    dolfin::Form(1, 6), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4), pressure(*this, 5)
   {
     _function_spaces[0] = V0;
 
     this->u = u;
     this->B = B;
-    this->T = T;
     this->c1 = c1;
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
+    this->pressure = pressure;
 
     _ufc_form = std::make_shared<const hyperelasticitycarotidiso_form_2>();
   }
@@ -2509,13 +2474,13 @@ public:
       return 0;
     else if (name == "B")
       return 1;
-    else if (name == "T")
-      return 2;
     else if (name == "c1")
-      return 3;
+      return 2;
     else if (name == "epsilon1")
-      return 4;
+      return 3;
     else if (name == "epsilon2")
+      return 4;
+    else if (name == "pressure")
       return 5;
 
     dolfin::dolfin_error("generated code for class Form",
@@ -2534,13 +2499,13 @@ public:
     case 1:
       return "B";
     case 2:
-      return "T";
-    case 3:
       return "c1";
-    case 4:
+    case 3:
       return "epsilon1";
-    case 5:
+    case 4:
       return "epsilon2";
+    case 5:
+      return "pressure";
     }
 
     dolfin::dolfin_error("generated code for class Form",
@@ -2554,18 +2519,18 @@ public:
   typedef Form_Res_MultiMeshFunctionSpace_0 MultiMeshTestSpace;
   typedef Form_Res_FunctionSpace_1 CoefficientSpace_u;
   typedef Form_Res_FunctionSpace_2 CoefficientSpace_B;
-  typedef Form_Res_FunctionSpace_3 CoefficientSpace_T;
-  typedef Form_Res_FunctionSpace_4 CoefficientSpace_c1;
-  typedef Form_Res_FunctionSpace_5 CoefficientSpace_epsilon1;
-  typedef Form_Res_FunctionSpace_6 CoefficientSpace_epsilon2;
+  typedef Form_Res_FunctionSpace_3 CoefficientSpace_c1;
+  typedef Form_Res_FunctionSpace_4 CoefficientSpace_epsilon1;
+  typedef Form_Res_FunctionSpace_5 CoefficientSpace_epsilon2;
+  typedef Form_Res_FunctionSpace_6 CoefficientSpace_pressure;
 
   // Coefficients
   dolfin::CoefficientAssigner u;
   dolfin::CoefficientAssigner B;
-  dolfin::CoefficientAssigner T;
   dolfin::CoefficientAssigner c1;
   dolfin::CoefficientAssigner epsilon1;
   dolfin::CoefficientAssigner epsilon2;
+  dolfin::CoefficientAssigner pressure;
 };
 
 class MultiMeshForm_Res: public dolfin::MultiMeshForm
@@ -2574,7 +2539,7 @@ public:
 
   // Constructor
   MultiMeshForm_Res(std::shared_ptr<const dolfin::MultiMeshFunctionSpace> V0):
-    dolfin::MultiMeshForm(V0), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+    dolfin::MultiMeshForm(V0), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4), pressure(*this, 5)
   {
     // Create and add standard forms
     std::size_t num_parts = V0->num_parts(); // assume all equal and pick first
@@ -2592,8 +2557,8 @@ public:
   }
 
   // Constructor
-  MultiMeshForm_Res(std::shared_ptr<const dolfin::MultiMeshFunctionSpace> V0, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> T, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2):
-    dolfin::MultiMeshForm(V0), u(*this, 0), B(*this, 1), T(*this, 2), c1(*this, 3), epsilon1(*this, 4), epsilon2(*this, 5)
+  MultiMeshForm_Res(std::shared_ptr<const dolfin::MultiMeshFunctionSpace> V0, std::shared_ptr<const dolfin::GenericFunction> u, std::shared_ptr<const dolfin::GenericFunction> B, std::shared_ptr<const dolfin::GenericFunction> c1, std::shared_ptr<const dolfin::GenericFunction> epsilon1, std::shared_ptr<const dolfin::GenericFunction> epsilon2, std::shared_ptr<const dolfin::GenericFunction> pressure):
+    dolfin::MultiMeshForm(V0), u(*this, 0), B(*this, 1), c1(*this, 2), epsilon1(*this, 3), epsilon2(*this, 4), pressure(*this, 5)
   {
     // Create and add standard forms
     std::size_t num_parts = V0->num_parts(); // assume all equal and pick first
@@ -2609,10 +2574,10 @@ public:
     /// Assign coefficients
     this->u = u;
     this->B = B;
-    this->T = T;
     this->c1 = c1;
     this->epsilon1 = epsilon1;
     this->epsilon2 = epsilon2;
+    this->pressure = pressure;
 
   }
 
@@ -2627,13 +2592,13 @@ public:
       return 0;
     else if (name == "B")
       return 1;
-    else if (name == "T")
-      return 2;
     else if (name == "c1")
-      return 3;
+      return 2;
     else if (name == "epsilon1")
-      return 4;
+      return 3;
     else if (name == "epsilon2")
+      return 4;
+    else if (name == "pressure")
       return 5;
 
     dolfin::dolfin_error("generated code for class Form",
@@ -2652,13 +2617,13 @@ public:
     case 1:
       return "B";
     case 2:
-      return "T";
-    case 3:
       return "c1";
-    case 4:
+    case 3:
       return "epsilon1";
-    case 5:
+    case 4:
       return "epsilon2";
+    case 5:
+      return "pressure";
     }
 
     dolfin::dolfin_error("generated code for class Form",
@@ -2672,18 +2637,18 @@ public:
   typedef Form_Res_MultiMeshFunctionSpace_0 MultiMeshTestSpace;
   typedef Form_Res_FunctionSpace_1 CoefficientSpace_u;
   typedef Form_Res_FunctionSpace_2 CoefficientSpace_B;
-  typedef Form_Res_FunctionSpace_3 CoefficientSpace_T;
-  typedef Form_Res_FunctionSpace_4 CoefficientSpace_c1;
-  typedef Form_Res_FunctionSpace_5 CoefficientSpace_epsilon1;
-  typedef Form_Res_FunctionSpace_6 CoefficientSpace_epsilon2;
+  typedef Form_Res_FunctionSpace_3 CoefficientSpace_c1;
+  typedef Form_Res_FunctionSpace_4 CoefficientSpace_epsilon1;
+  typedef Form_Res_FunctionSpace_5 CoefficientSpace_epsilon2;
+  typedef Form_Res_FunctionSpace_6 CoefficientSpace_pressure;
 
   // Coefficients
   dolfin::MultiMeshCoefficientAssigner u;
   dolfin::MultiMeshCoefficientAssigner B;
-  dolfin::MultiMeshCoefficientAssigner T;
   dolfin::MultiMeshCoefficientAssigner c1;
   dolfin::MultiMeshCoefficientAssigner epsilon1;
   dolfin::MultiMeshCoefficientAssigner epsilon2;
+  dolfin::MultiMeshCoefficientAssigner pressure;
 };
 
 class Form_Mass_vms_FunctionSpace_0: public dolfin::FunctionSpace

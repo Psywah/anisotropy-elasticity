@@ -27,8 +27,9 @@
 # ffc -l dolfin  -fquadrature_degree=1 -feliminate_zeros -fprecompute_basis_const -fprecompute_ip_const -fsplit HyperElasticityA.ufl
 
 # Function spaces
-VecCG = VectorElement("Lagrange", tetrahedron, 2)
-DG = FiniteElement("Lagrange", tetrahedron, 1)
+cell = tetrahedron
+VecCG = VectorElement("Lagrange", cell, 2)
+DG = FiniteElement("Lagrange", cell, 1)
 
 # Trial and test functions
 du = TrialFunction(VecCG)     # Incremental displacement
@@ -36,21 +37,23 @@ v  = TestFunction(VecCG)      # Test function
 
 # Functions
 u = Coefficient(VecCG)        # Displacement from previous iteration
-B = VectorConstant(tetrahedron)        # Body force per unit volume
-T = VectorConstant(tetrahedron)        # Traction force on the boundary
+B = VectorConstant(cell)        # Body force per unit volume
+#T = VectorConstant(cell)        # Traction force on the boundary
 
 # Elasticity parameters
-c1 = Constant(tetrahedron)
-epsilon1 = Constant(tetrahedron)
-epsilon2 = Constant(tetrahedron)
+c1 = Constant(cell)
+epsilon1 = Constant(cell)
+epsilon2 = Constant(cell)
 
-beta1 = Constant(tetrahedron)
-eta1 = Constant(tetrahedron)
-delta1 = Constant(tetrahedron)
-delta2 = Constant(tetrahedron)
+beta1 = Constant(cell)
+eta1 = Constant(cell)
+delta1 = Constant(cell)
+delta2 = Constant(cell)
+pressure = Constant(cell)
 
 #
 # Kinematics
+n = FacetNormal(cell)
 d = u.geometric_dimension()
 I = Identity(d)                 # Identity tensor
 F = I + grad(u)                 # Deformation gradient
@@ -63,36 +66,36 @@ J  = det(F)
 I2 = tr(cofac(C))
 I3 = det(C)
 I3_ = I3**(1./3.)
-#J4_1 = inner(vec1,C*vec1)
-#J4_2 = inner(vec2,C*vec2)
-#J5_1 = inner(vec1,C*C*vec1)
-#J5_2 = inner(vec2,C*C*vec2)
-
-# Macauley brackets
-#eps = 1e-10
-#mac_1 = (I1*J4_1 - J5_1 -2)
-#mac_2 = (I1*J4_2 - J5_2 -2)
-#mac1 = conditional(mac_1 <= eps, 0., (abs(mac_1)+eps)**alpha2)
-#mac2 = conditional(mac_2 <= eps, 0., (abs(mac_2)+eps)**alpha2)
 
 # Stored strain energy density (compressible neo-Hookean model)
-#psi = (mu/2)*(I1 - 3) - mu*ln(J) + (lmbda/2)*(ln(J))**2
-psi = c1*(I1/I3_ -3.) + epsilon1*((I3**epsilon2) + (I3**(-epsilon2))-2.)\
-#       + alpha1*(mac1+mac2)
-Pi = psi*dx - inner(B,u)*dx - inner(T,u)*ds(3)
-
-psi_1  = c1 * (I3**(-1./3.))
-psi_3  = -1./3. * c1 * I1 * (I3**(-4./3.)) + epsilon1*epsilon2*(I3**(epsilon2-1) -I3**(-epsilon2-1)) 
-psi_11 = 0
-psi_33 = 4./9. * c1 * I1* (I3**(-7./3.)) + epsilon1*epsilon2* ( (I3**(epsilon2-2)) * (epsilon2-1) + (I3**(-epsilon2-2)) * (epsilon2+1) ) 
-psi_13 =  -1./3. * c1 * (I3**(-4./3.))
-psi_31 = psi_13 
-
+psi = c1*(I1/I3_ -3.) + epsilon1*((I3**epsilon2) + (I3**(-epsilon2))-2.)
+psi_pla = beta1*I1 +eta1*I2+delta1*I3 -delta2*ln(I3)
+#
 invF = inv(F)
+#T = -pressure*cofac(F)*n
+T = -pressure*n
+
+#Pi = psi*dx(1) +psi_pla*dx(2)- inner(B, u)*dx
+Pi = psi*dx - inner(B,u)*dx #- inner(T,u)*ds(3)
+
+# First variation of Pi (directional derivative about u in the direction of v)
+Res = derivative(Pi, u, v) - inner(T,v)*ds(3)
+
+# Compute Jacobian of F
+Jac = derivative(Res, u, du)
+
+#psi_1  = c1 * (I3**(-1./3.))
+#psi_3  = -1./3. * c1 * I1 * (I3**(-4./3.)) + epsilon1*epsilon2*(I3**(epsilon2-1) -I3**(-epsilon2-1)) 
+#psi_11 = 0
+#psi_33 = 4./9. * c1 * I1* (I3**(-7./3.)) + epsilon1*epsilon2* ( (I3**(epsilon2-2)) * (epsilon2-1) + (I3**(-epsilon2-2)) * (epsilon2+1) ) 
+#psi_13 =  -1./3. * c1 * (I3**(-4./3.))
+#psi_31 = psi_13 
+
+#invF = inv(F)
 #S = psi_1*I + psi_3 * cofac(C) = psi_1*I + psi_3 * J**2 * inv(F)* inv(F.T)
-S =  2*(psi_1*I + psi_3 * I3 * invF* invF.T)
-P = 2*(psi_1 *F + psi_3 * I3 * invF.T)
-Res = inner(P, grad(v))*dx - inner(B,v)*dx - inner(T,v)*ds(3) 
+#S =  2*(psi_1*I + psi_3 * I3 * invF* invF.T)
+#P = 2*(psi_1 *F + psi_3 * I3 * invF.T)
+#Res = inner(P, grad(v))*dx - inner(B,v)*dx - inner(T,v)*ds(3) 
 
 #Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
 #  + psi_3 * I3 * (4.*inner(invF.T, grad(du)) * inner(invF.T, grad(v))\
@@ -101,12 +104,12 @@ Res = inner(P, grad(v))*dx - inner(B,v)*dx - inner(T,v)*ds(3)
 #  + psi_31 * 4. * I3 * inner(F, grad(v)) *inner(invF.T, grad(du))*dx\
 #  + psi_33 * 4. * I3**2 * inner(invF.T,grad(v))*inner(invF.T, grad(du))*dx\
 ##  + psi_11 *4. * inner(F, grad(du)) * inner(F, grad(v))*dx
-Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
-    - 4./3. * c1 * I3**(-1./3.) * (inner(invF.T, grad(du)) * inner(F, grad(v))\
-                                    +inner(invF.T, grad(v)) * inner(F, grad(du)))*dx\
-    + 4.*(1./9. * c1 * I1 * I3**(-1./3.) + epsilon1 * epsilon2**2 *( I3**epsilon2 + I3**(-epsilon2)))\
-        * inner(invF.T, grad(du)) * inner(invF.T, grad(v))*dx\
-    - psi_3 * I3 *2. * inner(grad(du).T * invF.T, invF * grad(v))*dx\
+#Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
+#    - 4./3. * c1 * I3**(-1./3.) * (inner(invF.T, grad(du)) * inner(F, grad(v))\
+#                                    +inner(invF.T, grad(v)) * inner(F, grad(du)))*dx\
+#    + 4.*(1./9. * c1 * I1 * I3**(-1./3.) + epsilon1 * epsilon2**2 *( I3**epsilon2 + I3**(-epsilon2)))\
+#        * inner(invF.T, grad(du)) * inner(invF.T, grad(v))*dx\
+#    - psi_3 * I3 *2. * inner(grad(du).T * invF.T, invF * grad(v))*dx\
 #    + 4. *c1/I1**2 * I3**(-1./3.) * inner(F, grad(v)) * inner(F,grad(du))*dx\
 
 
@@ -116,8 +119,9 @@ Jac = psi_1 * 2. * inner(grad(du), grad(v)) *dx\
 p = TrialFunction(DG)     # Incremental displacement
 q  = TestFunction(DG)      # Test function
 
-S =  psi_1*I + psi_3 * J**2 * invF* invF.T
-sigma =  psi_1*F*F.T + psi_3 * J**2*I
+S = 2*diff(psi, C)
+#S =  psi_1*I + psi_3 * J**2 * invF* invF.T
+#sigma =  psi_1*F*F.T + psi_3 * J**2*I
 sigma = 1./J*F*S*F.T
 
 Mass_vms = p*q*dx

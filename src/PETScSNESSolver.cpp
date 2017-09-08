@@ -170,7 +170,9 @@ void PETScSNESSolver::init(NonlinearProblem& nonlinear_problem,
   PetscErrorCode ierr;
 
   // Set linear solver parameters
-  set_linear_solver_parameters();
+  if (_matJ.empty()){
+      set_linear_solver_parameters();
+  }
 
   // Prepare context for evaluation routines
   _snes_ctx.nonlinear_problem = &nonlinear_problem;

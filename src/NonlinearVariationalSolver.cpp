@@ -232,6 +232,8 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                nonlinear_problem->Object(*res.vector(),obj0, *u->vector());
            nonlinear_problem->F(*res.vector(), *u->vector());
            norm_res0 =res.vector()->norm("l2");
+           PETScMatrix J;
+           nonlinear_problem->J(J,*u->vector());
 
            bool converged = false;
            bool accept = false;
@@ -270,8 +272,6 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                // find all good dof
                double infty = res.vector()->norm("linf");
                info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty, rho1);
-               PETScMatrix J;
-               nonlinear_problem->J(J,*u->vector());
                nonlinear_coarse_problem->construct_coarse_IS(*res.vector(), infty*rho1, J, overlap);
 
                if(norm_res < norm_res0*rho0)

@@ -2,12 +2,11 @@
 <dolfin xmlns:dolfin="http://fenicsproject.org">
     <parameters name="problem_parameters">
         <parameter key="elas_model"               type="string"   value="CarotidIso" />
-        <parameter key="meshID"    type="int"   value="3" />
+        <parameter key="meshID"    type="int"   value="2" />
         <parameter key="C1"    type="double"   value="17.5e3" />
         <parameter key="pressure_boundary_condition"    type="double"   value="12.e3" />
-        <parameter key="C1"    type="double"   value="17.5e3" />
-        <parameter key="Epsilon1"    type="double"   value="499.8e2" />
-        <parameter key="Epsilon2"    type="double"   value="2.4e0" />
+        <parameter key="Epsilon1"    type="double"   value="70.0e3" />
+        <parameter key="Epsilon2"    type="double"   value="2.0e0" />
         <parameter key="Beta1"    type="double"   value="80.e3" />
         <parameter key="Eta1"    type="double"   value="250.e3" />
         <parameter key="Delta1"    type="double"   value="2000.e3" />

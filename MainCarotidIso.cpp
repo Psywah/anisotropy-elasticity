@@ -89,8 +89,8 @@ int main(int argc, char** argv)
     //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
     //interactive();
     
-    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
-    //HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/anisotropy-elasticity/mesh/carotidHII.h5","r");
+    //HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/pipe.h5","r");
     Mesh mesh;
     int meshID  = (int)para_material["meshID"];
     filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     
     std::vector<double>& coord = mesh.coordinates();
     for(std::size_t i = 0; i < coord.size(); i++)
-        coord[i]*= 1.e-3;
+        coord[i]*= 1.0e-2;
         
     
 

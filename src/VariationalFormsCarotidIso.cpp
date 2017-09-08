@@ -8,27 +8,69 @@ class InletXaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+        /*if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
                 (std::abs(x[1] + 0.00122233e3) < 1.e-5) 
-          )
+          )*/
+        if( //(std::abs(x[2] ) < DOLFIN_EPS) &&
+                (std::abs(x[1] + 0.01) < DOLFIN_EPS) )
         {   
-            //std::cout<<"found X point"<<std::endl;
-            //std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
+            std::cout<<"found X point"<<std::endl;
+            std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
             return true;
         }
         return false;
     }
 };
+class InletXaxisPoint1 : public SubDomain
+{
+    bool inside(const Array<double>& x, bool on_boundary) const
+    {
+        /*if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+                (std::abs(x[1] + 0.00122233e3) < 1.e-5) 
+          )*/
+        if( //(std::abs(x[2] ) < DOLFIN_EPS) && 
+                (std::abs(x[1] - 0.01) < DOLFIN_EPS) )
+        {   
+            std::cout<<"found X point"<<std::endl;
+            std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
+            return true;
+        }
+        return false;
+    }
+};
+
 class InletYaxisPoint : public SubDomain
 {
     bool inside(const Array<double>& x, bool on_boundary) const
     {
-        if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+        /*if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
                 (std::abs(x[0] - 0.0272064e3) < 1.e-5) 
+          )*/
+        if( //(std::abs(x[2] ) < DOLFIN_EPS) &&
+                (std::abs(x[0] - 0.01) < DOLFIN_EPS) 
           )
         {   
-            //std::cout<<"found Y point"<<std::endl;
-            //std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
+            std::cout<<"found Y point"<<std::endl;
+            std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
+            return true;
+        }
+        return false;
+    }
+};
+
+class InletYaxisPoint1 : public SubDomain
+{
+    bool inside(const Array<double>& x, bool on_boundary) const
+    {
+        /*if( (std::abs(x[2] - 0.0085466e3 ) < 1.e-5) &&
+                (std::abs(x[0] - 0.0272064e3) < 1.e-5) 
+          )*/
+        if( //(std::abs(x[2] ) < DOLFIN_EPS) &&
+                (std::abs(x[0] + 0.01) < DOLFIN_EPS) 
+          )
+        {   
+            std::cout<<"found Y point"<<std::endl;
+            std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
             return true;
         }
         return false;
@@ -153,6 +195,7 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
     // Define source and boundary traction functions
     pressure = para["pressure_boundary_condition"]; t = 1.0;
     final_pressure = pressure;
+    std::shared_ptr<Constant> _pressure = std::make_shared<Constant>(pressure);
     std::shared_ptr<PressureNormal> pressure_normal = 
         std::make_shared<PressureNormal>(mesh,&pressure);
     std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
@@ -167,7 +210,8 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
             {"delta1",      coef_delta1},
             {"delta2",      coef_delta2},
             {"B",       B},
-            {"T",       pressure_normal}};
+            {"T",       pressure_normal},
+            {"pressure", _pressure}};
     info("number of coefficients %d", coef_list.size());
 
 
@@ -190,23 +234,43 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
     std::shared_ptr<Constant> zero = std::make_shared<Constant>(0.0);
     std::string  method("pointwise");
 
-
+/*
     std::shared_ptr<InletXaxisPoint> inletXPoint =std::make_shared<InletXaxisPoint>();
     std::shared_ptr<InletYaxisPoint> inletYPoint =std::make_shared<InletYaxisPoint>();
+    std::shared_ptr<DirichletBC> bcx = std::make_shared<DirichletBC>((*_V)[0], zero, inletXPoint, method);
+    std::shared_ptr<DirichletBC> bcy = std::make_shared<DirichletBC>((*_V)[1], zero, inletYPoint, method);
+    bcs.push_back(bcx);
+    bcs.push_back(bcy);
 
+    std::shared_ptr<InletXaxisPoint1> inletXPoint1 =std::make_shared<InletXaxisPoint1>();
+    std::shared_ptr<InletYaxisPoint1> inletYPoint1 =std::make_shared<InletYaxisPoint1>();
+    std::shared_ptr<DirichletBC> bcx1 = std::make_shared<DirichletBC>((*_V)[0], zero, inletXPoint1, method);
+    std::shared_ptr<DirichletBC> bcy1 = std::make_shared<DirichletBC>((*_V)[1], zero, inletYPoint1, method);
+    bcs.push_back(bcx1);
+    bcs.push_back(bcy1);
+    */
 
 
     // Create Dirichlet boundary conditions
-    std::shared_ptr<DirichletBC> bcInlet = std::make_shared<DirichletBC>((*_V)[2], zero,
+    std::shared_ptr<DirichletBC> bcInlet = std::make_shared<DirichletBC>((*_V)[0], zero,
             reference_to_no_delete_pointer(boundary_mark), 1);
-    std::shared_ptr<DirichletBC> bcOutlet = std::make_shared<DirichletBC>((*_V)[2], zero,
+    std::shared_ptr<DirichletBC> bcOutlet = std::make_shared<DirichletBC>((*_V)[0], zero,
             reference_to_no_delete_pointer(boundary_mark), 2);
-    std::shared_ptr<DirichletBC> bcx = std::make_shared<DirichletBC>((*_V)[0], zero, inletXPoint, method);
-    std::shared_ptr<DirichletBC> bcy = std::make_shared<DirichletBC>((*_V)[1], zero, inletYPoint, method);
     bcs.push_back(bcInlet);
     bcs.push_back(bcOutlet);
-    bcs.push_back(bcx);
-    bcs.push_back(bcy);
+    std::shared_ptr<DirichletBC> bcInlet2 = std::make_shared<DirichletBC>((*_V)[1], zero,
+            reference_to_no_delete_pointer(boundary_mark), 1);
+    std::shared_ptr<DirichletBC> bcInlet3 = std::make_shared<DirichletBC>((*_V)[2], zero,
+            reference_to_no_delete_pointer(boundary_mark), 1);
+    std::shared_ptr<DirichletBC> bcOutlet2 = std::make_shared<DirichletBC>((*_V)[1], zero,
+            reference_to_no_delete_pointer(boundary_mark), 2);
+    std::shared_ptr<DirichletBC> bcOutlet3 = std::make_shared<DirichletBC>((*_V)[2], zero,
+            reference_to_no_delete_pointer(boundary_mark), 2);
+    bcs.push_back(bcInlet2);
+    bcs.push_back(bcOutlet2);
+    bcs.push_back(bcInlet3);
+    bcs.push_back(bcOutlet3);
+    
 
 }
 
