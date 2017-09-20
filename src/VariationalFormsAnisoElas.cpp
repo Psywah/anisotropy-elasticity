@@ -292,8 +292,10 @@ VariationalForms::VariationalForms(
     _obj->ds = reference_to_no_delete_pointer(boundary_mark);
     _obj->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _J->set_some_coefficients(coef_list);
+    _J->ds = reference_to_no_delete_pointer(boundary_mark);
     _J->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _L->set_some_coefficients(coef_list);
+    _L->ds = reference_to_no_delete_pointer(boundary_mark);
     _L->dx = reference_to_no_delete_pointer(sub_domains_mark);
 
     // Define Dirichlet boundaries
@@ -303,6 +305,7 @@ VariationalForms::VariationalForms(
 
     // Define Dirichlet boundary functions
     std::shared_ptr<Constant> zero = std::make_shared<Constant>(0.0);
+    std::shared_ptr<Constant> zeros = std::make_shared<Constant>(0.0,0.0,0.0);
     std::string  method("pointwise");
 
     // Create Dirichlet boundary conditions
@@ -311,6 +314,8 @@ VariationalForms::VariationalForms(
     std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
     std::shared_ptr<DirichletBC> bc_cross = std::make_shared<DirichletBC>((*_V)[2], zero, 
             reference_to_no_delete_pointer(boundary_mark), 2);
+
+
     bcs.push_back(bcl);
     bcs.push_back(bcr);
     bcs.push_back(bct);

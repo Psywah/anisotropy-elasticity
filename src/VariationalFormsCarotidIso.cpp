@@ -222,8 +222,10 @@ VariationalFormsCarotidIso::VariationalFormsCarotidIso(
     _obj->ds = reference_to_no_delete_pointer(boundary_mark);
     _obj->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _J->set_some_coefficients(coef_list);
+    _J->ds = reference_to_no_delete_pointer(boundary_mark);
     _J->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _L->set_some_coefficients(coef_list);
+    _L->ds = reference_to_no_delete_pointer(boundary_mark);
     _L->dx = reference_to_no_delete_pointer(sub_domains_mark);
 
     // Define Dirichlet boundaries
