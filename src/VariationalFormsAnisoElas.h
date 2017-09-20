@@ -2,7 +2,7 @@
 #define __NONLINEAR_VARIATIONAL_FORMS_H
 #include <dolfin.h>
 
-#define R (0.01*1)
+#define R (0.008*1)
 #define Thk_med (0.00132*1)
 #define Thk_adv (0.00096*1)
 #define Depth (0.005*1)

@@ -4,7 +4,6 @@
 #
 # Require CMake 3.5
 cmake_minimum_required(VERSION 3.5)
-
 set(PROJECT_NAME AnisoElas)
 project(${PROJECT_NAME})
 
@@ -21,48 +20,29 @@ set(NE_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 #set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 #set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib)
 include_directories(${NE_INCLUDE_DIR})
+#include_directories(${DOLFIN_INCLUDE_DIRS})
+include_directories(SYSTEM /opt/boost/1.63.0/include)
+
 
 # Get DOLFIN configuration data (DOLFINConfig.cmake must be in
 # DOLFIN_CMAKE_CONFIG_PATH)
 find_package(DOLFIN REQUIRED)
 
-if (EXISTS ${DOLFIN_USE_FILE})
-  include(${DOLFIN_USE_FILE})
+include(${DOLFIN_USE_FILE})
 
-  # Default build type (can be overridden by user)
-  if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+# Default build type (can be overridden by user)
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
       "Choose the type of build, options are: Debug MinSizeRel Release RelWithDebInfo." FORCE)
-  endif()
-
-  # Do not throw error for 'multi-line comments' (these are typical in
-  # rst which includes LaTeX)
-  include(CheckCXXCompilerFlag)
-  CHECK_CXX_COMPILER_FLAG("-Wno-comment" HAVE_NO_MULTLINE)
-  if (HAVE_NO_MULTLINE)
-    set(CMAKE_CXX_FLAGS "-Wno-comment ${CMAKE_CXX_FLAGS}")
-  endif()
-
-else()
-  # Compiler definitions
-  add_definitions(${DOLFIN_CXX_DEFINITIONS})
-
-  # Compiler flags
-  set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
-
-  # Do not throw error for 'multi-line comments' (these are typical in
-  # rst which includes LaTeX)
-  include(CheckCXXCompilerFlag)
-  CHECK_CXX_COMPILER_FLAG("-Wno-comment" HAVE_NO_MULTLINE)
-  if (HAVE_NO_MULTLINE)
-    set(CMAKE_CXX_FLAGS "-Wno-comment ${CMAKE_CXX_FLAGS}")
-  endif()
-
-  # Include directories
-  include_directories(${DOLFIN_INCLUDE_DIRS})
-  include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 endif()
 
+# Do not throw error for 'multi-line comments' (these are typical in
+# rst which includes LaTeX)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-Wno-comment" HAVE_NO_MULTLINE)
+if (HAVE_NO_MULTLINE)
+  set(CMAKE_CXX_FLAGS "-Wno-comment ${CMAKE_CXX_FLAGS}")
+endif()
 
 file(GLOB NE_LIB_SRC ${NE_SRC_DIR}/*.cpp)
 add_library(nonlinear_precondition SHARED ${NE_LIB_SRC})
@@ -74,16 +54,15 @@ foreach( srcfile ${EXESRC} )
     string( REGEX REPLACE "\\.[^\\.]*$" ".ex" exectmp ${srcfile} )
     string( REGEX REPLACE "Main" "" execfile ${exectmp} )
     #    message( "${execfile} ${srcfile}" )
-    add_executable( ${execfile} ./${srcfile} )
+    add_executable( ${execfile} ./${srcfile}  )
 
     # Target libraries
-    target_link_libraries(${execfile} nonlinear_precondition ${DOLFIN_LIBRARIES})
+    target_link_libraries(${execfile}  nonlinear_precondition ${DOLFIN_LIBRARIES})
 endforeach(srcfile)
 
+
 # Executable
-#add_executable(${PROJECT_NAME} MainAnisoElas.cpp ${AE_LIB_SRC})
-#add_executable(IsoElas MainIsoElas.cpp ${AE_LIB_SRC})
+#add_executable(${PROJECT_NAME} main.cpp)
 
 # Target libraries
-#target_link_libraries(${PROJECT_NAME}  ${DOLFIN_LIBRARIES})
-#target_link_libraries(IsoElas  ${DOLFIN_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} dolfin)

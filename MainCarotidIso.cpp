@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     //interactive();
     
     //HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/carotidHII.h5","r");
-    HDF5File filer(MPI_COMM_WORLD,"/scratch/summit/shgo7817/mesh/pipe.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/pipe.h5","r");
     Mesh mesh;
     int meshID  = (int)para_material["meshID"];
     filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);

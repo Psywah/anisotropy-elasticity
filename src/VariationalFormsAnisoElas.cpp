@@ -1,6 +1,8 @@
 #include "VariationalFormsAnisoElas.h"
 #include "HyperElasticityC.h"
+#include "HyperElasticityB.h"
 #include "HyperElasticityA.h"
+#include "P1VectorElement.h"
 using namespace dolfin;
 
 
@@ -154,6 +156,8 @@ VariationalForms::VariationalForms(
 {
     
     _mesh = reference_to_no_delete_pointer(mesh);
+    _V_p1 = std::make_shared<P1VectorElement::FunctionSpace>(_mesh);
+    _u_p1 = std::make_shared<Function>(_V_p1);
     std::string elas_model = para["elas_model"];
     switch (elas_model[0]) {
         case 'C':
@@ -162,6 +166,7 @@ VariationalForms::VariationalForms(
             _V = std::make_shared<HyperElasticityC::Form_Res::TestSpace>(_mesh);
             _u = std::make_shared<Function>(_V);
             _F = std::make_shared<HyperElasticityC::Form_Res>(_V);
+            _obj = std::make_shared<HyperElasticityC::Form_Pi>(_mesh);
             dolfin_assert(_F);
             _J = std::make_shared<HyperElasticityC::Form_Jac>(_V, _V);
             _VMS = std::make_shared<HyperElasticityC::Form_L_vms::TestSpace>(_mesh);
@@ -174,6 +179,7 @@ VariationalForms::VariationalForms(
             _V = std::make_shared<HyperElasticityA::Form_Res::TestSpace>(_mesh);
             _u = std::make_shared<Function>(_V);
             _F = std::make_shared<HyperElasticityA::Form_Res>(_V);
+            _obj = std::make_shared<HyperElasticityA::Form_Pi>(_mesh);
             dolfin_assert(_F);
             _J = std::make_shared<HyperElasticityA::Form_Jac>(_V, _V);
             _VMS = std::make_shared<HyperElasticityA::Form_L_vms::TestSpace>(_mesh);
@@ -181,13 +187,25 @@ VariationalForms::VariationalForms(
             _a = std::make_shared<HyperElasticityA::Form_Mass_vms>(_VMS,_VMS);
             _L = std::make_shared<HyperElasticityA::Form_L_vms>(_VMS);
             break;
+        case 'B':
+            info("inital forms of model B");
+            _V = std::make_shared<HyperElasticityB::Form_Res::TestSpace>(_mesh);
+            _u = std::make_shared<Function>(_V);
+            _F = std::make_shared<HyperElasticityB::Form_Res>(_V);
+            _obj = std::make_shared<HyperElasticityB::Form_Pi>(_mesh);
+            dolfin_assert(_F);
+            _J = std::make_shared<HyperElasticityB::Form_Jac>(_V, _V);
+            _VMS = std::make_shared<HyperElasticityB::Form_L_vms::TestSpace>(_mesh);
+            _p = std::make_shared<Function>(_VMS);
+            _a = std::make_shared<HyperElasticityB::Form_Mass_vms>(_VMS,_VMS);
+            _L = std::make_shared<HyperElasticityB::Form_L_vms>(_VMS);
+            break;
         default :
             dolfin_error("VariationalForms.cpp",
                          "Switch Elasticity Model",
                          "Error option for Elasticity Model");
     }
-    info("# of Vertice %d, # of Cells %d, # of Unknowns %d", mesh.num_vertices(),
-         mesh.num_cells(), _V->dim());
+    info("# of Vertices %d, # of Cells %d, # of Unknowns %d", dolfin::MPI::sum(MPI_COMM_WORLD,num_v), dolfin::MPI::sum(MPI_COMM_WORLD,num_c), _V->dim());
     // Set material parameters
     double C1_adv = (double)(para["C1_adv"]),
            C1_med  = (double)(para["C1_med"]),
@@ -202,6 +220,13 @@ VariationalForms::VariationalForms(
            Alpha3_med = (double)(para["Alpha3_med"]),
            Alpha4_adv  = (double)(para["Alpha4_adv"]),
            Alpha4_med  = (double)(para["Alpha4_med"]),
+           Alpha5_adv  = (double)(para["Alpha5_adv"]),
+           Alpha5_med  = (double)(para["Alpha5_med"]),
+           Alpha5_pla  = (double)(para["Alpha5_pla"]),
+           K1_adv  = (double)(para["K1_adv"]),
+           K2_adv  = (double)(para["K2_adv"]),
+           K1_med  = (double)(para["K1_med"]),
+           K2_med  = (double)(para["K2_med"]),
            Beta1  = (double)(para["Beta1"]),
            Eta1  = (double)(para["Eta1"]),
            Delta1  = (double)(para["Delta1"]),
@@ -214,6 +239,9 @@ VariationalForms::VariationalForms(
     std::shared_ptr<MaterialCoef> coef_epsilon2 = std::make_shared<MaterialCoef>(Epsilon2_adv, Epsilon2_med, Epsilon2_pla);
     std::shared_ptr<MaterialCoef> coef_alpha3 = std::make_shared<MaterialCoef>(Alpha3_adv, Alpha3_med, 0.0);
     std::shared_ptr<MaterialCoef> coef_alpha4 = std::make_shared<MaterialCoef>(Alpha4_adv, Alpha4_med, 0.0);
+    std::shared_ptr<MaterialCoef> coef_alpha5 = std::make_shared<MaterialCoef>(Alpha5_adv, Alpha5_med, Alpha5_pla);
+    std::shared_ptr<MaterialCoef> coef_k1 = std::make_shared<MaterialCoef>(K1_adv, K1_med, 0.0);
+    std::shared_ptr<MaterialCoef> coef_k2 = std::make_shared<MaterialCoef>(K2_adv, K2_med, 0.0);
     std::shared_ptr<Constant> coef_beta1 = std::make_shared<Constant>(Beta1);
     std::shared_ptr<Constant> coef_eta1 = std::make_shared<Constant>(Eta1);
     std::shared_ptr<Constant> coef_delta1 = std::make_shared<Constant>(Delta1);
@@ -241,6 +269,9 @@ VariationalForms::VariationalForms(
             {"epsilon1",coef_epsilon1},
             {"epsilon2",coef_epsilon2},
             {"B",       B},
+            {"alpha5",  coef_alpha5},
+            {"k1",      coef_k1},
+            {"k2",      coef_k2},
             {"T",       pressure_normal}};
     // add coef for model A`
     double Alpha1_adv  = (double)(para["Alpha1_adv"]),
@@ -257,6 +288,9 @@ VariationalForms::VariationalForms(
     _F->set_some_coefficients(coef_list);
     _F->ds = reference_to_no_delete_pointer(boundary_mark);
     _F->dx = reference_to_no_delete_pointer(sub_domains_mark);
+    _obj->set_some_coefficients(coef_list);
+    _obj->ds = reference_to_no_delete_pointer(boundary_mark);
+    _obj->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _J->set_some_coefficients(coef_list);
     _J->dx = reference_to_no_delete_pointer(sub_domains_mark);
     _L->set_some_coefficients(coef_list);
