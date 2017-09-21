@@ -251,6 +251,7 @@ VariationalForms::VariationalForms(
     // Define source and boundary traction functions
     pressure = para["pressure_boundary_condition"]; t = 1.0;
     final_pressure = pressure;
+    std::shared_ptr<Constant> _pressure = std::make_shared<Constant>(pressure);
     std::shared_ptr<PressureNormal> pressure_normal = 
                      std::make_shared<PressureNormal>(mesh,&pressure);
     std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
@@ -272,6 +273,7 @@ VariationalForms::VariationalForms(
             {"alpha5",  coef_alpha5},
             {"k1",      coef_k1},
             {"k2",      coef_k2},
+            {"pressure", _pressure}
             {"T",       pressure_normal}};
     // add coef for model A`
     double Alpha1_adv  = (double)(para["Alpha1_adv"]),
@@ -312,14 +314,26 @@ VariationalForms::VariationalForms(
     std::shared_ptr<DirichletBC> bcl = std::make_shared<DirichletBC>((*_V)[1], zero, left, method);
     std::shared_ptr<DirichletBC> bcr = std::make_shared<DirichletBC>((*_V)[1], zero, right, method);
     std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
-    std::shared_ptr<DirichletBC> bc_cross = std::make_shared<DirichletBC>((*_V)[2], zero, 
+    std::shared_ptr<DirichletBC> bc_cross2 = std::make_shared<DirichletBC>((*_V)[2], zero, 
+            reference_to_no_delete_pointer(boundary_mark), 2);
+    std::shared_ptr<DirichletBC> bc_cross1 = std::make_shared<DirichletBC>((*_V)[2], zero, 
+            reference_to_no_delete_pointer(boundary_mark), 1);
+
+    std::shared_ptr<DirichletBC> bc_inlet = std::make_shared<DirichletBC>((*_V), zeros, 
+            reference_to_no_delete_pointer(boundary_mark), 1);
+    std::shared_ptr<DirichletBC> bc_outlet = std::make_shared<DirichletBC>((*_V), zeros, 
             reference_to_no_delete_pointer(boundary_mark), 2);
 
 
+    /*
     bcs.push_back(bcl);
     bcs.push_back(bcr);
     bcs.push_back(bct);
-    bcs.push_back(bc_cross);
+    bcs.push_back(bc_cross1);
+    bcs.push_back(bc_cross2);
+    */
+    bcs.push_back(bc_inlet);
+    bcs.push_back(bc_outlet);
 
 }
 
@@ -330,10 +344,16 @@ void VariationalForms::save_solution()
     ss << std::fixed << std::setprecision(2) << double(para["pressure_boundary_condition"]);
     std::string idx = std::string("Pres") + ss.str();
     // Save solution in VTK format
-    File file(std::string("displacement")+idx+std::string(".pvd"));
+    File file(std::string("./result/displacement")+idx+std::string(".pvd"));
     file << *_u;
     File file_backup(std::string("backup_solution")+(".xml"));
     file_backup << *_u;
+}
+
+void VariationalFormsCarotidIso::backup_solution(std::string str)
+{
+    File file_backup(str);
+    file_backup <<*_u;
 }
 
 void VariationalForms::load_solution(std::string str)
@@ -349,8 +369,13 @@ void VariationalForms::save_von_misec_stress()
     std::string idx = std::string("Pres") + ss.str();
 
     solve(*_a==*_L,*_p);
-    ALE::move(*_mesh, *_u);
-    File filep(std::string("stress")+idx+std::string(".pvd"));
+    if (_V->element()->ufc_element()->degree() != 1)
+    {
+        _u_p1->interpolate(*_u);
+        ALE::move(*_mesh, *_u_p1);
+    }
+    else ALE::move(*_mesh, *_u);
+    File filep(std::string("./result/stress")+idx+std::string(".pvd"));
     filep << *_p;
 }
 
