@@ -7013,11 +7013,1683 @@ hyperelasticitya_cell_integral_0_1::~hyperelasticitya_cell_integral_0_1()
 
 const std::vector<bool> & hyperelasticitya_cell_integral_0_1::enabled_coefficients() const
 {
-static const std::vector<bool> enabled({true, false, false, false, false, false, false, false, true, true, true, true});
+static const std::vector<bool> enabled({true, true, false, false, false, false, false, false, false, false, true, true, true, true});
 return enabled;
 }
 
 void hyperelasticitya_cell_integral_0_1::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE24_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE24_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
+    // Unstructured piecewise computations
+    double w0_d0_c0 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c0 += w[0][ic] * FE24_C0_D001_Q14[0][0][ic];
+    const double J_c4 = coordinate_dofs[1] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE24_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE24_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE24_C0_D001_Q14[0][0][1];
+    const double w0_d1_c0 = w[0][0] * FE24_C0_D001_Q14[0][0][0] + w[0][2] * FE24_C0_D001_Q14[0][0][1];
+    const double w0_d2_c0 = w[0][0] * FE24_C0_D001_Q14[0][0][0] + w[0][3] * FE24_C0_D001_Q14[0][0][1];
+    double w0_d0_c1 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c1 += w[0][ic + 4] * FE24_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c1 = w[0][4] * FE24_C0_D001_Q14[0][0][0] + w[0][6] * FE24_C0_D001_Q14[0][0][1];
+    const double w0_d2_c1 = w[0][4] * FE24_C0_D001_Q14[0][0][0] + w[0][7] * FE24_C0_D001_Q14[0][0][1];
+    double w0_d0_c2 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c2 += w[0][ic + 8] * FE24_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c2 = w[0][8] * FE24_C0_D001_Q14[0][0][0] + w[0][10] * FE24_C0_D001_Q14[0][0][1];
+    const double w0_d2_c2 = w[0][8] * FE24_C0_D001_Q14[0][0][0] + w[0][11] * FE24_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[151];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = sp[2] / sp[13];
+    sp[15] = w0_d0_c0 * sp[14];
+    sp[16] = J_c3 * (-1 * J_c8);
+    sp[17] = sp[4] + sp[16];
+    sp[18] = sp[17] / sp[13];
+    sp[19] = w0_d1_c0 * sp[18];
+    sp[20] = sp[15] + sp[19];
+    sp[21] = sp[11] / sp[13];
+    sp[22] = w0_d2_c0 * sp[21];
+    sp[23] = sp[20] + sp[22];
+    sp[24] = (1 + sp[23]) * (1 + sp[23]);
+    sp[25] = w0_d0_c1 * sp[14];
+    sp[26] = w0_d1_c1 * sp[18];
+    sp[27] = sp[25] + sp[26];
+    sp[28] = w0_d2_c1 * sp[21];
+    sp[29] = sp[27] + sp[28];
+    sp[30] = sp[29] * sp[29];
+    sp[31] = sp[24] + sp[30];
+    sp[32] = w0_d0_c2 * sp[14];
+    sp[33] = w0_d1_c2 * sp[18];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = w0_d2_c2 * sp[21];
+    sp[36] = sp[34] + sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[31] + sp[37];
+    sp[39] = J_c2 * J_c7;
+    sp[40] = J_c8 * (-1 * J_c1);
+    sp[41] = sp[39] + sp[40];
+    sp[42] = sp[41] / sp[13];
+    sp[43] = w0_d0_c1 * sp[42];
+    sp[44] = J_c0 * J_c8;
+    sp[45] = J_c6 * (-1 * J_c2);
+    sp[46] = sp[44] + sp[45];
+    sp[47] = sp[46] / sp[13];
+    sp[48] = w0_d1_c1 * sp[47];
+    sp[49] = sp[43] + sp[48];
+    sp[50] = J_c1 * J_c6;
+    sp[51] = J_c0 * J_c7;
+    sp[52] = sp[50] + -1 * sp[51];
+    sp[53] = sp[52] / sp[13];
+    sp[54] = w0_d2_c1 * sp[53];
+    sp[55] = sp[49] + sp[54];
+    sp[56] = (1 + sp[55]) * (1 + sp[55]);
+    sp[57] = w0_d0_c0 * sp[42];
+    sp[58] = w0_d1_c0 * sp[47];
+    sp[59] = sp[57] + sp[58];
+    sp[60] = w0_d2_c0 * sp[53];
+    sp[61] = sp[59] + sp[60];
+    sp[62] = sp[61] * sp[61];
+    sp[63] = sp[56] + sp[62];
+    sp[64] = w0_d0_c2 * sp[42];
+    sp[65] = w0_d1_c2 * sp[47];
+    sp[66] = sp[64] + sp[65];
+    sp[67] = w0_d2_c2 * sp[53];
+    sp[68] = sp[66] + sp[67];
+    sp[69] = sp[68] * sp[68];
+    sp[70] = sp[63] + sp[69];
+    sp[71] = sp[38] + sp[70];
+    sp[72] = J_c1 * J_c5;
+    sp[73] = J_c2 * J_c4;
+    sp[74] = sp[72] + -1 * sp[73];
+    sp[75] = sp[74] / sp[13];
+    sp[76] = w0_d0_c0 * sp[75];
+    sp[77] = J_c2 * J_c3;
+    sp[78] = J_c0 * J_c5;
+    sp[79] = sp[77] + -1 * sp[78];
+    sp[80] = sp[79] / sp[13];
+    sp[81] = w0_d1_c0 * sp[80];
+    sp[82] = sp[76] + sp[81];
+    sp[83] = J_c0 * J_c4;
+    sp[84] = J_c1 * J_c3;
+    sp[85] = sp[83] + -1 * sp[84];
+    sp[86] = sp[85] / sp[13];
+    sp[87] = w0_d2_c0 * sp[86];
+    sp[88] = sp[82] + sp[87];
+    sp[89] = sp[88] * sp[88];
+    sp[90] = w0_d0_c1 * sp[75];
+    sp[91] = w0_d1_c1 * sp[80];
+    sp[92] = sp[90] + sp[91];
+    sp[93] = w0_d2_c1 * sp[86];
+    sp[94] = sp[92] + sp[93];
+    sp[95] = sp[94] * sp[94];
+    sp[96] = sp[89] + sp[95];
+    sp[97] = w0_d0_c2 * sp[75];
+    sp[98] = w0_d1_c2 * sp[80];
+    sp[99] = sp[97] + sp[98];
+    sp[100] = w0_d2_c2 * sp[86];
+    sp[101] = sp[99] + sp[100];
+    sp[102] = (1 + sp[101]) * (1 + sp[101]);
+    sp[103] = sp[96] + sp[102];
+    sp[104] = sp[71] + sp[103];
+    sp[105] = sp[104] * w[10][0];
+    sp[106] = sp[103] * sp[38];
+    sp[107] = (1 + sp[23]) * sp[88];
+    sp[108] = sp[94] * sp[29];
+    sp[109] = sp[107] + sp[108];
+    sp[110] = (1 + sp[101]) * sp[36];
+    sp[111] = sp[109] + sp[110];
+    sp[112] = sp[111] * sp[111];
+    sp[113] = sp[106] + -1 * sp[112];
+    sp[114] = sp[103] * sp[70];
+    sp[115] = (1 + sp[55]) * sp[94];
+    sp[116] = sp[88] * sp[61];
+    sp[117] = sp[115] + sp[116];
+    sp[118] = (1 + sp[101]) * sp[68];
+    sp[119] = sp[117] + sp[118];
+    sp[120] = sp[119] * sp[119];
+    sp[121] = sp[114] + -1 * sp[120];
+    sp[122] = sp[113] + sp[121];
+    sp[123] = sp[38] * sp[70];
+    sp[124] = (1 + sp[55]) * sp[29];
+    sp[125] = (1 + sp[23]) * sp[61];
+    sp[126] = sp[124] + sp[125];
+    sp[127] = sp[36] * sp[68];
+    sp[128] = sp[126] + sp[127];
+    sp[129] = sp[128] * (-1 * sp[128]);
+    sp[130] = sp[123] + sp[129];
+    sp[131] = sp[122] + sp[130];
+    sp[132] = sp[131] * w[11][0];
+    sp[133] = sp[105] + sp[132];
+    sp[134] = sp[38] * sp[121];
+    sp[135] = sp[111] * sp[119];
+    sp[136] = sp[103] * sp[128];
+    sp[137] = sp[135] + -1 * sp[136];
+    sp[138] = sp[128] * sp[137];
+    sp[139] = sp[134] + sp[138];
+    sp[140] = sp[119] * sp[128];
+    sp[141] = sp[111] * sp[70];
+    sp[142] = sp[140] + -1 * sp[141];
+    sp[143] = sp[111] * sp[142];
+    sp[144] = sp[139] + sp[143];
+    sp[145] = sp[144] * w[12][0];
+    sp[146] = sp[133] + sp[145];
+    sp[147] = std::log(sp[144]);
+    sp[148] = sp[147] * w[13][0];
+    sp[149] = sp[146] + -1 * sp[148];
+    sp[150] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE24_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE24_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE24_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[7];
+        sv14[0] = w0_c0 * w[1][0];
+        sv14[1] = w0_c1 * w[1][1];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_c2 * w[1][2];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = sp[149] + -1 * sv14[4];
+        sv14[6] = sv14[5] * sp[150];
+        const double fw0 = sv14[6] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_cell_integral_0_2::hyperelasticitya_cell_integral_0_2() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitya_cell_integral_0_2::~hyperelasticitya_cell_integral_0_2()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_cell_integral_0_2::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
+return enabled;
+}
+
+void hyperelasticitya_cell_integral_0_2::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE30_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE30_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
+    // Unstructured piecewise computations
+    double w0_d0_c0 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c0 += w[0][ic] * FE30_C0_D001_Q14[0][0][ic];
+    const double J_c4 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d1_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][2] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][3] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c1 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c1 += w[0][ic + 4] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][6] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][7] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c2 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c2 += w[0][ic + 8] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][10] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][11] * FE30_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[258];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = sp[2] / sp[13];
+    sp[15] = w0_d0_c0 * sp[14];
+    sp[16] = J_c3 * (-1 * J_c8);
+    sp[17] = sp[4] + sp[16];
+    sp[18] = sp[17] / sp[13];
+    sp[19] = w0_d1_c0 * sp[18];
+    sp[20] = sp[15] + sp[19];
+    sp[21] = sp[11] / sp[13];
+    sp[22] = w0_d2_c0 * sp[21];
+    sp[23] = sp[20] + sp[22];
+    sp[24] = (1 + sp[23]) * (1 + sp[23]);
+    sp[25] = w0_d0_c1 * sp[14];
+    sp[26] = w0_d1_c1 * sp[18];
+    sp[27] = sp[25] + sp[26];
+    sp[28] = w0_d2_c1 * sp[21];
+    sp[29] = sp[27] + sp[28];
+    sp[30] = sp[29] * sp[29];
+    sp[31] = sp[24] + sp[30];
+    sp[32] = w0_d0_c2 * sp[14];
+    sp[33] = w0_d1_c2 * sp[18];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = w0_d2_c2 * sp[21];
+    sp[36] = sp[34] + sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[31] + sp[37];
+    sp[39] = J_c2 * J_c7;
+    sp[40] = J_c8 * (-1 * J_c1);
+    sp[41] = sp[39] + sp[40];
+    sp[42] = sp[41] / sp[13];
+    sp[43] = w0_d0_c1 * sp[42];
+    sp[44] = J_c0 * J_c8;
+    sp[45] = J_c6 * (-1 * J_c2);
+    sp[46] = sp[44] + sp[45];
+    sp[47] = sp[46] / sp[13];
+    sp[48] = w0_d1_c1 * sp[47];
+    sp[49] = sp[43] + sp[48];
+    sp[50] = J_c1 * J_c6;
+    sp[51] = J_c0 * J_c7;
+    sp[52] = sp[50] + -1 * sp[51];
+    sp[53] = sp[52] / sp[13];
+    sp[54] = w0_d2_c1 * sp[53];
+    sp[55] = sp[49] + sp[54];
+    sp[56] = (1 + sp[55]) * (1 + sp[55]);
+    sp[57] = w0_d0_c0 * sp[42];
+    sp[58] = w0_d1_c0 * sp[47];
+    sp[59] = sp[57] + sp[58];
+    sp[60] = w0_d2_c0 * sp[53];
+    sp[61] = sp[59] + sp[60];
+    sp[62] = sp[61] * sp[61];
+    sp[63] = sp[56] + sp[62];
+    sp[64] = w0_d0_c2 * sp[42];
+    sp[65] = w0_d1_c2 * sp[47];
+    sp[66] = sp[64] + sp[65];
+    sp[67] = w0_d2_c2 * sp[53];
+    sp[68] = sp[66] + sp[67];
+    sp[69] = sp[68] * sp[68];
+    sp[70] = sp[63] + sp[69];
+    sp[71] = sp[38] + sp[70];
+    sp[72] = J_c1 * J_c5;
+    sp[73] = J_c2 * J_c4;
+    sp[74] = sp[72] + -1 * sp[73];
+    sp[75] = sp[74] / sp[13];
+    sp[76] = w0_d0_c0 * sp[75];
+    sp[77] = J_c2 * J_c3;
+    sp[78] = J_c0 * J_c5;
+    sp[79] = sp[77] + -1 * sp[78];
+    sp[80] = sp[79] / sp[13];
+    sp[81] = w0_d1_c0 * sp[80];
+    sp[82] = sp[76] + sp[81];
+    sp[83] = J_c0 * J_c4;
+    sp[84] = J_c1 * J_c3;
+    sp[85] = sp[83] + -1 * sp[84];
+    sp[86] = sp[85] / sp[13];
+    sp[87] = w0_d2_c0 * sp[86];
+    sp[88] = sp[82] + sp[87];
+    sp[89] = sp[88] * sp[88];
+    sp[90] = w0_d0_c1 * sp[75];
+    sp[91] = w0_d1_c1 * sp[80];
+    sp[92] = sp[90] + sp[91];
+    sp[93] = w0_d2_c1 * sp[86];
+    sp[94] = sp[92] + sp[93];
+    sp[95] = sp[94] * sp[94];
+    sp[96] = sp[89] + sp[95];
+    sp[97] = w0_d0_c2 * sp[75];
+    sp[98] = w0_d1_c2 * sp[80];
+    sp[99] = sp[97] + sp[98];
+    sp[100] = w0_d2_c2 * sp[86];
+    sp[101] = sp[99] + sp[100];
+    sp[102] = (1 + sp[101]) * (1 + sp[101]);
+    sp[103] = sp[96] + sp[102];
+    sp[104] = sp[71] + sp[103];
+    sp[105] = sp[103] * sp[70];
+    sp[106] = (1 + sp[55]) * sp[94];
+    sp[107] = sp[88] * sp[61];
+    sp[108] = sp[106] + sp[107];
+    sp[109] = (1 + sp[101]) * sp[68];
+    sp[110] = sp[108] + sp[109];
+    sp[111] = sp[110] * sp[110];
+    sp[112] = sp[105] + -1 * sp[111];
+    sp[113] = sp[38] * sp[112];
+    sp[114] = (1 + sp[55]) * sp[29];
+    sp[115] = (1 + sp[23]) * sp[61];
+    sp[116] = sp[114] + sp[115];
+    sp[117] = sp[36] * sp[68];
+    sp[118] = sp[116] + sp[117];
+    sp[119] = (1 + sp[23]) * sp[88];
+    sp[120] = sp[94] * sp[29];
+    sp[121] = sp[119] + sp[120];
+    sp[122] = (1 + sp[101]) * sp[36];
+    sp[123] = sp[121] + sp[122];
+    sp[124] = sp[123] * sp[110];
+    sp[125] = sp[103] * sp[118];
+    sp[126] = sp[124] + -1 * sp[125];
+    sp[127] = sp[118] * sp[126];
+    sp[128] = sp[113] + sp[127];
+    sp[129] = sp[110] * sp[118];
+    sp[130] = sp[123] * sp[70];
+    sp[131] = sp[129] + -1 * sp[130];
+    sp[132] = sp[123] * sp[131];
+    sp[133] = sp[128] + sp[132];
+    sp[134] = sp[104] / std::pow(sp[133], 0.3333333333333333);
+    sp[135] = (-3.0 + sp[134]) * w[5][0];
+    sp[136] = std::pow(sp[133], w[7][0]);
+    sp[137] = 1.0 / sp[136] + sp[136];
+    sp[138] = (-2.0 + sp[137]) * w[6][0];
+    sp[139] = sp[135] + sp[138];
+    sp[140] = w[3][0] * sp[38];
+    sp[141] = w[3][1] * sp[118];
+    sp[142] = sp[140] + sp[141];
+    sp[143] = w[3][2] * sp[123];
+    sp[144] = sp[142] + sp[143];
+    sp[145] = w[3][0] * sp[144];
+    sp[146] = w[3][0] * sp[118];
+    sp[147] = w[3][1] * sp[70];
+    sp[148] = sp[146] + sp[147];
+    sp[149] = w[3][2] * sp[110];
+    sp[150] = sp[148] + sp[149];
+    sp[151] = w[3][1] * sp[150];
+    sp[152] = sp[145] + sp[151];
+    sp[153] = w[3][0] * sp[123];
+    sp[154] = w[3][1] * sp[110];
+    sp[155] = sp[153] + sp[154];
+    sp[156] = w[3][2] * sp[103];
+    sp[157] = sp[155] + sp[156];
+    sp[158] = w[3][2] * sp[157];
+    sp[159] = sp[152] + sp[158];
+    sp[160] = sp[104] * sp[159];
+    sp[161] = sp[38] * sp[38];
+    sp[162] = sp[118] * sp[118];
+    sp[163] = sp[161] + sp[162];
+    sp[164] = sp[123] * sp[123];
+    sp[165] = sp[163] + sp[164];
+    sp[166] = w[3][0] * sp[165];
+    sp[167] = sp[38] * sp[118];
+    sp[168] = sp[118] * sp[70];
+    sp[169] = sp[167] + sp[168];
+    sp[170] = sp[169] + sp[124];
+    sp[171] = w[3][1] * sp[170];
+    sp[172] = sp[166] + sp[171];
+    sp[173] = sp[123] * sp[38];
+    sp[174] = sp[173] + sp[129];
+    sp[175] = sp[103] * sp[123];
+    sp[176] = sp[174] + sp[175];
+    sp[177] = w[3][2] * sp[176];
+    sp[178] = sp[172] + sp[177];
+    sp[179] = w[3][0] * sp[178];
+    sp[180] = w[3][0] * sp[170];
+    sp[181] = sp[70] * sp[70];
+    sp[182] = sp[162] + sp[181];
+    sp[183] = sp[182] + sp[111];
+    sp[184] = w[3][1] * sp[183];
+    sp[185] = sp[180] + sp[184];
+    sp[186] = sp[123] * sp[118];
+    sp[187] = sp[110] * sp[70];
+    sp[188] = sp[186] + sp[187];
+    sp[189] = sp[103] * sp[110];
+    sp[190] = sp[188] + sp[189];
+    sp[191] = w[3][2] * sp[190];
+    sp[192] = sp[185] + sp[191];
+    sp[193] = w[3][1] * sp[192];
+    sp[194] = sp[179] + sp[193];
+    sp[195] = w[3][0] * sp[176];
+    sp[196] = w[3][1] * sp[190];
+    sp[197] = sp[195] + sp[196];
+    sp[198] = sp[164] + sp[111];
+    sp[199] = sp[103] * sp[103];
+    sp[200] = sp[198] + sp[199];
+    sp[201] = w[3][2] * sp[200];
+    sp[202] = sp[197] + sp[201];
+    sp[203] = w[3][2] * sp[202];
+    sp[204] = sp[194] + sp[203];
+    sp[205] = sp[160] + -1 * sp[204];
+    sp[206] = std::abs(-2 + sp[205]);
+    sp[207] = std::pow(1e-10 + sp[206], w[9][0]);
+    sp[208] = sp[207] * (-2 + sp[205] <= 1e-10 ? 0.0 : 1.0);
+    sp[209] = w[4][0] * sp[38];
+    sp[210] = w[4][1] * sp[118];
+    sp[211] = sp[209] + sp[210];
+    sp[212] = w[4][2] * sp[123];
+    sp[213] = sp[211] + sp[212];
+    sp[214] = w[4][0] * sp[213];
+    sp[215] = w[4][0] * sp[118];
+    sp[216] = w[4][1] * sp[70];
+    sp[217] = sp[215] + sp[216];
+    sp[218] = w[4][2] * sp[110];
+    sp[219] = sp[217] + sp[218];
+    sp[220] = w[4][1] * sp[219];
+    sp[221] = sp[214] + sp[220];
+    sp[222] = w[4][0] * sp[123];
+    sp[223] = w[4][1] * sp[110];
+    sp[224] = sp[222] + sp[223];
+    sp[225] = w[4][2] * sp[103];
+    sp[226] = sp[224] + sp[225];
+    sp[227] = w[4][2] * sp[226];
+    sp[228] = sp[221] + sp[227];
+    sp[229] = sp[104] * sp[228];
+    sp[230] = w[4][0] * sp[165];
+    sp[231] = w[4][1] * sp[170];
+    sp[232] = sp[230] + sp[231];
+    sp[233] = w[4][2] * sp[176];
+    sp[234] = sp[232] + sp[233];
+    sp[235] = w[4][0] * sp[234];
+    sp[236] = w[4][0] * sp[170];
+    sp[237] = w[4][1] * sp[183];
+    sp[238] = sp[236] + sp[237];
+    sp[239] = w[4][2] * sp[190];
+    sp[240] = sp[238] + sp[239];
+    sp[241] = w[4][1] * sp[240];
+    sp[242] = sp[235] + sp[241];
+    sp[243] = w[4][0] * sp[176];
+    sp[244] = w[4][1] * sp[190];
+    sp[245] = sp[243] + sp[244];
+    sp[246] = w[4][2] * sp[200];
+    sp[247] = sp[245] + sp[246];
+    sp[248] = w[4][2] * sp[247];
+    sp[249] = sp[242] + sp[248];
+    sp[250] = sp[229] + -1 * sp[249];
+    sp[251] = std::abs(-2 + sp[250]);
+    sp[252] = std::pow(1e-10 + sp[251], w[9][0]);
+    sp[253] = sp[252] * (-2 + sp[250] <= 1e-10 ? 0.0 : 1.0);
+    sp[254] = sp[208] + sp[253];
+    sp[255] = sp[254] * w[8][0];
+    sp[256] = sp[139] + sp[255];
+    sp[257] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE30_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE30_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE30_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[7];
+        sv14[0] = w0_c0 * w[1][0];
+        sv14[1] = w0_c1 * w[1][1];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_c2 * w[1][2];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = sp[256] + -1 * sv14[4];
+        sv14[6] = sv14[5] * sp[257];
+        const double fw0 = sv14[6] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_cell_integral_0_3::hyperelasticitya_cell_integral_0_3() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitya_cell_integral_0_3::~hyperelasticitya_cell_integral_0_3()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_cell_integral_0_3::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
+return enabled;
+}
+
+void hyperelasticitya_cell_integral_0_3::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE30_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE30_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
+    // Unstructured piecewise computations
+    double w0_d0_c0 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c0 += w[0][ic] * FE30_C0_D001_Q14[0][0][ic];
+    const double J_c4 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d1_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][2] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][3] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c1 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c1 += w[0][ic + 4] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][6] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][7] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c2 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c2 += w[0][ic + 8] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][10] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][11] * FE30_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[258];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = sp[2] / sp[13];
+    sp[15] = w0_d0_c0 * sp[14];
+    sp[16] = J_c3 * (-1 * J_c8);
+    sp[17] = sp[4] + sp[16];
+    sp[18] = sp[17] / sp[13];
+    sp[19] = w0_d1_c0 * sp[18];
+    sp[20] = sp[15] + sp[19];
+    sp[21] = sp[11] / sp[13];
+    sp[22] = w0_d2_c0 * sp[21];
+    sp[23] = sp[20] + sp[22];
+    sp[24] = (1 + sp[23]) * (1 + sp[23]);
+    sp[25] = w0_d0_c1 * sp[14];
+    sp[26] = w0_d1_c1 * sp[18];
+    sp[27] = sp[25] + sp[26];
+    sp[28] = w0_d2_c1 * sp[21];
+    sp[29] = sp[27] + sp[28];
+    sp[30] = sp[29] * sp[29];
+    sp[31] = sp[24] + sp[30];
+    sp[32] = w0_d0_c2 * sp[14];
+    sp[33] = w0_d1_c2 * sp[18];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = w0_d2_c2 * sp[21];
+    sp[36] = sp[34] + sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[31] + sp[37];
+    sp[39] = J_c2 * J_c7;
+    sp[40] = J_c8 * (-1 * J_c1);
+    sp[41] = sp[39] + sp[40];
+    sp[42] = sp[41] / sp[13];
+    sp[43] = w0_d0_c1 * sp[42];
+    sp[44] = J_c0 * J_c8;
+    sp[45] = J_c6 * (-1 * J_c2);
+    sp[46] = sp[44] + sp[45];
+    sp[47] = sp[46] / sp[13];
+    sp[48] = w0_d1_c1 * sp[47];
+    sp[49] = sp[43] + sp[48];
+    sp[50] = J_c1 * J_c6;
+    sp[51] = J_c0 * J_c7;
+    sp[52] = sp[50] + -1 * sp[51];
+    sp[53] = sp[52] / sp[13];
+    sp[54] = w0_d2_c1 * sp[53];
+    sp[55] = sp[49] + sp[54];
+    sp[56] = (1 + sp[55]) * (1 + sp[55]);
+    sp[57] = w0_d0_c0 * sp[42];
+    sp[58] = w0_d1_c0 * sp[47];
+    sp[59] = sp[57] + sp[58];
+    sp[60] = w0_d2_c0 * sp[53];
+    sp[61] = sp[59] + sp[60];
+    sp[62] = sp[61] * sp[61];
+    sp[63] = sp[56] + sp[62];
+    sp[64] = w0_d0_c2 * sp[42];
+    sp[65] = w0_d1_c2 * sp[47];
+    sp[66] = sp[64] + sp[65];
+    sp[67] = w0_d2_c2 * sp[53];
+    sp[68] = sp[66] + sp[67];
+    sp[69] = sp[68] * sp[68];
+    sp[70] = sp[63] + sp[69];
+    sp[71] = sp[38] + sp[70];
+    sp[72] = J_c1 * J_c5;
+    sp[73] = J_c2 * J_c4;
+    sp[74] = sp[72] + -1 * sp[73];
+    sp[75] = sp[74] / sp[13];
+    sp[76] = w0_d0_c0 * sp[75];
+    sp[77] = J_c2 * J_c3;
+    sp[78] = J_c0 * J_c5;
+    sp[79] = sp[77] + -1 * sp[78];
+    sp[80] = sp[79] / sp[13];
+    sp[81] = w0_d1_c0 * sp[80];
+    sp[82] = sp[76] + sp[81];
+    sp[83] = J_c0 * J_c4;
+    sp[84] = J_c1 * J_c3;
+    sp[85] = sp[83] + -1 * sp[84];
+    sp[86] = sp[85] / sp[13];
+    sp[87] = w0_d2_c0 * sp[86];
+    sp[88] = sp[82] + sp[87];
+    sp[89] = sp[88] * sp[88];
+    sp[90] = w0_d0_c1 * sp[75];
+    sp[91] = w0_d1_c1 * sp[80];
+    sp[92] = sp[90] + sp[91];
+    sp[93] = w0_d2_c1 * sp[86];
+    sp[94] = sp[92] + sp[93];
+    sp[95] = sp[94] * sp[94];
+    sp[96] = sp[89] + sp[95];
+    sp[97] = w0_d0_c2 * sp[75];
+    sp[98] = w0_d1_c2 * sp[80];
+    sp[99] = sp[97] + sp[98];
+    sp[100] = w0_d2_c2 * sp[86];
+    sp[101] = sp[99] + sp[100];
+    sp[102] = (1 + sp[101]) * (1 + sp[101]);
+    sp[103] = sp[96] + sp[102];
+    sp[104] = sp[71] + sp[103];
+    sp[105] = sp[103] * sp[70];
+    sp[106] = (1 + sp[55]) * sp[94];
+    sp[107] = sp[88] * sp[61];
+    sp[108] = sp[106] + sp[107];
+    sp[109] = (1 + sp[101]) * sp[68];
+    sp[110] = sp[108] + sp[109];
+    sp[111] = sp[110] * sp[110];
+    sp[112] = sp[105] + -1 * sp[111];
+    sp[113] = sp[38] * sp[112];
+    sp[114] = (1 + sp[55]) * sp[29];
+    sp[115] = (1 + sp[23]) * sp[61];
+    sp[116] = sp[114] + sp[115];
+    sp[117] = sp[36] * sp[68];
+    sp[118] = sp[116] + sp[117];
+    sp[119] = (1 + sp[23]) * sp[88];
+    sp[120] = sp[94] * sp[29];
+    sp[121] = sp[119] + sp[120];
+    sp[122] = (1 + sp[101]) * sp[36];
+    sp[123] = sp[121] + sp[122];
+    sp[124] = sp[123] * sp[110];
+    sp[125] = sp[103] * sp[118];
+    sp[126] = sp[124] + -1 * sp[125];
+    sp[127] = sp[118] * sp[126];
+    sp[128] = sp[113] + sp[127];
+    sp[129] = sp[110] * sp[118];
+    sp[130] = sp[123] * sp[70];
+    sp[131] = sp[129] + -1 * sp[130];
+    sp[132] = sp[123] * sp[131];
+    sp[133] = sp[128] + sp[132];
+    sp[134] = sp[104] / std::pow(sp[133], 0.3333333333333333);
+    sp[135] = (-3.0 + sp[134]) * w[5][0];
+    sp[136] = std::pow(sp[133], w[7][0]);
+    sp[137] = 1.0 / sp[136] + sp[136];
+    sp[138] = (-2.0 + sp[137]) * w[6][0];
+    sp[139] = sp[135] + sp[138];
+    sp[140] = w[3][0] * sp[38];
+    sp[141] = w[3][1] * sp[118];
+    sp[142] = sp[140] + sp[141];
+    sp[143] = w[3][2] * sp[123];
+    sp[144] = sp[142] + sp[143];
+    sp[145] = w[3][0] * sp[144];
+    sp[146] = w[3][0] * sp[118];
+    sp[147] = w[3][1] * sp[70];
+    sp[148] = sp[146] + sp[147];
+    sp[149] = w[3][2] * sp[110];
+    sp[150] = sp[148] + sp[149];
+    sp[151] = w[3][1] * sp[150];
+    sp[152] = sp[145] + sp[151];
+    sp[153] = w[3][0] * sp[123];
+    sp[154] = w[3][1] * sp[110];
+    sp[155] = sp[153] + sp[154];
+    sp[156] = w[3][2] * sp[103];
+    sp[157] = sp[155] + sp[156];
+    sp[158] = w[3][2] * sp[157];
+    sp[159] = sp[152] + sp[158];
+    sp[160] = sp[104] * sp[159];
+    sp[161] = sp[38] * sp[38];
+    sp[162] = sp[118] * sp[118];
+    sp[163] = sp[161] + sp[162];
+    sp[164] = sp[123] * sp[123];
+    sp[165] = sp[163] + sp[164];
+    sp[166] = w[3][0] * sp[165];
+    sp[167] = sp[38] * sp[118];
+    sp[168] = sp[118] * sp[70];
+    sp[169] = sp[167] + sp[168];
+    sp[170] = sp[169] + sp[124];
+    sp[171] = w[3][1] * sp[170];
+    sp[172] = sp[166] + sp[171];
+    sp[173] = sp[123] * sp[38];
+    sp[174] = sp[173] + sp[129];
+    sp[175] = sp[103] * sp[123];
+    sp[176] = sp[174] + sp[175];
+    sp[177] = w[3][2] * sp[176];
+    sp[178] = sp[172] + sp[177];
+    sp[179] = w[3][0] * sp[178];
+    sp[180] = w[3][0] * sp[170];
+    sp[181] = sp[70] * sp[70];
+    sp[182] = sp[162] + sp[181];
+    sp[183] = sp[182] + sp[111];
+    sp[184] = w[3][1] * sp[183];
+    sp[185] = sp[180] + sp[184];
+    sp[186] = sp[123] * sp[118];
+    sp[187] = sp[110] * sp[70];
+    sp[188] = sp[186] + sp[187];
+    sp[189] = sp[103] * sp[110];
+    sp[190] = sp[188] + sp[189];
+    sp[191] = w[3][2] * sp[190];
+    sp[192] = sp[185] + sp[191];
+    sp[193] = w[3][1] * sp[192];
+    sp[194] = sp[179] + sp[193];
+    sp[195] = w[3][0] * sp[176];
+    sp[196] = w[3][1] * sp[190];
+    sp[197] = sp[195] + sp[196];
+    sp[198] = sp[164] + sp[111];
+    sp[199] = sp[103] * sp[103];
+    sp[200] = sp[198] + sp[199];
+    sp[201] = w[3][2] * sp[200];
+    sp[202] = sp[197] + sp[201];
+    sp[203] = w[3][2] * sp[202];
+    sp[204] = sp[194] + sp[203];
+    sp[205] = sp[160] + -1 * sp[204];
+    sp[206] = std::abs(-2 + sp[205]);
+    sp[207] = std::pow(1e-10 + sp[206], w[9][0]);
+    sp[208] = sp[207] * (-2 + sp[205] <= 1e-10 ? 0.0 : 1.0);
+    sp[209] = w[4][0] * sp[38];
+    sp[210] = w[4][1] * sp[118];
+    sp[211] = sp[209] + sp[210];
+    sp[212] = w[4][2] * sp[123];
+    sp[213] = sp[211] + sp[212];
+    sp[214] = w[4][0] * sp[213];
+    sp[215] = w[4][0] * sp[118];
+    sp[216] = w[4][1] * sp[70];
+    sp[217] = sp[215] + sp[216];
+    sp[218] = w[4][2] * sp[110];
+    sp[219] = sp[217] + sp[218];
+    sp[220] = w[4][1] * sp[219];
+    sp[221] = sp[214] + sp[220];
+    sp[222] = w[4][0] * sp[123];
+    sp[223] = w[4][1] * sp[110];
+    sp[224] = sp[222] + sp[223];
+    sp[225] = w[4][2] * sp[103];
+    sp[226] = sp[224] + sp[225];
+    sp[227] = w[4][2] * sp[226];
+    sp[228] = sp[221] + sp[227];
+    sp[229] = sp[104] * sp[228];
+    sp[230] = w[4][0] * sp[165];
+    sp[231] = w[4][1] * sp[170];
+    sp[232] = sp[230] + sp[231];
+    sp[233] = w[4][2] * sp[176];
+    sp[234] = sp[232] + sp[233];
+    sp[235] = w[4][0] * sp[234];
+    sp[236] = w[4][0] * sp[170];
+    sp[237] = w[4][1] * sp[183];
+    sp[238] = sp[236] + sp[237];
+    sp[239] = w[4][2] * sp[190];
+    sp[240] = sp[238] + sp[239];
+    sp[241] = w[4][1] * sp[240];
+    sp[242] = sp[235] + sp[241];
+    sp[243] = w[4][0] * sp[176];
+    sp[244] = w[4][1] * sp[190];
+    sp[245] = sp[243] + sp[244];
+    sp[246] = w[4][2] * sp[200];
+    sp[247] = sp[245] + sp[246];
+    sp[248] = w[4][2] * sp[247];
+    sp[249] = sp[242] + sp[248];
+    sp[250] = sp[229] + -1 * sp[249];
+    sp[251] = std::abs(-2 + sp[250]);
+    sp[252] = std::pow(1e-10 + sp[251], w[9][0]);
+    sp[253] = sp[252] * (-2 + sp[250] <= 1e-10 ? 0.0 : 1.0);
+    sp[254] = sp[208] + sp[253];
+    sp[255] = sp[254] * w[8][0];
+    sp[256] = sp[139] + sp[255];
+    sp[257] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE30_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE30_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE30_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[7];
+        sv14[0] = w0_c0 * w[1][0];
+        sv14[1] = w0_c1 * w[1][1];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_c2 * w[1][2];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = sp[256] + -1 * sv14[4];
+        sv14[6] = sv14[5] * sp[257];
+        const double fw0 = sv14[6] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_cell_integral_0_4::hyperelasticitya_cell_integral_0_4() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitya_cell_integral_0_4::~hyperelasticitya_cell_integral_0_4()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_cell_integral_0_4::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
+return enabled;
+}
+
+void hyperelasticitya_cell_integral_0_4::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE30_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE30_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
+    // Unstructured piecewise computations
+    double w0_d0_c0 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c0 += w[0][ic] * FE30_C0_D001_Q14[0][0][ic];
+    const double J_c4 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE30_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE30_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d1_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][2] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c0 = w[0][0] * FE30_C0_D001_Q14[0][0][0] + w[0][3] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c1 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c1 += w[0][ic + 4] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][6] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c1 = w[0][4] * FE30_C0_D001_Q14[0][0][0] + w[0][7] * FE30_C0_D001_Q14[0][0][1];
+    double w0_d0_c2 = 0.0;
+    for (int ic = 0; ic < 2; ++ic)
+        w0_d0_c2 += w[0][ic + 8] * FE30_C0_D001_Q14[0][0][ic];
+    const double w0_d1_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][10] * FE30_C0_D001_Q14[0][0][1];
+    const double w0_d2_c2 = w[0][8] * FE30_C0_D001_Q14[0][0][0] + w[0][11] * FE30_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[258];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = sp[2] / sp[13];
+    sp[15] = w0_d0_c0 * sp[14];
+    sp[16] = J_c3 * (-1 * J_c8);
+    sp[17] = sp[4] + sp[16];
+    sp[18] = sp[17] / sp[13];
+    sp[19] = w0_d1_c0 * sp[18];
+    sp[20] = sp[15] + sp[19];
+    sp[21] = sp[11] / sp[13];
+    sp[22] = w0_d2_c0 * sp[21];
+    sp[23] = sp[20] + sp[22];
+    sp[24] = (1 + sp[23]) * (1 + sp[23]);
+    sp[25] = w0_d0_c1 * sp[14];
+    sp[26] = w0_d1_c1 * sp[18];
+    sp[27] = sp[25] + sp[26];
+    sp[28] = w0_d2_c1 * sp[21];
+    sp[29] = sp[27] + sp[28];
+    sp[30] = sp[29] * sp[29];
+    sp[31] = sp[24] + sp[30];
+    sp[32] = w0_d0_c2 * sp[14];
+    sp[33] = w0_d1_c2 * sp[18];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = w0_d2_c2 * sp[21];
+    sp[36] = sp[34] + sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[31] + sp[37];
+    sp[39] = J_c2 * J_c7;
+    sp[40] = J_c8 * (-1 * J_c1);
+    sp[41] = sp[39] + sp[40];
+    sp[42] = sp[41] / sp[13];
+    sp[43] = w0_d0_c1 * sp[42];
+    sp[44] = J_c0 * J_c8;
+    sp[45] = J_c6 * (-1 * J_c2);
+    sp[46] = sp[44] + sp[45];
+    sp[47] = sp[46] / sp[13];
+    sp[48] = w0_d1_c1 * sp[47];
+    sp[49] = sp[43] + sp[48];
+    sp[50] = J_c1 * J_c6;
+    sp[51] = J_c0 * J_c7;
+    sp[52] = sp[50] + -1 * sp[51];
+    sp[53] = sp[52] / sp[13];
+    sp[54] = w0_d2_c1 * sp[53];
+    sp[55] = sp[49] + sp[54];
+    sp[56] = (1 + sp[55]) * (1 + sp[55]);
+    sp[57] = w0_d0_c0 * sp[42];
+    sp[58] = w0_d1_c0 * sp[47];
+    sp[59] = sp[57] + sp[58];
+    sp[60] = w0_d2_c0 * sp[53];
+    sp[61] = sp[59] + sp[60];
+    sp[62] = sp[61] * sp[61];
+    sp[63] = sp[56] + sp[62];
+    sp[64] = w0_d0_c2 * sp[42];
+    sp[65] = w0_d1_c2 * sp[47];
+    sp[66] = sp[64] + sp[65];
+    sp[67] = w0_d2_c2 * sp[53];
+    sp[68] = sp[66] + sp[67];
+    sp[69] = sp[68] * sp[68];
+    sp[70] = sp[63] + sp[69];
+    sp[71] = sp[38] + sp[70];
+    sp[72] = J_c1 * J_c5;
+    sp[73] = J_c2 * J_c4;
+    sp[74] = sp[72] + -1 * sp[73];
+    sp[75] = sp[74] / sp[13];
+    sp[76] = w0_d0_c0 * sp[75];
+    sp[77] = J_c2 * J_c3;
+    sp[78] = J_c0 * J_c5;
+    sp[79] = sp[77] + -1 * sp[78];
+    sp[80] = sp[79] / sp[13];
+    sp[81] = w0_d1_c0 * sp[80];
+    sp[82] = sp[76] + sp[81];
+    sp[83] = J_c0 * J_c4;
+    sp[84] = J_c1 * J_c3;
+    sp[85] = sp[83] + -1 * sp[84];
+    sp[86] = sp[85] / sp[13];
+    sp[87] = w0_d2_c0 * sp[86];
+    sp[88] = sp[82] + sp[87];
+    sp[89] = sp[88] * sp[88];
+    sp[90] = w0_d0_c1 * sp[75];
+    sp[91] = w0_d1_c1 * sp[80];
+    sp[92] = sp[90] + sp[91];
+    sp[93] = w0_d2_c1 * sp[86];
+    sp[94] = sp[92] + sp[93];
+    sp[95] = sp[94] * sp[94];
+    sp[96] = sp[89] + sp[95];
+    sp[97] = w0_d0_c2 * sp[75];
+    sp[98] = w0_d1_c2 * sp[80];
+    sp[99] = sp[97] + sp[98];
+    sp[100] = w0_d2_c2 * sp[86];
+    sp[101] = sp[99] + sp[100];
+    sp[102] = (1 + sp[101]) * (1 + sp[101]);
+    sp[103] = sp[96] + sp[102];
+    sp[104] = sp[71] + sp[103];
+    sp[105] = sp[103] * sp[70];
+    sp[106] = (1 + sp[55]) * sp[94];
+    sp[107] = sp[88] * sp[61];
+    sp[108] = sp[106] + sp[107];
+    sp[109] = (1 + sp[101]) * sp[68];
+    sp[110] = sp[108] + sp[109];
+    sp[111] = sp[110] * sp[110];
+    sp[112] = sp[105] + -1 * sp[111];
+    sp[113] = sp[38] * sp[112];
+    sp[114] = (1 + sp[55]) * sp[29];
+    sp[115] = (1 + sp[23]) * sp[61];
+    sp[116] = sp[114] + sp[115];
+    sp[117] = sp[36] * sp[68];
+    sp[118] = sp[116] + sp[117];
+    sp[119] = (1 + sp[23]) * sp[88];
+    sp[120] = sp[94] * sp[29];
+    sp[121] = sp[119] + sp[120];
+    sp[122] = (1 + sp[101]) * sp[36];
+    sp[123] = sp[121] + sp[122];
+    sp[124] = sp[123] * sp[110];
+    sp[125] = sp[103] * sp[118];
+    sp[126] = sp[124] + -1 * sp[125];
+    sp[127] = sp[118] * sp[126];
+    sp[128] = sp[113] + sp[127];
+    sp[129] = sp[110] * sp[118];
+    sp[130] = sp[123] * sp[70];
+    sp[131] = sp[129] + -1 * sp[130];
+    sp[132] = sp[123] * sp[131];
+    sp[133] = sp[128] + sp[132];
+    sp[134] = sp[104] / std::pow(sp[133], 0.3333333333333333);
+    sp[135] = (-3.0 + sp[134]) * w[5][0];
+    sp[136] = std::pow(sp[133], w[7][0]);
+    sp[137] = 1.0 / sp[136] + sp[136];
+    sp[138] = (-2.0 + sp[137]) * w[6][0];
+    sp[139] = sp[135] + sp[138];
+    sp[140] = w[3][0] * sp[38];
+    sp[141] = w[3][1] * sp[118];
+    sp[142] = sp[140] + sp[141];
+    sp[143] = w[3][2] * sp[123];
+    sp[144] = sp[142] + sp[143];
+    sp[145] = w[3][0] * sp[144];
+    sp[146] = w[3][0] * sp[118];
+    sp[147] = w[3][1] * sp[70];
+    sp[148] = sp[146] + sp[147];
+    sp[149] = w[3][2] * sp[110];
+    sp[150] = sp[148] + sp[149];
+    sp[151] = w[3][1] * sp[150];
+    sp[152] = sp[145] + sp[151];
+    sp[153] = w[3][0] * sp[123];
+    sp[154] = w[3][1] * sp[110];
+    sp[155] = sp[153] + sp[154];
+    sp[156] = w[3][2] * sp[103];
+    sp[157] = sp[155] + sp[156];
+    sp[158] = w[3][2] * sp[157];
+    sp[159] = sp[152] + sp[158];
+    sp[160] = sp[104] * sp[159];
+    sp[161] = sp[38] * sp[38];
+    sp[162] = sp[118] * sp[118];
+    sp[163] = sp[161] + sp[162];
+    sp[164] = sp[123] * sp[123];
+    sp[165] = sp[163] + sp[164];
+    sp[166] = w[3][0] * sp[165];
+    sp[167] = sp[38] * sp[118];
+    sp[168] = sp[118] * sp[70];
+    sp[169] = sp[167] + sp[168];
+    sp[170] = sp[169] + sp[124];
+    sp[171] = w[3][1] * sp[170];
+    sp[172] = sp[166] + sp[171];
+    sp[173] = sp[123] * sp[38];
+    sp[174] = sp[173] + sp[129];
+    sp[175] = sp[103] * sp[123];
+    sp[176] = sp[174] + sp[175];
+    sp[177] = w[3][2] * sp[176];
+    sp[178] = sp[172] + sp[177];
+    sp[179] = w[3][0] * sp[178];
+    sp[180] = w[3][0] * sp[170];
+    sp[181] = sp[70] * sp[70];
+    sp[182] = sp[162] + sp[181];
+    sp[183] = sp[182] + sp[111];
+    sp[184] = w[3][1] * sp[183];
+    sp[185] = sp[180] + sp[184];
+    sp[186] = sp[123] * sp[118];
+    sp[187] = sp[110] * sp[70];
+    sp[188] = sp[186] + sp[187];
+    sp[189] = sp[103] * sp[110];
+    sp[190] = sp[188] + sp[189];
+    sp[191] = w[3][2] * sp[190];
+    sp[192] = sp[185] + sp[191];
+    sp[193] = w[3][1] * sp[192];
+    sp[194] = sp[179] + sp[193];
+    sp[195] = w[3][0] * sp[176];
+    sp[196] = w[3][1] * sp[190];
+    sp[197] = sp[195] + sp[196];
+    sp[198] = sp[164] + sp[111];
+    sp[199] = sp[103] * sp[103];
+    sp[200] = sp[198] + sp[199];
+    sp[201] = w[3][2] * sp[200];
+    sp[202] = sp[197] + sp[201];
+    sp[203] = w[3][2] * sp[202];
+    sp[204] = sp[194] + sp[203];
+    sp[205] = sp[160] + -1 * sp[204];
+    sp[206] = std::abs(-2 + sp[205]);
+    sp[207] = std::pow(1e-10 + sp[206], w[9][0]);
+    sp[208] = sp[207] * (-2 + sp[205] <= 1e-10 ? 0.0 : 1.0);
+    sp[209] = w[4][0] * sp[38];
+    sp[210] = w[4][1] * sp[118];
+    sp[211] = sp[209] + sp[210];
+    sp[212] = w[4][2] * sp[123];
+    sp[213] = sp[211] + sp[212];
+    sp[214] = w[4][0] * sp[213];
+    sp[215] = w[4][0] * sp[118];
+    sp[216] = w[4][1] * sp[70];
+    sp[217] = sp[215] + sp[216];
+    sp[218] = w[4][2] * sp[110];
+    sp[219] = sp[217] + sp[218];
+    sp[220] = w[4][1] * sp[219];
+    sp[221] = sp[214] + sp[220];
+    sp[222] = w[4][0] * sp[123];
+    sp[223] = w[4][1] * sp[110];
+    sp[224] = sp[222] + sp[223];
+    sp[225] = w[4][2] * sp[103];
+    sp[226] = sp[224] + sp[225];
+    sp[227] = w[4][2] * sp[226];
+    sp[228] = sp[221] + sp[227];
+    sp[229] = sp[104] * sp[228];
+    sp[230] = w[4][0] * sp[165];
+    sp[231] = w[4][1] * sp[170];
+    sp[232] = sp[230] + sp[231];
+    sp[233] = w[4][2] * sp[176];
+    sp[234] = sp[232] + sp[233];
+    sp[235] = w[4][0] * sp[234];
+    sp[236] = w[4][0] * sp[170];
+    sp[237] = w[4][1] * sp[183];
+    sp[238] = sp[236] + sp[237];
+    sp[239] = w[4][2] * sp[190];
+    sp[240] = sp[238] + sp[239];
+    sp[241] = w[4][1] * sp[240];
+    sp[242] = sp[235] + sp[241];
+    sp[243] = w[4][0] * sp[176];
+    sp[244] = w[4][1] * sp[190];
+    sp[245] = sp[243] + sp[244];
+    sp[246] = w[4][2] * sp[200];
+    sp[247] = sp[245] + sp[246];
+    sp[248] = w[4][2] * sp[247];
+    sp[249] = sp[242] + sp[248];
+    sp[250] = sp[229] + -1 * sp[249];
+    sp[251] = std::abs(-2 + sp[250]);
+    sp[252] = std::pow(1e-10 + sp[251], w[9][0]);
+    sp[253] = sp[252] * (-2 + sp[250] <= 1e-10 ? 0.0 : 1.0);
+    sp[254] = sp[208] + sp[253];
+    sp[255] = sp[254] * w[8][0];
+    sp[256] = sp[139] + sp[255];
+    sp[257] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE30_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE30_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE30_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[7];
+        sv14[0] = w0_c0 * w[1][0];
+        sv14[1] = w0_c1 * w[1][1];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_c2 * w[1][2];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = sp[256] + -1 * sv14[4];
+        sv14[6] = sv14[5] * sp[257];
+        const double fw0 = sv14[6] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_cell_integral_0_otherwise::hyperelasticitya_cell_integral_0_otherwise() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitya_cell_integral_0_otherwise::~hyperelasticitya_cell_integral_0_otherwise()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_cell_integral_0_otherwise::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, true, false, false, false, false, false, false, false, false, false, false, false, false});
+return enabled;
+}
+
+void hyperelasticitya_cell_integral_0_otherwise::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights14[14] = { 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.003174603174603167, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.01476497079049678, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512, 0.02213979111426512 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE15_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE15_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
+    // Unstructured piecewise computations
+    const double J_c0 = coordinate_dofs[0] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[3] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c4 = coordinate_dofs[1] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[7] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[11] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[8] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[5] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c3 = coordinate_dofs[1] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[4] * FE15_C0_D001_Q14[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE15_C0_D001_Q14[0][0][0] + coordinate_dofs[9] * FE15_C0_D001_Q14[0][0][1];
+    alignas(32) double sp[15];
+    sp[0] = J_c4 * J_c8;
+    sp[1] = J_c5 * J_c7;
+    sp[2] = sp[0] + -1 * sp[1];
+    sp[3] = J_c0 * sp[2];
+    sp[4] = J_c5 * J_c6;
+    sp[5] = J_c3 * J_c8;
+    sp[6] = sp[4] + -1 * sp[5];
+    sp[7] = J_c1 * sp[6];
+    sp[8] = sp[3] + sp[7];
+    sp[9] = J_c3 * J_c7;
+    sp[10] = J_c4 * J_c6;
+    sp[11] = sp[9] + -1 * sp[10];
+    sp[12] = J_c2 * sp[11];
+    sp[13] = sp[8] + sp[12];
+    sp[14] = std::abs(sp[13]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 14; ++iq)
+    {
+        // Quadrature loop body setup (num_points=14)
+        // Unstructured varying computations for num_points=14
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE15_C0_Q14[0][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE15_C0_Q14[0][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE15_C0_Q14[0][iq][ic];
+        alignas(32) double sv14[6];
+        sv14[0] = w0_c0 * w[1][0];
+        sv14[1] = w0_c1 * w[1][1];
+        sv14[2] = sv14[0] + sv14[1];
+        sv14[3] = w0_c2 * w[1][2];
+        sv14[4] = sv14[2] + sv14[3];
+        sv14[5] = -1 * sv14[4] * sp[14];
+        const double fw0 = sv14[5] * weights14[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_exterior_facet_integral_0_1::hyperelasticitya_exterior_facet_integral_0_1() : ufc::exterior_facet_integral()
+{
+
+}
+
+hyperelasticitya_exterior_facet_integral_0_1::~hyperelasticitya_exterior_facet_integral_0_1()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_exterior_facet_integral_0_1::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, false, true, false, false, false, false, false, false, false, false, false, false, false});
+return enabled;
+}
+
+void hyperelasticitya_exterior_facet_integral_0_1::tabulate_tensor(double * A,
+                                    const double * const * w,
+                                    const double * coordinate_dofs,
+                                    std::size_t facet,
+                                    int cell_orientation) const
+{
+    // This function was generated using 'uflacs' representation
+    // with the following integrals metadata:
+    // 
+    //   num_cells:         None
+    //   optimize:          True
+    //   precision:         16
+    //   quadrature_degree: 4
+    //   quadrature_rule:   'default'
+    //   representation:    'uflacs'
+    // 
+    // and the following integral 0 metadata:
+    // 
+    //   estimated_polynomial_degree: 1
+    //   optimize:                    True
+    //   precision:                   16
+    //   quadrature_degree:           4
+    //   quadrature_rule:             'default'
+    //   representation:              'uflacs'
+    
+    // Quadrature rules
+    alignas(32) static const double weights6[6] = { 0.054975871827661, 0.054975871827661, 0.054975871827661, 0.1116907948390055, 0.1116907948390055, 0.1116907948390055 };
+    // Precomputed values of basis functions and precomputations
+    // FE* dimensions: [entities][points][dofs]
+    // PI* dimensions: [entities][dofs][dofs] or [entities][dofs]
+    // PM* dimensions: [entities][dofs][dofs]
+    alignas(32) static const double FE15_C0_D001_F_Q6[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE15_C0_F_Q6[4][6][4] =
+        { { { 0.0, 0.09157621350977004, 0.8168475729804591, 0.09157621350977101 },
+            { 0.0, 0.0915762135097701, 0.09157621350977098, 0.816847572980459 },
+            { 0.0, 0.8168475729804578, 0.09157621350977102, 0.09157621350977105 },
+            { 0.0, 0.4459484909159649, 0.10810301816807, 0.445948490915965 },
+            { 0.0, 0.4459484909159649, 0.445948490915965, 0.10810301816807 },
+            { 0.0, 0.10810301816807, 0.445948490915965, 0.445948490915965 } },
+          { { 0.09157621350977002, 0.0, 0.8168475729804591, 0.09157621350977101 },
+            { 0.09157621350977006, 0.0, 0.09157621350977098, 0.816847572980459 },
+            { 0.816847572980458, 0.0, 0.09157621350977103, 0.09157621350977101 },
+            { 0.4459484909159651, 0.0, 0.10810301816807, 0.445948490915965 },
+            { 0.4459484909159651, 0.0, 0.445948490915965, 0.10810301816807 },
+            { 0.1081030181680701, 0.0, 0.445948490915965, 0.445948490915965 } },
+          { { 0.09157621350977005, 0.816847572980459, 0.0, 0.09157621350977101 },
+            { 0.09157621350977012, 0.09157621350977105, 0.0, 0.816847572980459 },
+            { 0.816847572980458, 0.09157621350977094, 0.0, 0.09157621350977101 },
+            { 0.4459484909159651, 0.10810301816807, 0.0, 0.445948490915965 },
+            { 0.4459484909159651, 0.4459484909159649, 0.0, 0.10810301816807 },
+            { 0.1081030181680701, 0.4459484909159649, 0.0, 0.445948490915965 } },
+          { { 0.09157621350977005, 0.8168475729804588, 0.09157621350977102, 0.0 },
+            { 0.09157621350977005, 0.09157621350977095, 0.8168475729804591, 0.0 },
+            { 0.8168475729804581, 0.09157621350977094, 0.09157621350977102, 0.0 },
+            { 0.4459484909159651, 0.10810301816807, 0.445948490915965, 0.0 },
+            { 0.4459484909159651, 0.4459484909159649, 0.10810301816807, 0.0 },
+            { 0.1081030181680701, 0.4459484909159649, 0.445948490915965, 0.0 } } };
+    // Unstructured piecewise computations
+    const double J_c3 = coordinate_dofs[1] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[4] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c4 = coordinate_dofs[1] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[7] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c5 = coordinate_dofs[1] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[10] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c6 = coordinate_dofs[2] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[5] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c7 = coordinate_dofs[2] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[8] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c8 = coordinate_dofs[2] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[11] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c0 = coordinate_dofs[0] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[3] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c1 = coordinate_dofs[0] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[6] * FE15_C0_D001_F_Q6[0][0][1];
+    const double J_c2 = coordinate_dofs[0] * FE15_C0_D001_F_Q6[0][0][0] + coordinate_dofs[9] * FE15_C0_D001_F_Q6[0][0][1];
+    alignas(32) double sp[45];
+    sp[0] = tetrahedron_reference_facet_jacobian[facet][0][0] * J_c3;
+    sp[1] = tetrahedron_reference_facet_jacobian[facet][1][0] * J_c4;
+    sp[2] = sp[0] + sp[1];
+    sp[3] = J_c5 * tetrahedron_reference_facet_jacobian[facet][2][0];
+    sp[4] = sp[2] + sp[3];
+    sp[5] = tetrahedron_reference_facet_jacobian[facet][0][1] * J_c6;
+    sp[6] = tetrahedron_reference_facet_jacobian[facet][1][1] * J_c7;
+    sp[7] = sp[5] + sp[6];
+    sp[8] = tetrahedron_reference_facet_jacobian[facet][2][1] * J_c8;
+    sp[9] = sp[7] + sp[8];
+    sp[10] = sp[4] * sp[9];
+    sp[11] = tetrahedron_reference_facet_jacobian[facet][0][1] * J_c3;
+    sp[12] = J_c4 * tetrahedron_reference_facet_jacobian[facet][1][1];
+    sp[13] = sp[11] + sp[12];
+    sp[14] = J_c5 * tetrahedron_reference_facet_jacobian[facet][2][1];
+    sp[15] = sp[13] + sp[14];
+    sp[16] = tetrahedron_reference_facet_jacobian[facet][0][0] * J_c6;
+    sp[17] = tetrahedron_reference_facet_jacobian[facet][1][0] * J_c7;
+    sp[18] = sp[16] + sp[17];
+    sp[19] = tetrahedron_reference_facet_jacobian[facet][2][0] * J_c8;
+    sp[20] = sp[18] + sp[19];
+    sp[21] = sp[15] * sp[20];
+    sp[22] = sp[10] + -1 * sp[21];
+    sp[23] = sp[22] * sp[22];
+    sp[24] = J_c0 * tetrahedron_reference_facet_jacobian[facet][0][1];
+    sp[25] = J_c1 * tetrahedron_reference_facet_jacobian[facet][1][1];
+    sp[26] = sp[24] + sp[25];
+    sp[27] = J_c2 * tetrahedron_reference_facet_jacobian[facet][2][1];
+    sp[28] = sp[26] + sp[27];
+    sp[29] = sp[28] * sp[20];
+    sp[30] = J_c0 * tetrahedron_reference_facet_jacobian[facet][0][0];
+    sp[31] = J_c1 * tetrahedron_reference_facet_jacobian[facet][1][0];
+    sp[32] = sp[30] + sp[31];
+    sp[33] = J_c2 * tetrahedron_reference_facet_jacobian[facet][2][0];
+    sp[34] = sp[32] + sp[33];
+    sp[35] = sp[34] * sp[9];
+    sp[36] = sp[29] + -1 * sp[35];
+    sp[37] = sp[36] * sp[36];
+    sp[38] = sp[23] + sp[37];
+    sp[39] = sp[34] * sp[15];
+    sp[40] = sp[4] * sp[28];
+    sp[41] = sp[39] + -1 * sp[40];
+    sp[42] = sp[41] * sp[41];
+    sp[43] = sp[38] + sp[42];
+    sp[44] = std::sqrt(sp[43]);
+    alignas(32) double BF0 = {};
+    for (int iq = 0; iq < 6; ++iq)
+    {
+        // Quadrature loop body setup (num_points=6)
+        // Unstructured varying computations for num_points=6
+        double w0_c0 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c0 += w[0][ic] * FE15_C0_F_Q6[facet][iq][ic];
+        double w0_c1 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c1 += w[0][ic + 4] * FE15_C0_F_Q6[facet][iq][ic];
+        double w0_c2 = 0.0;
+        for (int ic = 0; ic < 4; ++ic)
+            w0_c2 += w[0][ic + 8] * FE15_C0_F_Q6[facet][iq][ic];
+        alignas(32) double sv6[6];
+        sv6[0] = w0_c0 * w[2][0];
+        sv6[1] = w0_c1 * w[2][1];
+        sv6[2] = sv6[0] + sv6[1];
+        sv6[3] = w0_c2 * w[2][2];
+        sv6[4] = sv6[2] + sv6[3];
+        sv6[5] = -1 * sv6[4] * sp[44];
+        const double fw0 = sv6[5] * weights6[iq];
+        BF0 += fw0;
+    }
+    A[0] = 0.0;
+    A[0] += BF0;
+}
+
+
+hyperelasticitya_cell_integral_1_1::hyperelasticitya_cell_integral_1_1() : ufc::cell_integral()
+{
+
+}
+
+hyperelasticitya_cell_integral_1_1::~hyperelasticitya_cell_integral_1_1()
+{
+
+}
+
+const std::vector<bool> & hyperelasticitya_cell_integral_1_1::enabled_coefficients() const
+{
+static const std::vector<bool> enabled({true, false, false, false, false, false, false, false, true, true, true, true});
+return enabled;
+}
+
+void hyperelasticitya_cell_integral_1_1::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -11969,23 +13641,23 @@ void hyperelasticitya_cell_integral_0_1::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_0_2::hyperelasticitya_cell_integral_0_2() : ufc::cell_integral()
+hyperelasticitya_cell_integral_1_2::hyperelasticitya_cell_integral_1_2() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_0_2::~hyperelasticitya_cell_integral_0_2()
+hyperelasticitya_cell_integral_1_2::~hyperelasticitya_cell_integral_1_2()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_0_2::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_1_2::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_0_2::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_1_2::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -25037,23 +26709,23 @@ void hyperelasticitya_cell_integral_0_2::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_0_3::hyperelasticitya_cell_integral_0_3() : ufc::cell_integral()
+hyperelasticitya_cell_integral_1_3::hyperelasticitya_cell_integral_1_3() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_0_3::~hyperelasticitya_cell_integral_0_3()
+hyperelasticitya_cell_integral_1_3::~hyperelasticitya_cell_integral_1_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_0_3::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_1_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_0_3::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_1_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -38105,23 +39777,23 @@ void hyperelasticitya_cell_integral_0_3::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_0_4::hyperelasticitya_cell_integral_0_4() : ufc::cell_integral()
+hyperelasticitya_cell_integral_1_4::hyperelasticitya_cell_integral_1_4() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_0_4::~hyperelasticitya_cell_integral_0_4()
+hyperelasticitya_cell_integral_1_4::~hyperelasticitya_cell_integral_1_4()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_0_4::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_1_4::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_0_4::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_1_4::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -51173,23 +52845,23 @@ void hyperelasticitya_cell_integral_0_4::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_1_1::hyperelasticitya_cell_integral_1_1() : ufc::cell_integral()
+hyperelasticitya_cell_integral_2_1::hyperelasticitya_cell_integral_2_1() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_1_1::~hyperelasticitya_cell_integral_1_1()
+hyperelasticitya_cell_integral_2_1::~hyperelasticitya_cell_integral_2_1()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_1_1::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_2_1::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, false, false, false, false, false, false, false, false, true, true, true, true});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_1_1::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_2_1::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -52043,23 +53715,23 @@ void hyperelasticitya_cell_integral_1_1::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_1_2::hyperelasticitya_cell_integral_1_2() : ufc::cell_integral()
+hyperelasticitya_cell_integral_2_2::hyperelasticitya_cell_integral_2_2() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_1_2::~hyperelasticitya_cell_integral_1_2()
+hyperelasticitya_cell_integral_2_2::~hyperelasticitya_cell_integral_2_2()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_1_2::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_2_2::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_1_2::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_2_2::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -54209,23 +55881,23 @@ void hyperelasticitya_cell_integral_1_2::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_1_3::hyperelasticitya_cell_integral_1_3() : ufc::cell_integral()
+hyperelasticitya_cell_integral_2_3::hyperelasticitya_cell_integral_2_3() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_1_3::~hyperelasticitya_cell_integral_1_3()
+hyperelasticitya_cell_integral_2_3::~hyperelasticitya_cell_integral_2_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_1_3::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_2_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_1_3::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_2_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -56375,23 +58047,23 @@ void hyperelasticitya_cell_integral_1_3::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_1_4::hyperelasticitya_cell_integral_1_4() : ufc::cell_integral()
+hyperelasticitya_cell_integral_2_4::hyperelasticitya_cell_integral_2_4() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_1_4::~hyperelasticitya_cell_integral_1_4()
+hyperelasticitya_cell_integral_2_4::~hyperelasticitya_cell_integral_2_4()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_1_4::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_2_4::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, false, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_1_4::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_2_4::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -58541,23 +60213,23 @@ void hyperelasticitya_cell_integral_1_4::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_1_otherwise::hyperelasticitya_cell_integral_1_otherwise() : ufc::cell_integral()
+hyperelasticitya_cell_integral_2_otherwise::hyperelasticitya_cell_integral_2_otherwise() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_1_otherwise::~hyperelasticitya_cell_integral_1_otherwise()
+hyperelasticitya_cell_integral_2_otherwise::~hyperelasticitya_cell_integral_2_otherwise()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_1_otherwise::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_2_otherwise::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({false, true, false, false, false, false, false, false, false, false, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_1_otherwise::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_2_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -58630,23 +60302,23 @@ void hyperelasticitya_cell_integral_1_otherwise::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_exterior_facet_integral_1_1::hyperelasticitya_exterior_facet_integral_1_1() : ufc::exterior_facet_integral()
+hyperelasticitya_exterior_facet_integral_2_1::hyperelasticitya_exterior_facet_integral_2_1() : ufc::exterior_facet_integral()
 {
 
 }
 
-hyperelasticitya_exterior_facet_integral_1_1::~hyperelasticitya_exterior_facet_integral_1_1()
+hyperelasticitya_exterior_facet_integral_2_1::~hyperelasticitya_exterior_facet_integral_2_1()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_exterior_facet_integral_1_1::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_exterior_facet_integral_2_1::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({false, false, true, false, false, false, false, false, false, false, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_exterior_facet_integral_1_1::tabulate_tensor(double * A,
+void hyperelasticitya_exterior_facet_integral_2_1::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     std::size_t facet,
@@ -58755,23 +60427,23 @@ void hyperelasticitya_exterior_facet_integral_1_1::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_2_otherwise::hyperelasticitya_cell_integral_2_otherwise() : ufc::cell_integral()
+hyperelasticitya_cell_integral_3_otherwise::hyperelasticitya_cell_integral_3_otherwise() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_2_otherwise::~hyperelasticitya_cell_integral_2_otherwise()
+hyperelasticitya_cell_integral_3_otherwise::~hyperelasticitya_cell_integral_3_otherwise()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_2_otherwise::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_3_otherwise::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_2_otherwise::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_3_otherwise::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -58830,23 +60502,23 @@ void hyperelasticitya_cell_integral_2_otherwise::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_3_1::hyperelasticitya_cell_integral_3_1() : ufc::cell_integral()
+hyperelasticitya_cell_integral_4_1::hyperelasticitya_cell_integral_4_1() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_3_1::~hyperelasticitya_cell_integral_3_1()
+hyperelasticitya_cell_integral_4_1::~hyperelasticitya_cell_integral_4_1()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_3_1::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_4_1::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, false, false, false, false, false, false, false, true, true, true, true});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_3_1::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_4_1::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -59214,23 +60886,23 @@ void hyperelasticitya_cell_integral_3_1::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_3_2::hyperelasticitya_cell_integral_3_2() : ufc::cell_integral()
+hyperelasticitya_cell_integral_4_2::hyperelasticitya_cell_integral_4_2() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_3_2::~hyperelasticitya_cell_integral_3_2()
+hyperelasticitya_cell_integral_4_2::~hyperelasticitya_cell_integral_4_2()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_3_2::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_4_2::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_3_2::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_4_2::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -60046,23 +61718,23 @@ void hyperelasticitya_cell_integral_3_2::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_3_3::hyperelasticitya_cell_integral_3_3() : ufc::cell_integral()
+hyperelasticitya_cell_integral_4_3::hyperelasticitya_cell_integral_4_3() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_3_3::~hyperelasticitya_cell_integral_3_3()
+hyperelasticitya_cell_integral_4_3::~hyperelasticitya_cell_integral_4_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_3_3::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_4_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_3_3::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_4_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -60878,23 +62550,23 @@ void hyperelasticitya_cell_integral_3_3::tabulate_tensor(double * A,
 }
 
 
-hyperelasticitya_cell_integral_3_4::hyperelasticitya_cell_integral_3_4() : ufc::cell_integral()
+hyperelasticitya_cell_integral_4_4::hyperelasticitya_cell_integral_4_4() : ufc::cell_integral()
 {
 
 }
 
-hyperelasticitya_cell_integral_3_4::~hyperelasticitya_cell_integral_3_4()
+hyperelasticitya_cell_integral_4_4::~hyperelasticitya_cell_integral_4_4()
 {
 
 }
 
-const std::vector<bool> & hyperelasticitya_cell_integral_3_4::enabled_coefficients() const
+const std::vector<bool> & hyperelasticitya_cell_integral_4_4::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, true, true, true, true, true, true, true, false, false, false, false});
 return enabled;
 }
 
-void hyperelasticitya_cell_integral_3_4::tabulate_tensor(double * A,
+void hyperelasticitya_cell_integral_4_4::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     int cell_orientation) const
@@ -61722,22 +63394,22 @@ hyperelasticitya_form_0::~hyperelasticitya_form_0()
 
 const char * hyperelasticitya_form_0::signature() const
 {
-    return "ab5ad7fe36c427b3c10d265ee958d4056fc46d46941dcfaee34feb602eb8cb0c6c12b0020fb98fc01fa24ea1485f255eea13789dce6fc74cbe4898cd0394e504";
+    return "d5274d71240660fdeb25512d990b9c8c5fc062d2c2b7d31d808c233456657f40b12ea5d01ab64ebb6ff5e8ac6b2d5270d03e469caa3a1158abf122896190872e";
 }
 
 std::size_t hyperelasticitya_form_0::rank() const
 {
-    return 2;
+    return 0;
 }
 
 std::size_t hyperelasticitya_form_0::num_coefficients() const
 {
-    return 12;
+    return 14;
 }
 
 std::size_t hyperelasticitya_form_0::original_coefficient_position(std::size_t i) const
 {
-    static const std::vector<std::size_t> position({0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
+    static const std::vector<std::size_t> position({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
     return position[i];
 }
 
@@ -61767,12 +63439,12 @@ ufc::finite_element * hyperelasticitya_form_0::create_finite_element(std::size_t
       }
     case 1:
       {
-        return new hyperelasticitya_finite_element_3();
+        return new hyperelasticitya_finite_element_1();
         break;
       }
     case 2:
       {
-        return new hyperelasticitya_finite_element_3();
+        return new hyperelasticitya_finite_element_1();
         break;
       }
     case 3:
@@ -61846,12 +63518,12 @@ ufc::dofmap * hyperelasticitya_form_0::create_dofmap(std::size_t i) const
       }
     case 1:
       {
-        return new hyperelasticitya_dofmap_3();
+        return new hyperelasticitya_dofmap_1();
         break;
       }
     case 2:
       {
-        return new hyperelasticitya_dofmap_3();
+        return new hyperelasticitya_dofmap_1();
         break;
       }
     case 3:
@@ -61921,7 +63593,7 @@ std::size_t hyperelasticitya_form_0::max_cell_subdomain_id() const
 
 std::size_t hyperelasticitya_form_0::max_exterior_facet_subdomain_id() const
 {
-    return 0;
+    return 2;
 }
 
 std::size_t hyperelasticitya_form_0::max_interior_facet_subdomain_id() const
@@ -61961,7 +63633,7 @@ bool hyperelasticitya_form_0::has_cell_integrals() const
 
 bool hyperelasticitya_form_0::has_exterior_facet_integrals() const
 {
-    return false;
+    return true;
 }
 
 bool hyperelasticitya_form_0::has_interior_facet_integrals() const
@@ -62025,6 +63697,15 @@ ufc::cell_integral * hyperelasticitya_form_0::create_cell_integral(std::size_t s
 
 ufc::exterior_facet_integral * hyperelasticitya_form_0::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
+    switch (subdomain_id)
+    {
+    case 1:
+      {
+        return new hyperelasticitya_exterior_facet_integral_0_1();
+        break;
+      }
+    }
+    
     return 0;
 }
 
@@ -62060,7 +63741,7 @@ ufc::overlap_integral * hyperelasticitya_form_0::create_overlap_integral(std::si
 
 ufc::cell_integral * hyperelasticitya_form_0::create_default_cell_integral() const
 {
-    return 0;
+    return new hyperelasticitya_cell_integral_0_otherwise();
 }
 
 ufc::exterior_facet_integral * hyperelasticitya_form_0::create_default_exterior_facet_integral() const
@@ -62111,22 +63792,22 @@ hyperelasticitya_form_1::~hyperelasticitya_form_1()
 
 const char * hyperelasticitya_form_1::signature() const
 {
-    return "f850428443aa3539491b84272a203d3979c0f3b2eb8cd9419adafbd014b45f668915352515827758f84f4f32447b3c6409f8bda0ee3429e6533a3d208898dd5a";
+    return "ab5ad7fe36c427b3c10d265ee958d4056fc46d46941dcfaee34feb602eb8cb0c6c12b0020fb98fc01fa24ea1485f255eea13789dce6fc74cbe4898cd0394e504";
 }
 
 std::size_t hyperelasticitya_form_1::rank() const
 {
-    return 1;
+    return 2;
 }
 
 std::size_t hyperelasticitya_form_1::num_coefficients() const
 {
-    return 14;
+    return 12;
 }
 
 std::size_t hyperelasticitya_form_1::original_coefficient_position(std::size_t i) const
 {
-    static const std::vector<std::size_t> position({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
+    static const std::vector<std::size_t> position({0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
     return position[i];
 }
 
@@ -62161,7 +63842,7 @@ ufc::finite_element * hyperelasticitya_form_1::create_finite_element(std::size_t
       }
     case 2:
       {
-        return new hyperelasticitya_finite_element_1();
+        return new hyperelasticitya_finite_element_3();
         break;
       }
     case 3:
@@ -62176,7 +63857,7 @@ ufc::finite_element * hyperelasticitya_form_1::create_finite_element(std::size_t
       }
     case 5:
       {
-        return new hyperelasticitya_finite_element_1();
+        return new hyperelasticitya_finite_element_0();
         break;
       }
     case 6:
@@ -62215,11 +63896,6 @@ ufc::finite_element * hyperelasticitya_form_1::create_finite_element(std::size_t
         break;
       }
     case 13:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 14:
       {
         return new hyperelasticitya_finite_element_0();
         break;
@@ -62245,7 +63921,7 @@ ufc::dofmap * hyperelasticitya_form_1::create_dofmap(std::size_t i) const
       }
     case 2:
       {
-        return new hyperelasticitya_dofmap_1();
+        return new hyperelasticitya_dofmap_3();
         break;
       }
     case 3:
@@ -62260,7 +63936,7 @@ ufc::dofmap * hyperelasticitya_form_1::create_dofmap(std::size_t i) const
       }
     case 5:
       {
-        return new hyperelasticitya_dofmap_1();
+        return new hyperelasticitya_dofmap_0();
         break;
       }
     case 6:
@@ -62303,11 +63979,6 @@ ufc::dofmap * hyperelasticitya_form_1::create_dofmap(std::size_t i) const
         return new hyperelasticitya_dofmap_0();
         break;
       }
-    case 14:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
     }
     
     return 0;
@@ -62320,7 +63991,7 @@ std::size_t hyperelasticitya_form_1::max_cell_subdomain_id() const
 
 std::size_t hyperelasticitya_form_1::max_exterior_facet_subdomain_id() const
 {
-    return 2;
+    return 0;
 }
 
 std::size_t hyperelasticitya_form_1::max_interior_facet_subdomain_id() const
@@ -62360,7 +64031,7 @@ bool hyperelasticitya_form_1::has_cell_integrals() const
 
 bool hyperelasticitya_form_1::has_exterior_facet_integrals() const
 {
-    return true;
+    return false;
 }
 
 bool hyperelasticitya_form_1::has_interior_facet_integrals() const
@@ -62424,15 +64095,6 @@ ufc::cell_integral * hyperelasticitya_form_1::create_cell_integral(std::size_t s
 
 ufc::exterior_facet_integral * hyperelasticitya_form_1::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
-    switch (subdomain_id)
-    {
-    case 1:
-      {
-        return new hyperelasticitya_exterior_facet_integral_1_1();
-        break;
-      }
-    }
-    
     return 0;
 }
 
@@ -62468,7 +64130,7 @@ ufc::overlap_integral * hyperelasticitya_form_1::create_overlap_integral(std::si
 
 ufc::cell_integral * hyperelasticitya_form_1::create_default_cell_integral() const
 {
-    return new hyperelasticitya_cell_integral_1_otherwise();
+    return 0;
 }
 
 ufc::exterior_facet_integral * hyperelasticitya_form_1::create_default_exterior_facet_integral() const
@@ -62519,22 +64181,22 @@ hyperelasticitya_form_2::~hyperelasticitya_form_2()
 
 const char * hyperelasticitya_form_2::signature() const
 {
-    return "9d6c3270f3a03cdd9a4f78b2aabc50d9e569c340874abfdcc6631d1e1387793b84bf80cf97e813d6e8c8faaa5d40a73596a5c48d29f29cd7c8ba7180feb7c8f9";
+    return "f850428443aa3539491b84272a203d3979c0f3b2eb8cd9419adafbd014b45f668915352515827758f84f4f32447b3c6409f8bda0ee3429e6533a3d208898dd5a";
 }
 
 std::size_t hyperelasticitya_form_2::rank() const
 {
-    return 2;
+    return 1;
 }
 
 std::size_t hyperelasticitya_form_2::num_coefficients() const
 {
-    return 0;
+    return 14;
 }
 
 std::size_t hyperelasticitya_form_2::original_coefficient_position(std::size_t i) const
 {
-    static const std::vector<std::size_t> position({});
+    static const std::vector<std::size_t> position({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
     return position[i];
 }
 
@@ -62559,12 +64221,77 @@ ufc::finite_element * hyperelasticitya_form_2::create_finite_element(std::size_t
     {
     case 0:
       {
-        return new hyperelasticitya_finite_element_4();
+        return new hyperelasticitya_finite_element_3();
         break;
       }
     case 1:
       {
-        return new hyperelasticitya_finite_element_4();
+        return new hyperelasticitya_finite_element_3();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 5:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 6:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 7:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 8:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 9:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 10:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 11:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 12:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 13:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 14:
+      {
+        return new hyperelasticitya_finite_element_0();
         break;
       }
     }
@@ -62578,12 +64305,77 @@ ufc::dofmap * hyperelasticitya_form_2::create_dofmap(std::size_t i) const
     {
     case 0:
       {
-        return new hyperelasticitya_dofmap_4();
+        return new hyperelasticitya_dofmap_3();
         break;
       }
     case 1:
       {
-        return new hyperelasticitya_dofmap_4();
+        return new hyperelasticitya_dofmap_3();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 5:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 6:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 7:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 8:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 9:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 10:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 11:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 12:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 13:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 14:
+      {
+        return new hyperelasticitya_dofmap_0();
         break;
       }
     }
@@ -62593,12 +64385,12 @@ ufc::dofmap * hyperelasticitya_form_2::create_dofmap(std::size_t i) const
 
 std::size_t hyperelasticitya_form_2::max_cell_subdomain_id() const
 {
-    return 0;
+    return 5;
 }
 
 std::size_t hyperelasticitya_form_2::max_exterior_facet_subdomain_id() const
 {
-    return 0;
+    return 2;
 }
 
 std::size_t hyperelasticitya_form_2::max_interior_facet_subdomain_id() const
@@ -62638,7 +64430,7 @@ bool hyperelasticitya_form_2::has_cell_integrals() const
 
 bool hyperelasticitya_form_2::has_exterior_facet_integrals() const
 {
-    return false;
+    return true;
 }
 
 bool hyperelasticitya_form_2::has_interior_facet_integrals() const
@@ -62673,11 +64465,44 @@ bool hyperelasticitya_form_2::has_overlap_integrals() const
 
 ufc::cell_integral * hyperelasticitya_form_2::create_cell_integral(std::size_t subdomain_id) const
 {
+    switch (subdomain_id)
+    {
+    case 1:
+      {
+        return new hyperelasticitya_cell_integral_2_1();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_cell_integral_2_2();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_cell_integral_2_3();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_cell_integral_2_4();
+        break;
+      }
+    }
+    
     return 0;
 }
 
 ufc::exterior_facet_integral * hyperelasticitya_form_2::create_exterior_facet_integral(std::size_t subdomain_id) const
 {
+    switch (subdomain_id)
+    {
+    case 1:
+      {
+        return new hyperelasticitya_exterior_facet_integral_2_1();
+        break;
+      }
+    }
+    
     return 0;
 }
 
@@ -62764,22 +64589,22 @@ hyperelasticitya_form_3::~hyperelasticitya_form_3()
 
 const char * hyperelasticitya_form_3::signature() const
 {
-    return "fd2e8d81315be309412a86d35ec41c63d9abf8db9d4922af81851e3ec0dc1ebb44e789da3f9a7e808eec835d46475ff2cc4e055d3e3f0b238e65bcce5cd29088";
+    return "9d6c3270f3a03cdd9a4f78b2aabc50d9e569c340874abfdcc6631d1e1387793b84bf80cf97e813d6e8c8faaa5d40a73596a5c48d29f29cd7c8ba7180feb7c8f9";
 }
 
 std::size_t hyperelasticitya_form_3::rank() const
 {
-    return 1;
+    return 2;
 }
 
 std::size_t hyperelasticitya_form_3::num_coefficients() const
 {
-    return 12;
+    return 0;
 }
 
 std::size_t hyperelasticitya_form_3::original_coefficient_position(std::size_t i) const
 {
-    static const std::vector<std::size_t> position({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+    static const std::vector<std::size_t> position({});
     return position[i];
 }
 
@@ -62809,62 +64634,7 @@ ufc::finite_element * hyperelasticitya_form_3::create_finite_element(std::size_t
       }
     case 1:
       {
-        return new hyperelasticitya_finite_element_3();
-        break;
-      }
-    case 2:
-      {
-        return new hyperelasticitya_finite_element_1();
-        break;
-      }
-    case 3:
-      {
-        return new hyperelasticitya_finite_element_1();
-        break;
-      }
-    case 4:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 5:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 6:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 7:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 8:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 9:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 10:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 11:
-      {
-        return new hyperelasticitya_finite_element_0();
-        break;
-      }
-    case 12:
-      {
-        return new hyperelasticitya_finite_element_0();
+        return new hyperelasticitya_finite_element_4();
         break;
       }
     }
@@ -62883,62 +64653,7 @@ ufc::dofmap * hyperelasticitya_form_3::create_dofmap(std::size_t i) const
       }
     case 1:
       {
-        return new hyperelasticitya_dofmap_3();
-        break;
-      }
-    case 2:
-      {
-        return new hyperelasticitya_dofmap_1();
-        break;
-      }
-    case 3:
-      {
-        return new hyperelasticitya_dofmap_1();
-        break;
-      }
-    case 4:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 5:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 6:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 7:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 8:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 9:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 10:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 11:
-      {
-        return new hyperelasticitya_dofmap_0();
-        break;
-      }
-    case 12:
-      {
-        return new hyperelasticitya_dofmap_0();
+        return new hyperelasticitya_dofmap_4();
         break;
       }
     }
@@ -62948,7 +64663,7 @@ ufc::dofmap * hyperelasticitya_form_3::create_dofmap(std::size_t i) const
 
 std::size_t hyperelasticitya_form_3::max_cell_subdomain_id() const
 {
-    return 5;
+    return 0;
 }
 
 std::size_t hyperelasticitya_form_3::max_exterior_facet_subdomain_id() const
@@ -63028,30 +64743,6 @@ bool hyperelasticitya_form_3::has_overlap_integrals() const
 
 ufc::cell_integral * hyperelasticitya_form_3::create_cell_integral(std::size_t subdomain_id) const
 {
-    switch (subdomain_id)
-    {
-    case 1:
-      {
-        return new hyperelasticitya_cell_integral_3_1();
-        break;
-      }
-    case 2:
-      {
-        return new hyperelasticitya_cell_integral_3_2();
-        break;
-      }
-    case 3:
-      {
-        return new hyperelasticitya_cell_integral_3_3();
-        break;
-      }
-    case 4:
-      {
-        return new hyperelasticitya_cell_integral_3_4();
-        break;
-      }
-    }
-    
     return 0;
 }
 
@@ -63092,7 +64783,7 @@ ufc::overlap_integral * hyperelasticitya_form_3::create_overlap_integral(std::si
 
 ufc::cell_integral * hyperelasticitya_form_3::create_default_cell_integral() const
 {
-    return 0;
+    return new hyperelasticitya_cell_integral_3_otherwise();
 }
 
 ufc::exterior_facet_integral * hyperelasticitya_form_3::create_default_exterior_facet_integral() const
@@ -63126,6 +64817,385 @@ ufc::interface_integral * hyperelasticitya_form_3::create_default_interface_inte
 }
 
 ufc::overlap_integral * hyperelasticitya_form_3::create_default_overlap_integral() const
+{
+    return 0;
+}
+
+
+hyperelasticitya_form_4::hyperelasticitya_form_4() : ufc::form()
+{
+    // Do nothing
+}
+
+hyperelasticitya_form_4::~hyperelasticitya_form_4()
+{
+    // Do nothing
+}
+
+const char * hyperelasticitya_form_4::signature() const
+{
+    return "fd2e8d81315be309412a86d35ec41c63d9abf8db9d4922af81851e3ec0dc1ebb44e789da3f9a7e808eec835d46475ff2cc4e055d3e3f0b238e65bcce5cd29088";
+}
+
+std::size_t hyperelasticitya_form_4::rank() const
+{
+    return 1;
+}
+
+std::size_t hyperelasticitya_form_4::num_coefficients() const
+{
+    return 12;
+}
+
+std::size_t hyperelasticitya_form_4::original_coefficient_position(std::size_t i) const
+{
+    static const std::vector<std::size_t> position({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+    return position[i];
+}
+
+ufc::finite_element * hyperelasticitya_form_4::create_coordinate_finite_element() const
+{
+    return new hyperelasticitya_finite_element_3();
+}
+
+ufc::dofmap * hyperelasticitya_form_4::create_coordinate_dofmap() const
+{
+    return new hyperelasticitya_dofmap_3();
+}
+
+ufc::coordinate_mapping * hyperelasticitya_form_4::create_coordinate_mapping() const
+{
+    return nullptr;
+}
+
+ufc::finite_element * hyperelasticitya_form_4::create_finite_element(std::size_t i) const
+{
+    switch (i)
+    {
+    case 0:
+      {
+        return new hyperelasticitya_finite_element_4();
+        break;
+      }
+    case 1:
+      {
+        return new hyperelasticitya_finite_element_3();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_finite_element_1();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 5:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 6:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 7:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 8:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 9:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 10:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 11:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    case 12:
+      {
+        return new hyperelasticitya_finite_element_0();
+        break;
+      }
+    }
+    
+    return 0;
+}
+
+ufc::dofmap * hyperelasticitya_form_4::create_dofmap(std::size_t i) const
+{
+    switch (i)
+    {
+    case 0:
+      {
+        return new hyperelasticitya_dofmap_4();
+        break;
+      }
+    case 1:
+      {
+        return new hyperelasticitya_dofmap_3();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_dofmap_1();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 5:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 6:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 7:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 8:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 9:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 10:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 11:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    case 12:
+      {
+        return new hyperelasticitya_dofmap_0();
+        break;
+      }
+    }
+    
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_cell_subdomain_id() const
+{
+    return 5;
+}
+
+std::size_t hyperelasticitya_form_4::max_exterior_facet_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_interior_facet_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_vertex_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_custom_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_cutcell_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_interface_subdomain_id() const
+{
+    return 0;
+}
+
+std::size_t hyperelasticitya_form_4::max_overlap_subdomain_id() const
+{
+    return 0;
+}
+
+bool hyperelasticitya_form_4::has_cell_integrals() const
+{
+    return true;
+}
+
+bool hyperelasticitya_form_4::has_exterior_facet_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_interior_facet_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_vertex_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_custom_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_cutcell_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_interface_integrals() const
+{
+    return false;
+}
+
+bool hyperelasticitya_form_4::has_overlap_integrals() const
+{
+    return false;
+}
+
+ufc::cell_integral * hyperelasticitya_form_4::create_cell_integral(std::size_t subdomain_id) const
+{
+    switch (subdomain_id)
+    {
+    case 1:
+      {
+        return new hyperelasticitya_cell_integral_4_1();
+        break;
+      }
+    case 2:
+      {
+        return new hyperelasticitya_cell_integral_4_2();
+        break;
+      }
+    case 3:
+      {
+        return new hyperelasticitya_cell_integral_4_3();
+        break;
+      }
+    case 4:
+      {
+        return new hyperelasticitya_cell_integral_4_4();
+        break;
+      }
+    }
+    
+    return 0;
+}
+
+ufc::exterior_facet_integral * hyperelasticitya_form_4::create_exterior_facet_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::interior_facet_integral * hyperelasticitya_form_4::create_interior_facet_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::vertex_integral * hyperelasticitya_form_4::create_vertex_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::custom_integral * hyperelasticitya_form_4::create_custom_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::cutcell_integral * hyperelasticitya_form_4::create_cutcell_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::interface_integral * hyperelasticitya_form_4::create_interface_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::overlap_integral * hyperelasticitya_form_4::create_overlap_integral(std::size_t subdomain_id) const
+{
+    return 0;
+}
+
+ufc::cell_integral * hyperelasticitya_form_4::create_default_cell_integral() const
+{
+    return 0;
+}
+
+ufc::exterior_facet_integral * hyperelasticitya_form_4::create_default_exterior_facet_integral() const
+{
+    return 0;
+}
+
+ufc::interior_facet_integral * hyperelasticitya_form_4::create_default_interior_facet_integral() const
+{
+    return 0;
+}
+
+ufc::vertex_integral * hyperelasticitya_form_4::create_default_vertex_integral() const
+{
+    return 0;
+}
+
+ufc::custom_integral * hyperelasticitya_form_4::create_default_custom_integral() const
+{
+    return 0;
+}
+
+ufc::cutcell_integral * hyperelasticitya_form_4::create_default_cutcell_integral() const
+{
+    return 0;
+}
+
+ufc::interface_integral * hyperelasticitya_form_4::create_default_interface_integral() const
+{
+    return 0;
+}
+
+ufc::overlap_integral * hyperelasticitya_form_4::create_default_overlap_integral() const
 {
     return 0;
 }

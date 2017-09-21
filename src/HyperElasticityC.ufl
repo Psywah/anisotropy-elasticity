@@ -93,10 +93,10 @@ psi = c1*(Ic/I3_ -3.) + epsilon1*((I3**epsilon2) + 1./(I3**epsilon2)-2.)\
 psi_iso = beta1*Ic +eta1*I2+delta1*I3 -delta2*ln(I3)
 
 # Total potential energy
-Phi = psi*(dx(2)+dx(3)+dx(4)) +psi_iso*dx(1)- inner(B, u)*dx - inner(T, u)*ds(1)
+Pi = psi*(dx(2)+dx(3)+dx(4)) +psi_iso*dx(1)- inner(B, u)*dx - inner(T, u)*ds(1)
 
 # First variation of Pi (directional derivative about u in the direction of v)
-Res = derivative(Phi, u, v)
+Res = derivative(Pi, u, v)
 
 # Compute Jacobian of F
 Jac = derivative(Res, u, du)
@@ -122,5 +122,5 @@ L_vms = sqrt((sigma[1,1]**2 +sigma[2,2]**2+sigma[0,0]**2\
     +3*(sigma_i[1,2]**2+sigma_i[1,0]**2+sigma_i[2,0]**2)))*q*dx(1)
 
 elements = [VecCG, DG]
-forms = [Phi, Jac, Res, Mass_vms, L_vms]
+forms = [Pi, Jac, Res, Mass_vms, L_vms]
 
