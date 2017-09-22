@@ -40,16 +40,18 @@ void list_petsc_ksp_methods()
 void pseudo_time_steping(double dt, VariationalForms& forms, 
                          NonlinearVariationalSolver& solver);
 
-int main()
+int main(int argc, char** argv)
 {
-    // list_linear_solver_methods();
-    // list_krylov_solver_preconditioners();
-    #ifdef HAS_PETSC
-    info("has PETSc");
-    list_petsc_snes_methods();
-    list_petsc_ksp_methods();
-    list_petsc_pre_methods();
+  #ifdef HAS_PETSC
     parameters["linear_algebra_backend"] = "PETSc";
+    PetscInitialize(&argc,&argv,NULL,NULL);
+    PetscOptionsInsertFile(PETSC_COMM_WORLD,NULL,"./petsc_options",PETSC_TRUE);
+    if(dolfin::MPI::rank(MPI_COMM_WORLD) == 0){
+        info("has PETSc");
+        list_petsc_snes_methods();
+        list_petsc_ksp_methods();
+        list_petsc_pre_methods();
+    }
     #endif
     LogManager::logger().set_log_active(dolfin::MPI::rank(MPI_COMM_WORLD) == 0);
 
@@ -62,20 +64,24 @@ int main()
     File para_file_nls("../parameters/solver_parameters_aniso.xml");
     para_file_nls >> para_nls;
     
-    // Create mesh and define function space
-    std::string prefix("../../../mesh/tube-4components-short-refine0");
-    Mesh mesh(prefix + std::string(".xml"));
-    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), 
-            prefix+ std::string("-domains-marker.xml") );
-    MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), 
-            prefix+ std::string("-boundary-marker.xml"));
-    //plot(mesh);plot(sub_domains_mark);plot(boundary_mark);
-    //interactive();
+    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-2layer.h5","r");
+    Mesh mesh;
+    int meshID  = (int)para_material["meshID"];
+    filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
+
+    // Create mesh functions over the cells and acets
+    MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
+    MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
+
+    filer.read(sub_domains_mark,std::string("subdomains_mark") + std::to_string(meshID) );
+    filer.read(boundary_mark,std::string("facet_mark") + std::to_string(meshID) );
+    filer.close();
+
 
     /*std::vector<double>& coord = mesh.coordinates();
-    for(std::size_t i = 0; i < coord.size(); i++)
-        coord[i]*= 1000.;
-        */
+      for(std::size_t i = 0; i < coord.size(); i++)
+      coord[i]*= 1000.;
+      */
 
     Timer t1("Inital Forms"); info("Initial Forms");
     t1.start();
@@ -85,6 +91,7 @@ int main()
     //solve(F == 0, u, bcs, J, para);
     Timer t2("Inital Nonlinear Problem"); info("Initial Nonlinear Problem");
     t2.start();
+    //NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J, forms._obj);
     NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
     t2.stop();
 
@@ -115,7 +122,7 @@ int main()
 }
 
 void pseudo_time_steping(double dt, VariationalForms& forms, 
-                         NonlinearVariationalSolver& solver)
+        NonlinearVariationalSolver& solver)
 {
     double t = dt;
     while(t < 1.0 + dt -DOLFIN_EPS)
