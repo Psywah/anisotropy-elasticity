@@ -16111,263 +16111,6 @@ ufc::finite_element * hyperelasticityb_finite_element_5::create() const
 }
 
 
-hyperelasticityb_finite_element_6::hyperelasticityb_finite_element_6() : ufc::finite_element()
-{
-    // Do nothing
-}
-
-hyperelasticityb_finite_element_6::~hyperelasticityb_finite_element_6()
-{
-    // Do nothing
-}
-
-const char * hyperelasticityb_finite_element_6::signature() const
-{
-    return "FiniteElement('Discontinuous Lagrange', tetrahedron, 0)";
-}
-
-ufc::shape hyperelasticityb_finite_element_6::cell_shape() const
-{
-    return ufc::shape::tetrahedron;
-}
-
-std::size_t hyperelasticityb_finite_element_6::topological_dimension() const
-{
-    return 3;
-}
-
-std::size_t hyperelasticityb_finite_element_6::geometric_dimension() const
-{
-    return 3;
-}
-
-std::size_t hyperelasticityb_finite_element_6::space_dimension() const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_finite_element_6::value_rank() const
-{
-    return 0;
-}
-
-std::size_t hyperelasticityb_finite_element_6::value_dimension(std::size_t i) const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_finite_element_6::value_size() const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_finite_element_6::reference_value_rank() const
-{
-    return 0;
-}
-
-std::size_t hyperelasticityb_finite_element_6::reference_value_dimension(std::size_t i) const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_finite_element_6::reference_value_size() const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_finite_element_6::degree() const
-{
-    return 0;
-}
-
-const char * hyperelasticityb_finite_element_6::family() const
-{
-    return "Discontinuous Lagrange";
-}
-
-void hyperelasticityb_finite_element_6::_evaluate_basis(std::size_t i,
-                                    double * values,
-                                    const double * x,
-                                    const double * coordinate_dofs,
-                                    int cell_orientation)
-{
-    // Compute Jacobian
-    double J[9];
-    compute_jacobian_tetrahedron_3d(J, coordinate_dofs);
-    
-    // Compute Jacobian inverse and determinant
-    double K[9];
-    double detJ;
-    compute_jacobian_inverse_tetrahedron_3d(K, detJ, J);
-    
-    
-    // Compute constants
-    
-    // Compute subdeterminants
-    
-    // Get coordinates and map to the reference (FIAT) element
-    
-    
-    // Reset values
-    *values = 0.0;
-    
-    // Array of basisvalues
-    double basisvalues[1] = {0.0};
-    
-    // Declare helper variables
-    
-    // Compute basisvalues
-    basisvalues[0] = 1.0;
-    
-    // Table(s) of coefficients
-    static const double coefficients0[1] = \
-    {1.0};
-    
-    // Compute value(s)
-    for (unsigned int r = 0; r < 1; r++)
-    {
-      *values += coefficients0[r]*basisvalues[r];
-    } // end loop over 'r'
-}
-
-void hyperelasticityb_finite_element_6::_evaluate_basis_all(double * values,
-                                        const double * x,
-                                        const double * coordinate_dofs,
-                                        int cell_orientation)
-{
-    // Element is constant, calling evaluate_basis.
-    _evaluate_basis(0, values, x, coordinate_dofs, cell_orientation);
-}
-
-void hyperelasticityb_finite_element_6::_evaluate_basis_derivatives(std::size_t i,
-                                                std::size_t n,
-                                                double * values,
-                                                const double * x,
-                                                const double * coordinate_dofs,
-                                                int cell_orientation)
-{
-    
-    // Compute number of derivatives.
-    unsigned int num_derivatives = 1;
-    for (unsigned int r = 0; r < n; r++)
-    {
-      num_derivatives *= 3;
-    } // end loop over 'r'
-    
-    // Reset values. Assuming that values is always an array.
-    for (unsigned int r = 0; r < num_derivatives; r++)
-    {
-      values[r] = 0.0;
-    } // end loop over 'r'
-    
-    // Call evaluate_basis if order of derivatives is equal to zero.
-    if (n == 0)
-    {
-      _evaluate_basis(i, values, x, coordinate_dofs, cell_orientation);
-      return ;
-    }
-    
-    // If order of derivatives is greater than the maximum polynomial degree, return zeros.
-    if (n > 0)
-    {
-    return ;
-    }
-    
-}
-
-void hyperelasticityb_finite_element_6::_evaluate_basis_derivatives_all(std::size_t n,
-                                                    double * values,
-                                                    const double * x,
-                                                    const double * coordinate_dofs,
-                                                    int cell_orientation)
-{
-    // Element is constant, calling evaluate_basis_derivatives.
-    _evaluate_basis_derivatives(0, n, values, x, coordinate_dofs, cell_orientation);
-}
-
-double hyperelasticityb_finite_element_6::evaluate_dof(std::size_t i,
-                                   const ufc::function& f,
-                                   const double * coordinate_dofs,
-                                   int cell_orientation,
-                                   const ufc::cell& c) const
-{
-    // Declare variables for result of evaluation
-    double vals[1];
-    
-    // Declare variable for physical coordinates
-    double y[3];
-    switch (i)
-    {
-    case 0:
-      {
-        y[0] = 0.25*coordinate_dofs[0] + 0.25*coordinate_dofs[3] + 0.25*coordinate_dofs[6] + 0.25*coordinate_dofs[9];
-      y[1] = 0.25*coordinate_dofs[1] + 0.25*coordinate_dofs[4] + 0.25*coordinate_dofs[7] + 0.25*coordinate_dofs[10];
-      y[2] = 0.25*coordinate_dofs[2] + 0.25*coordinate_dofs[5] + 0.25*coordinate_dofs[8] + 0.25*coordinate_dofs[11];
-      f.evaluate(vals, y, c);
-      return vals[0];
-        break;
-      }
-    }
-    
-    return 0.0;
-}
-
-void hyperelasticityb_finite_element_6::evaluate_dofs(double * values,
-                                  const ufc::function& f,
-                                  const double * coordinate_dofs,
-                                  int cell_orientation,
-                                  const ufc::cell& c) const
-{
-    // Declare variables for result of evaluation
-    double vals[1];
-    
-    // Declare variable for physical coordinates
-    double y[3];
-    y[0] = 0.25*coordinate_dofs[0] + 0.25*coordinate_dofs[3] + 0.25*coordinate_dofs[6] + 0.25*coordinate_dofs[9];
-    y[1] = 0.25*coordinate_dofs[1] + 0.25*coordinate_dofs[4] + 0.25*coordinate_dofs[7] + 0.25*coordinate_dofs[10];
-    y[2] = 0.25*coordinate_dofs[2] + 0.25*coordinate_dofs[5] + 0.25*coordinate_dofs[8] + 0.25*coordinate_dofs[11];
-    f.evaluate(vals, y, c);
-    values[0] = vals[0];
-}
-
-void hyperelasticityb_finite_element_6::interpolate_vertex_values(double * vertex_values,
-                                              const double * dof_values,
-                                              const double * coordinate_dofs,
-                                              int cell_orientation,
-                                              const ufc::cell& c) const
-{
-    // Evaluate function and change variables
-    vertex_values[0] = dof_values[0];
-    vertex_values[1] = dof_values[0];
-    vertex_values[2] = dof_values[0];
-    vertex_values[3] = dof_values[0];
-}
-
-void hyperelasticityb_finite_element_6::tabulate_dof_coordinates(double * dof_coordinates,
-                                             const double * coordinate_dofs) const
-{
-    dof_coordinates[0] = 0.25*coordinate_dofs[0] + 0.25*coordinate_dofs[3] + 0.25*coordinate_dofs[6] + 0.25*coordinate_dofs[9];
-    dof_coordinates[1] = 0.25*coordinate_dofs[1] + 0.25*coordinate_dofs[4] + 0.25*coordinate_dofs[7] + 0.25*coordinate_dofs[10];
-    dof_coordinates[2] = 0.25*coordinate_dofs[2] + 0.25*coordinate_dofs[5] + 0.25*coordinate_dofs[8] + 0.25*coordinate_dofs[11];
-}
-
-std::size_t hyperelasticityb_finite_element_6::num_sub_elements() const
-{
-    return 0;
-}
-
-ufc::finite_element * hyperelasticityb_finite_element_6::create_sub_element(std::size_t i) const
-{
-    return 0;
-}
-
-ufc::finite_element * hyperelasticityb_finite_element_6::create() const
-{
-    return new hyperelasticityb_finite_element_6();
-}
-
-
 hyperelasticityb_dofmap_0::hyperelasticityb_dofmap_0() : ufc::dofmap()
 {
     // Do nothing
@@ -19199,353 +18942,6 @@ ufc::dofmap * hyperelasticityb_dofmap_5::create() const
 }
 
 
-hyperelasticityb_dofmap_6::hyperelasticityb_dofmap_6() : ufc::dofmap()
-{
-    // Do nothing
-}
-
-hyperelasticityb_dofmap_6::~hyperelasticityb_dofmap_6()
-{
-    // Do nothing
-}
-
-const char * hyperelasticityb_dofmap_6::signature() const
-{
-    return "FFC dofmap for FiniteElement('Discontinuous Lagrange', tetrahedron, 0)";
-}
-
-bool hyperelasticityb_dofmap_6::needs_mesh_entities(std::size_t d) const
-{
-    switch (d)
-    {
-    case 0:
-      {
-        return false;
-        break;
-      }
-    case 1:
-      {
-        return false;
-        break;
-      }
-    case 2:
-      {
-        return false;
-        break;
-      }
-    case 3:
-      {
-        return true;
-        break;
-      }
-    }
-    
-    return false;
-}
-
-std::size_t hyperelasticityb_dofmap_6::topological_dimension() const
-{
-    return 3;
-}
-
-std::size_t hyperelasticityb_dofmap_6::global_dimension(const std::vector<std::size_t>&
-                                            num_global_entities) const
-{
-    return num_global_entities[3];
-}
-
-std::size_t hyperelasticityb_dofmap_6::num_element_dofs() const
-{
-    return 1;
-}
-
-std::size_t hyperelasticityb_dofmap_6::num_facet_dofs() const
-{
-    return 0;
-}
-
-std::size_t hyperelasticityb_dofmap_6::num_entity_dofs(std::size_t d) const
-{
-    switch (d)
-    {
-    case 0:
-      {
-        return 0;
-        break;
-      }
-    case 1:
-      {
-        return 0;
-        break;
-      }
-    case 2:
-      {
-        return 0;
-        break;
-      }
-    case 3:
-      {
-        return 1;
-        break;
-      }
-    }
-    
-    return 0;
-}
-
-std::size_t hyperelasticityb_dofmap_6::num_entity_closure_dofs(std::size_t d) const
-{
-    switch (d)
-    {
-    case 0:
-      {
-        return 0;
-        break;
-      }
-    case 1:
-      {
-        return 0;
-        break;
-      }
-    case 2:
-      {
-        return 0;
-        break;
-      }
-    case 3:
-      {
-        return 1;
-        break;
-      }
-    }
-    
-    return 0;
-}
-
-void hyperelasticityb_dofmap_6::tabulate_dofs(std::size_t * dofs,
-                                  const std::vector<std::size_t>& num_global_entities,
-                                  const std::vector<std::vector<std::size_t>>& entity_indices) const
-{
-    dofs[0] = entity_indices[3][0];
-}
-
-void hyperelasticityb_dofmap_6::tabulate_facet_dofs(std::size_t * dofs,
-                                        std::size_t facet) const
-{
-    switch (facet)
-    {
-    case 0:
-      {
-        
-        break;
-      }
-    case 1:
-      {
-        
-        break;
-      }
-    case 2:
-      {
-        
-        break;
-      }
-    case 3:
-      {
-        
-        break;
-      }
-    }
-    
-}
-
-void hyperelasticityb_dofmap_6::tabulate_entity_dofs(std::size_t * dofs,
-                                         std::size_t d, std::size_t i) const
-{
-    if (d > 3)
-    {
-    throw std::runtime_error("d is larger than dimension (3)");
-    }
-    
-    switch (d)
-    {
-    case 0:
-      {
-        
-        break;
-      }
-    case 1:
-      {
-        
-        break;
-      }
-    case 2:
-      {
-        
-        break;
-      }
-    case 3:
-      {
-        if (i > 0)
-      {
-      throw std::runtime_error("i is larger than number of entities (0)");
-      }
-      
-      dofs[0] = 0;
-        break;
-      }
-    }
-    
-}
-
-void hyperelasticityb_dofmap_6::tabulate_entity_closure_dofs(std::size_t * dofs,
-                                             std::size_t d, std::size_t i) const
-{
-    if (d > 3)
-    {
-    throw std::runtime_error("d is larger than dimension (3)");
-    }
-    
-    switch (d)
-    {
-    case 0:
-      {
-        if (i > 3)
-      {
-      throw std::runtime_error("i is larger than number of entities (3)");
-      }
-      
-      switch (i)
-      {
-      case 0:
-        {
-          
-          break;
-        }
-      case 1:
-        {
-          
-          break;
-        }
-      case 2:
-        {
-          
-          break;
-        }
-      case 3:
-        {
-          
-          break;
-        }
-      }
-      
-        break;
-      }
-    case 1:
-      {
-        if (i > 5)
-      {
-      throw std::runtime_error("i is larger than number of entities (5)");
-      }
-      
-      switch (i)
-      {
-      case 0:
-        {
-          
-          break;
-        }
-      case 1:
-        {
-          
-          break;
-        }
-      case 2:
-        {
-          
-          break;
-        }
-      case 3:
-        {
-          
-          break;
-        }
-      case 4:
-        {
-          
-          break;
-        }
-      case 5:
-        {
-          
-          break;
-        }
-      }
-      
-        break;
-      }
-    case 2:
-      {
-        if (i > 3)
-      {
-      throw std::runtime_error("i is larger than number of entities (3)");
-      }
-      
-      switch (i)
-      {
-      case 0:
-        {
-          
-          break;
-        }
-      case 1:
-        {
-          
-          break;
-        }
-      case 2:
-        {
-          
-          break;
-        }
-      case 3:
-        {
-          
-          break;
-        }
-      }
-      
-        break;
-      }
-    case 3:
-      {
-        if (i > 0)
-      {
-      throw std::runtime_error("i is larger than number of entities (0)");
-      }
-      
-      dofs[0] = 0;
-        break;
-      }
-    }
-    
-}
-
-std::size_t hyperelasticityb_dofmap_6::num_sub_dofmaps() const
-{
-    return 0;
-}
-
-ufc::dofmap * hyperelasticityb_dofmap_6::create_sub_dofmap(std::size_t i) const
-{
-    return 0;
-}
-
-ufc::dofmap * hyperelasticityb_dofmap_6::create() const
-{
-    return new hyperelasticityb_dofmap_6();
-}
-
-
 hyperelasticityb_cell_integral_0_otherwise::hyperelasticityb_cell_integral_0_otherwise() : ufc::cell_integral()
 {
 
@@ -19898,23 +19294,23 @@ void hyperelasticityb_cell_integral_0_otherwise::tabulate_tensor(double * A,
 }
 
 
-hyperelasticityb_exterior_facet_integral_0_1::hyperelasticityb_exterior_facet_integral_0_1() : ufc::exterior_facet_integral()
+hyperelasticityb_exterior_facet_integral_0_3::hyperelasticityb_exterior_facet_integral_0_3() : ufc::exterior_facet_integral()
 {
 
 }
 
-hyperelasticityb_exterior_facet_integral_0_1::~hyperelasticityb_exterior_facet_integral_0_1()
+hyperelasticityb_exterior_facet_integral_0_3::~hyperelasticityb_exterior_facet_integral_0_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticityb_exterior_facet_integral_0_1::enabled_coefficients() const
+const std::vector<bool> & hyperelasticityb_exterior_facet_integral_0_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({true, false, false, false, false, false, false, false, false, false, true});
 return enabled;
 }
 
-void hyperelasticityb_exterior_facet_integral_0_1::tabulate_tensor(double * A,
+void hyperelasticityb_exterior_facet_integral_0_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     std::size_t facet,
@@ -31248,23 +30644,23 @@ void hyperelasticityb_cell_integral_2_otherwise::tabulate_tensor(double * A,
 }
 
 
-hyperelasticityb_exterior_facet_integral_2_1::hyperelasticityb_exterior_facet_integral_2_1() : ufc::exterior_facet_integral()
+hyperelasticityb_exterior_facet_integral_2_3::hyperelasticityb_exterior_facet_integral_2_3() : ufc::exterior_facet_integral()
 {
 
 }
 
-hyperelasticityb_exterior_facet_integral_2_1::~hyperelasticityb_exterior_facet_integral_2_1()
+hyperelasticityb_exterior_facet_integral_2_3::~hyperelasticityb_exterior_facet_integral_2_3()
 {
 
 }
 
-const std::vector<bool> & hyperelasticityb_exterior_facet_integral_2_1::enabled_coefficients() const
+const std::vector<bool> & hyperelasticityb_exterior_facet_integral_2_3::enabled_coefficients() const
 {
 static const std::vector<bool> enabled({false, false, false, false, false, false, false, false, false, false, true});
 return enabled;
 }
 
-void hyperelasticityb_exterior_facet_integral_2_1::tabulate_tensor(double * A,
+void hyperelasticityb_exterior_facet_integral_2_3::tabulate_tensor(double * A,
                                     const double * const * w,
                                     const double * coordinate_dofs,
                                     std::size_t facet,
@@ -31494,7 +30890,7 @@ void hyperelasticityb_cell_integral_3_otherwise::tabulate_tensor(double * A,
     // 
     // and the following integral 0 metadata:
     // 
-    //   estimated_polynomial_degree: 0
+    //   estimated_polynomial_degree: 2
     //   optimize:                    True
     //   precision:                   16
     //   quadrature_degree:           4
@@ -31532,7 +30928,22 @@ void hyperelasticityb_cell_integral_3_otherwise::tabulate_tensor(double * A,
     sp[12] = J_c2 * sp[11];
     sp[13] = sp[8] + sp[12];
     sp[14] = std::abs(sp[13]);
-    A[0] = 0.1666666666666666 * sp[14];
+    A[0] = 0.01666666666666666 * sp[14];
+    A[1] = 0.008333333333333328 * sp[14];
+    A[2] = 0.008333333333333333 * sp[14];
+    A[3] = 0.008333333333333331 * sp[14];
+    A[4] = 0.008333333333333328 * sp[14];
+    A[5] = 0.01666666666666666 * sp[14];
+    A[6] = 0.008333333333333328 * sp[14];
+    A[7] = 0.00833333333333333 * sp[14];
+    A[8] = 0.008333333333333333 * sp[14];
+    A[9] = 0.008333333333333328 * sp[14];
+    A[10] = 0.01666666666666666 * sp[14];
+    A[11] = 0.00833333333333333 * sp[14];
+    A[12] = 0.008333333333333331 * sp[14];
+    A[13] = 0.00833333333333333 * sp[14];
+    A[14] = 0.00833333333333333 * sp[14];
+    A[15] = 0.01666666666666666 * sp[14];
 }
 
 
@@ -31569,7 +30980,7 @@ void hyperelasticityb_cell_integral_4_otherwise::tabulate_tensor(double * A,
     // 
     // and the following integral 0 metadata:
     // 
-    //   estimated_polynomial_degree: 140
+    //   estimated_polynomial_degree: 141
     //   optimize:                    True
     //   precision:                   16
     //   quadrature_degree:           4
@@ -31628,6 +31039,21 @@ void hyperelasticityb_cell_integral_4_otherwise::tabulate_tensor(double * A,
             { -0.2574914939727678, 0.2574914939727679, 0.2275255180816942, 1.25749149397277, -0.2275255180816941, -1.25749149397277, 0.0 },
             { -0.2574914939727674, 0.2574914939727682, 1.25749149397277, 0.2275255180816939, -1.25749149397277, -0.227525518081694, 0.0 } } };
     alignas(32) static const double FE25_C0_D001_Q14[1][1][2] = { { { -1.0, 1.0 } } };
+    alignas(32) static const double FE25_C0_Q14[1][14][4] =
+        { { { 0.0, 0.0, 0.5, 0.5 },
+            { 0.0, 0.5, 0.0, 0.5 },
+            { 0.0, 0.5, 0.5, 0.0 },
+            { 0.5, 0.5, 0.0, 0.0 },
+            { 0.5, 0.0, 0.5, 0.0 },
+            { 0.5, 0.0, 0.0, 0.5 },
+            { 0.1005267652252045, 0.6984197043243864, 0.1005267652252045, 0.1005267652252045 },
+            { 0.6984197043243865, 0.1005267652252044, 0.1005267652252045, 0.1005267652252045 },
+            { 0.1005267652252046, 0.1005267652252045, 0.1005267652252045, 0.6984197043243865 },
+            { 0.1005267652252046, 0.1005267652252045, 0.6984197043243865, 0.1005267652252045 },
+            { 0.3143728734931923, 0.05688137952042335, 0.3143728734931922, 0.3143728734931922 },
+            { 0.05688137952042346, 0.3143728734931922, 0.3143728734931922, 0.3143728734931922 },
+            { 0.3143728734931923, 0.3143728734931921, 0.3143728734931922, 0.05688137952042342 },
+            { 0.3143728734931922, 0.3143728734931922, 0.05688137952042344, 0.3143728734931922 } } };
     // Unstructured piecewise computations
     const double J_c1 = coordinate_dofs[0] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[6] * FE25_C0_D001_Q14[0][0][1];
     const double J_c5 = coordinate_dofs[1] * FE25_C0_D001_Q14[0][0][0] + coordinate_dofs[10] * FE25_C0_D001_Q14[0][0][1];
@@ -31696,7 +31122,7 @@ void hyperelasticityb_cell_integral_4_otherwise::tabulate_tensor(double * A,
     sp[54] = w[1][2] * w[1][2];
     sp[55] = w[2][2] * w[2][2];
     sp[56] = std::abs(sp[16]);
-    alignas(32) double BF0[1] = {};
+    alignas(32) double BF0[4] = {};
     for (int iq = 0; iq < 14; ++iq)
     {
         // Quadrature loop body setup (num_points=14)
@@ -32226,11 +31652,11 @@ void hyperelasticityb_cell_integral_4_otherwise::tabulate_tensor(double * A,
         sv14[512] = std::sqrt(sv14[511]);
         sv14[513] = sp[56] * sv14[512];
         const double fw0 = sv14[513] * weights14[iq];
-        for (int i = 0; i < 1; ++i)
-            BF0[i] += fw0;
+        for (int i = 0; i < 4; ++i)
+            BF0[i] += fw0 * FE25_C0_Q14[0][iq][i];
     }
-    A[0] = 0.0;
-    for (int i = 0; i < 1; ++i)
+    std::fill(&A[0], &A[4], 0.0);
+    for (int i = 0; i < 4; ++i)
         A[i] += BF0[i];
 }
 
@@ -32247,7 +31673,7 @@ hyperelasticityb_form_0::~hyperelasticityb_form_0()
 
 const char * hyperelasticityb_form_0::signature() const
 {
-    return "25022e22a2c287796b7035935f6667b99f7dc961d535353a13cb87d3348aaff33717726941a91c453cae7569620479e14626ba4aa7ca34574c19859304264601";
+    return "457ce6228778a2904712ed8bcb8bcd09cd62617be0218d3b0b5bbc3fe41a10b6514d147f24de00887252214634016afa7eba5e9ddb74643d174749616dd8eccf";
 }
 
 std::size_t hyperelasticityb_form_0::rank() const
@@ -32416,7 +31842,7 @@ std::size_t hyperelasticityb_form_0::max_cell_subdomain_id() const
 
 std::size_t hyperelasticityb_form_0::max_exterior_facet_subdomain_id() const
 {
-    return 2;
+    return 4;
 }
 
 std::size_t hyperelasticityb_form_0::max_interior_facet_subdomain_id() const
@@ -32498,9 +31924,9 @@ ufc::exterior_facet_integral * hyperelasticityb_form_0::create_exterior_facet_in
 {
     switch (subdomain_id)
     {
-    case 1:
+    case 3:
       {
-        return new hyperelasticityb_exterior_facet_integral_0_1();
+        return new hyperelasticityb_exterior_facet_integral_0_3();
         break;
       }
     }
@@ -32591,7 +32017,7 @@ hyperelasticityb_form_1::~hyperelasticityb_form_1()
 
 const char * hyperelasticityb_form_1::signature() const
 {
-    return "4caf63763ecc98cf0206af943de1f6ec927828ab97915985f35cee1c44867eabb2dfcd9749ea918cd25a894fa9e3c68d0870871018f1469ffe4f521bfdf7bc77";
+    return "a492ae7c58ca21fced889ed6c5bbb57b53272e9c744e16f87a64f8d8fc43396a3ae9221506e8527c7417115f12cd877ee6d43e7c2c638500fac9314fa5a60e75";
 }
 
 std::size_t hyperelasticityb_form_1::rank() const
@@ -32926,7 +32352,7 @@ hyperelasticityb_form_2::~hyperelasticityb_form_2()
 
 const char * hyperelasticityb_form_2::signature() const
 {
-    return "25981c9a993055234e3e225f2de37cc8eb35c1ae4fe630a2d48ff42bf857bdc3d665194c7f935509b345151f2dc4719616de33692ea66325e8273263ba04e19e";
+    return "a42eb27aa0190b62ce0823d8843e6657c0b14fc9f48e9d0fedd3c66123a1c14bcb17fa8fc954b15588115f510f43d3e266b6f8dc9d93964d220f234781ad2cbc";
 }
 
 std::size_t hyperelasticityb_form_2::rank() const
@@ -33105,7 +32531,7 @@ std::size_t hyperelasticityb_form_2::max_cell_subdomain_id() const
 
 std::size_t hyperelasticityb_form_2::max_exterior_facet_subdomain_id() const
 {
-    return 2;
+    return 4;
 }
 
 std::size_t hyperelasticityb_form_2::max_interior_facet_subdomain_id() const
@@ -33187,9 +32613,9 @@ ufc::exterior_facet_integral * hyperelasticityb_form_2::create_exterior_facet_in
 {
     switch (subdomain_id)
     {
-    case 1:
+    case 3:
       {
-        return new hyperelasticityb_exterior_facet_integral_2_1();
+        return new hyperelasticityb_exterior_facet_integral_2_3();
         break;
       }
     }
@@ -33280,7 +32706,7 @@ hyperelasticityb_form_3::~hyperelasticityb_form_3()
 
 const char * hyperelasticityb_form_3::signature() const
 {
-    return "9d6c3270f3a03cdd9a4f78b2aabc50d9e569c340874abfdcc6631d1e1387793b84bf80cf97e813d6e8c8faaa5d40a73596a5c48d29f29cd7c8ba7180feb7c8f9";
+    return "104035fa1c66a91e444c7311dbeee4d2c48625ff0632f237e2a16f21116b4eaa0711a8b99aa5406543ef5f8a2fc3c8f6ebc6dc81377f2044934a65ffdb234090";
 }
 
 std::size_t hyperelasticityb_form_3::rank() const
@@ -33320,12 +32746,12 @@ ufc::finite_element * hyperelasticityb_form_3::create_finite_element(std::size_t
     {
     case 0:
       {
-        return new hyperelasticityb_finite_element_6();
+        return new hyperelasticityb_finite_element_4();
         break;
       }
     case 1:
       {
-        return new hyperelasticityb_finite_element_6();
+        return new hyperelasticityb_finite_element_4();
         break;
       }
     }
@@ -33339,12 +32765,12 @@ ufc::dofmap * hyperelasticityb_form_3::create_dofmap(std::size_t i) const
     {
     case 0:
       {
-        return new hyperelasticityb_dofmap_6();
+        return new hyperelasticityb_dofmap_4();
         break;
       }
     case 1:
       {
-        return new hyperelasticityb_dofmap_6();
+        return new hyperelasticityb_dofmap_4();
         break;
       }
     }
@@ -33525,7 +32951,7 @@ hyperelasticityb_form_4::~hyperelasticityb_form_4()
 
 const char * hyperelasticityb_form_4::signature() const
 {
-    return "1801924d590c56319ae9dff8a8b212c4aff90746d256e6e7f24c360350b292c29f543e05074c2016343428503859a09fd9bf5196772108e00cb25de0acc760b5";
+    return "4dd473c853775b266dd387bf7feb00daee16a56519156f190c0a4ac00165fea06f066151c37a9d6deafb01fd63cc7d991df5dadd9cdc0c29b078c510d7027860";
 }
 
 std::size_t hyperelasticityb_form_4::rank() const
@@ -33565,7 +32991,7 @@ ufc::finite_element * hyperelasticityb_form_4::create_finite_element(std::size_t
     {
     case 0:
       {
-        return new hyperelasticityb_finite_element_6();
+        return new hyperelasticityb_finite_element_4();
         break;
       }
     case 1:
@@ -33624,7 +33050,7 @@ ufc::dofmap * hyperelasticityb_form_4::create_dofmap(std::size_t i) const
     {
     case 0:
       {
-        return new hyperelasticityb_dofmap_6();
+        return new hyperelasticityb_dofmap_4();
         break;
       }
     case 1:

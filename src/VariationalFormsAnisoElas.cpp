@@ -58,6 +58,27 @@ class BottomPoint : public SubDomain
         return false;
     }
 };
+// Pressure boundary condition
+class PressurePara : public Expression
+{
+    public:
+
+        PressurePara(const Mesh& mesh, double* pres) : mesh(mesh), pressure(pres){}
+
+        void eval(Array<double>& values, const Array<double>& x,
+                const ufc::cell& ufc_cell) const
+        {
+            values[0] = x[2] *(x[2] - Depth)/Depth/Depth* -4. * (*pressure);
+        }
+
+    private:
+
+        const Mesh& mesh;
+        double* pressure;
+
+};
+
+
 
 // Pressure boundary condition
 class PressureNormal : public Expression
@@ -205,6 +226,7 @@ VariationalForms::VariationalForms(
                          "Switch Elasticity Model",
                          "Error option for Elasticity Model");
     }
+    int num_v = mesh.num_vertices(), num_c = mesh.num_cells();
     info("# of Vertices %d, # of Cells %d, # of Unknowns %d", dolfin::MPI::sum(MPI_COMM_WORLD,num_v), dolfin::MPI::sum(MPI_COMM_WORLD,num_c), _V->dim());
     // Set material parameters
     double C1_adv = (double)(para["C1_adv"]),
@@ -254,6 +276,8 @@ VariationalForms::VariationalForms(
     std::shared_ptr<Constant> _pressure = std::make_shared<Constant>(pressure);
     std::shared_ptr<PressureNormal> pressure_normal = 
                      std::make_shared<PressureNormal>(mesh,&pressure);
+    std::shared_ptr<PressurePara> pressure_para = 
+                     std::make_shared<PressurePara>(mesh,&pressure);
     std::shared_ptr<Constant> B = std::make_shared<Constant>(0.0, 0.0, 0.0);
      
     std::map<std::string, std::shared_ptr<const GenericFunction>> coef_list
@@ -273,8 +297,9 @@ VariationalForms::VariationalForms(
             {"alpha5",  coef_alpha5},
             {"k1",      coef_k1},
             {"k2",      coef_k2},
-            {"pressure", _pressure}
+            {"pressure", pressure_para},
             {"T",       pressure_normal}};
+            //{"pressure", _pressure},
     // add coef for model A`
     double Alpha1_adv  = (double)(para["Alpha1_adv"]),
            Alpha1_med = (double)(para["Alpha1_med"]),
@@ -319,12 +344,13 @@ VariationalForms::VariationalForms(
     std::shared_ptr<DirichletBC> bc_cross1 = std::make_shared<DirichletBC>((*_V)[2], zero, 
             reference_to_no_delete_pointer(boundary_mark), 1);
 
-    std::shared_ptr<DirichletBC> bc_inlet = std::make_shared<DirichletBC>((*_V), zeros, 
+    std::shared_ptr<DirichletBC> bc_inlet = std::make_shared<DirichletBC>(_V, zeros, 
             reference_to_no_delete_pointer(boundary_mark), 1);
-    std::shared_ptr<DirichletBC> bc_outlet = std::make_shared<DirichletBC>((*_V), zeros, 
+    std::shared_ptr<DirichletBC> bc_outlet = std::make_shared<DirichletBC>(_V, zeros, 
             reference_to_no_delete_pointer(boundary_mark), 2);
 
 
+    
     /*
     bcs.push_back(bcl);
     bcs.push_back(bcr);
@@ -332,8 +358,10 @@ VariationalForms::VariationalForms(
     bcs.push_back(bc_cross1);
     bcs.push_back(bc_cross2);
     */
+    
     bcs.push_back(bc_inlet);
     bcs.push_back(bc_outlet);
+    
 
 }
 
@@ -350,7 +378,7 @@ void VariationalForms::save_solution()
     file_backup << *_u;
 }
 
-void VariationalFormsCarotidIso::backup_solution(std::string str)
+void VariationalForms::backup_solution(std::string str)
 {
     File file_backup(str);
     file_backup <<*_u;

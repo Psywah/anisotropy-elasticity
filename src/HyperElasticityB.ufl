@@ -29,7 +29,7 @@
 # Function spaces
 cell = tetrahedron
 VecCG = VectorElement("Lagrange", cell, 2)
-DG = FiniteElement("DG", cell, 0)
+DG = FiniteElement("Lagrange", cell, 1)
 
 # Trial and test functions
 du = TrialFunction(VecCG)     # Incremental displacement
@@ -106,7 +106,7 @@ psi_aniso2 = k1/k2/2.*(exp(k2*mac_2**2) - 1)
 # Total potential energy
 #Pi = Pi_iso + cond1 * Pi_aniso1 + cond2 * Pi_aniso2  
 #Pi = psi*(dx(2)+dx(3)+dx(4)) +psi_iso*dx(1)- inner(B, u)*dx - inner(T, u)*ds(1)
-Pi= psi_iso*dx -  inner(B,u)*dx -  inner(T,u)*ds(1) + cond1*psi_aniso1*dx + cond2* psi_aniso2*dx
+Pi= psi_iso*dx -  inner(B,u)*dx -  inner(T,u)*ds(3) + cond1*psi_aniso1*dx + cond2* psi_aniso2*dx
 #
 
 # First variation of Pi (directional derivative about u in the direction of v)

@@ -5,7 +5,7 @@
 #define R (0.008*1)
 #define Thk_med (0.00132*1)
 #define Thk_adv (0.00096*1)
-#define Depth (0.005*1)
+#define Depth (0.03*1)
 
 
 namespace dolfin
@@ -29,6 +29,7 @@ namespace dolfin
     void save_solution();
 
     void load_solution(std::string str="backup_solution.xml");
+    void backup_solution(std::string str="backup_solution.xml");
     void save_von_misec_stress();
     void plot_solution();
 
@@ -36,14 +37,17 @@ namespace dolfin
 
     // function space and forms
     std::shared_ptr<FunctionSpace> _V;
+    std::shared_ptr<FunctionSpace> _V_p1;
     std::shared_ptr<Form> _J;
     std::shared_ptr<Form> _F;
+    std::shared_ptr<Form> _obj;
 
     // boundary conditions
     std::vector<std::shared_ptr<const DirichletBC>> bcs;
 
     // solution
     std::shared_ptr<Function> _u;
+    std::shared_ptr<Function> _u_p1;
 
     // von Misec Stress
     std::shared_ptr<FunctionSpace> _VMS;

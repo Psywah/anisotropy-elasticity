@@ -112,7 +112,7 @@ int main(int argc, char** argv)
     forms.save_von_misec_stress();
 
     std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
-    //list_timings(TimingClear::clear,type); 
+    list_timings(TimingClear::clear,type); 
 
     //forms.plot_solution();
 
