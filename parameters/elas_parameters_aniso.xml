@@ -3,7 +3,7 @@
     <parameters name="problem_parameters">
         <parameter key="elas_model"               type="string"   value="B" />
         <parameter key="meshID"    type="int"   value="1" />
-        <parameter key="pressure_boundary_condition"    type="double"   value="50.e3" />
+        <parameter key="pressure_boundary_condition"    type="double"   value="13.3e3" />
         <parameter key="C1_adv"    type="double"   value="6.2e3" />
         <parameter key="C1_med"    type="double"   value="10.7e3" />
         <parameter key="C1_pla"    type="double"   value="10.7.2e3" />
@@ -25,8 +25,8 @@
         <parameter key="Alpha5_med"    type="double"   value="10.0" />
         <parameter key="Alpha5_pla"    type="double"   value="10.0" />
         <parameter key="K1_adv"    type="double"   value="6.0e3" />
-        <parameter key="K1_med"    type="double"   value="20.0" />
-        <parameter key="K2_adv"    type="double"   value="1018.8e3" />
+        <parameter key="K1_med"    type="double"   value="1018.8e3" />
+        <parameter key="K2_adv"    type="double"   value="20.0" />
         <parameter key="K2_med"    type="double"   value="20.0" />
         <parameter key="Beta1"    type="double"   value="80.0e3" />
         <parameter key="Eta1"    type="double"   value="250.0e3" />

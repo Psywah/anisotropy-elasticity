@@ -25,8 +25,8 @@
         <parameter key="Alpha5_med"    type="double"   value="10.0" />
         <parameter key="Alpha5_pla"    type="double"   value="10.0" />
         <parameter key="K1_adv"    type="double"   value="6.0e3" />
-        <parameter key="K1_med"    type="double"   value="20.0" />
-        <parameter key="K2_adv"    type="double"   value="1018.8e3" />
+        <parameter key="K1_med"    type="double"   value="1018.8e3" />
+        <parameter key="K2_adv"    type="double"   value="20.0" />
         <parameter key="K2_med"    type="double"   value="20.0" />
         <parameter key="Beta1"    type="double"   value="80.0e3" />
         <parameter key="Eta1"    type="double"   value="250.0e3" />

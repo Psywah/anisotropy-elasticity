@@ -128,7 +128,7 @@ Jac = derivative(Res, u, du)
 p = TrialFunction(DG)     # Incremental displacement
 q  = TestFunction(DG)      # Test function
 
-S = diff(psi_iso, C) +cond1 *diff(psi_aniso1,C) + cond2*diff(psi_aniso2,C)
+S = 2.*diff(psi_iso, C) +2.*cond1 *diff(psi_aniso1,C) + 2.*cond2*diff(psi_aniso2,C)
 #S_pla = diff(psi_pla, C)
 
 sigma = 1./J*F*S*F.T

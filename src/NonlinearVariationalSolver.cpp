@@ -359,10 +359,10 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
 
            }
        }
-#else
+       #else
        info("begin snes solve");
        ret = snes_solver->solve(*nonlinear_problem, *u->vector());
-#endif
+       #endif
     }
   }
 #endif
@@ -758,9 +758,10 @@ void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::construct_coars
             dirichlet_dofs0.push_back(dof);
         else 
             bad_cell_dofs.push_back(dof);
-    }
+           }
 
-    info("#bad_cell_dofs: %d, #dirichlet_dofs %d", bad_cell_dofs.size(), dirichlet_dofs0.size());
+    info("#bad_cell_dofs: %d, #dirichlet_dofs %d", dolfin::MPI::sum<std::size_t>(PETSC_COMM_WORLD, bad_cell_dofs.size()),
+            dolfin::MPI::sum<std::size_t>(PETSC_COMM_WORLD, dirichlet_dofs0.size()));
 
     if(overlap)
     {
@@ -780,7 +781,7 @@ void NonlinearVariationalSolver::NonlinearCoarseDiscreteProblem::construct_coars
         }
         ISRestoreIndices(is,&nidx);
         ISDestroy(&is);
-        info("#coarse_dofs with %d ov: %d", overlap, n);
+        info("#coarse_dofs with %d ov: %d", overlap, dolfin::MPI::sum<std::size_t>(PETSC_COMM_WORLD, n));
     }
     is_dirichlet_dof.apply("insert");
 
