@@ -331,27 +331,31 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    info("elimination result: residual %f --> %f , object %f --> %f", norm_res, norm_res_c, obj, obj_c);
                }
                else{
-                   if(iter <10 || !accept || norm_res_c<norm_res)
+                   if(iter <10 || !accept || norm_res_c<norm_res0)
                    {
-                       norm_res0 = norm_res_c;
                        accept=true;
+                       info(ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination" "last res %.3f curr res  %.3f elim res %.3f, " ,
+                               norm_res0, norm_res, norm_res_c);
+                       /*
                        if(iter < 10)
                            info("elimination at the first 10 steps %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                                   norm_res_c,norm_res);
+                                   norm_res_c,norm_res0);
                        else if(!accept)
                            info("elimination since last not accept %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                                   norm_res_c,norm_res);
+                                   norm_res_c,norm_res0);
                        else
                            info("elimination Residual norm with correction %f < %f, " ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination",
-                                   norm_res_c,norm_res);
+                                   norm_res_c,norm_res0);
+                                   */
+                       norm_res0 = norm_res_c;
                    }
                    else
                    {
                        norm_res0 =norm_res;
                        *u->vector() = x_copy;
                        accept = false;
-                       info("Residual norm with correction %f > %f, " ANSI_COLOR_RED "not accept " ANSI_COLOR_RESET "nonlinear elimination",
-                               norm_res_c,norm_res);
+                       info(ANSI_COLOR_GREEN "not accept " ANSI_COLOR_RESET "nonlinear elimination" "last res %.3f curr res  %.3f elim res %.3f, " ,
+                               norm_res0, norm_res, norm_res_c);
                    }
                }
                info("Solved Coarse Problem");

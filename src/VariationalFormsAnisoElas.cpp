@@ -118,9 +118,9 @@ class MaterialCoef : public Expression
         void eval(Array<double>& values, const Array<double>& x) const
         {
             double r = sqrt(x[0]*x[0]+x[1]*x[1]);
-            if ( r > R+Thk_med)
+            if ( r >= R+Thk_med-DOLFIN_EPS)
                 values[0] = adv;
-            else if (r > R)
+            else if (r >= R-DOLFIN_EPS)
                 values[0] = med;
             else
                 values[0] = pla;
@@ -141,12 +141,12 @@ class Orient : public Expression
         void eval(Array<double>& values, const Array<double>& x) const
         {
             double r = sqrt(x[0]*x[0]+x[1]*x[1]);
-            if ( r > R+Thk_med)
+            if ( r >= R+Thk_med -DOLFIN_EPS)
             {values[0] = cos(phi_adv)*(-x[1])/r; values[1] = cos(phi_adv)*x[0]/r; values[2] = sin(phi_adv);}
-            else if (r > R)
+            else if (r >= R - DOLFIN_EPS)
             {values[0] = cos(phi_med)*(-x[1])/r; values[1] = cos(phi_med)*x[0]/r; values[2] = sin(phi_med);}
             else
-            {values[0] = 0.0; values[1] = 0.0; values[2] = 0.0;}
+            {values[0] = cos(phi_med)*(-x[1])/r; values[1] = cos(phi_med)*x[0]/r; values[2] = sin(phi_med);}
 
         }
 };
@@ -297,7 +297,7 @@ VariationalForms::VariationalForms(
             {"alpha5",  coef_alpha5},
             {"k1",      coef_k1},
             {"k2",      coef_k2},
-            {"pressure", pressure_para},
+            {"pressure", _pressure},
             {"T",       pressure_normal}};
             //{"pressure", _pressure},
     // add coef for model A`
@@ -351,16 +351,19 @@ VariationalForms::VariationalForms(
 
 
     
-    /*
     bcs.push_back(bcl);
     bcs.push_back(bcr);
     bcs.push_back(bct);
     bcs.push_back(bc_cross1);
     bcs.push_back(bc_cross2);
-    */
     
+    
+    
+    /*
     bcs.push_back(bc_inlet);
     bcs.push_back(bc_outlet);
+    */
+    
     
 
 }

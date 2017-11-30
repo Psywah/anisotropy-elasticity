@@ -6,7 +6,7 @@
         <parameter key="pressure_boundary_condition"    type="double"   value="13.3e3" />
         <parameter key="C1_adv"    type="double"   value="6.2e3" />
         <parameter key="C1_med"    type="double"   value="10.7e3" />
-        <parameter key="C1_pla"    type="double"   value="10.7.2e3" />
+        <parameter key="C1_pla"    type="double"   value="10.7e3" />
         <parameter key="Epsilon1_adv"    type="double"   value="101.0e3" />
         <parameter key="Epsilon1_med"    type="double"   value="207.1e3" />
         <parameter key="Epsilon1_pla"    type="double"   value="207.1e3" />

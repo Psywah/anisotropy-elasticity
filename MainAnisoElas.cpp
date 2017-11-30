@@ -64,7 +64,8 @@ int main(int argc, char** argv)
     File para_file_nls("../parameters/solver_parameters_aniso.xml");
     para_file_nls >> para_nls;
     
-    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-2layer.h5","r");
+    //HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-2layerL2.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-4components.h5","r");
     Mesh mesh;
     int meshID  = (int)para_material["meshID"];
     filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
