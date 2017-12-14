@@ -235,6 +235,26 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            PETScMatrix J;
            nonlinear_problem->J(J,*u->vector());
 
+           // elim before solve
+           /*
+           double infty1 = res.vector()->norm("linf");
+           info("finding bad dofs [ > %f*%.2f (infty norm * rho1)]", infty1, rho1);
+           nonlinear_coarse_problem->construct_coarse_IS(*res.vector(), infty1*rho1, J, overlap);
+           *u_hist << *u;
+           *r_hist << res ;
+           nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
+           std::size_t size_total1 = res.vector()->size();
+           std::size_t size_good1 = nonlinear_coarse_problem->size_dirichlet_dofs_global();
+           info("Size of coarse problem %d < %d * %.2f (total_size * rho_2), Need for nonlinear elimination",
+                       size_total1-size_good1, size_total1, rho2);
+           snes_solver->parameters.update(para_coarse);
+           ret = snes_solver->solve(*nonlinear_coarse_problem, *u->vector());
+           nonlinear_problem->F(*res.vector(), *u->vector());
+           *rc_hist << res ;
+           norm_res0 =res.vector()->norm("l2");
+           */
+           
+           
            bool converged = false;
            bool accept = false;
            std::size_t iter = 0, max_iter = parameters("snes_solver")["maximum_iterations"] ;
@@ -334,7 +354,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    if(iter <10 || !accept || norm_res_c<norm_res0)
                    {
                        accept=true;
-                       info(ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination" "last res %.3f curr res  %.3f elim res %.3f, " ,
+                       info(ANSI_COLOR_GREEN "accept " ANSI_COLOR_RESET "nonlinear elimination: " "last res %.3f curr res  %.3f elim res %.3f, " ,
                                norm_res0, norm_res, norm_res_c);
                        /*
                        if(iter < 10)

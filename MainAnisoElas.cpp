@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     para_file_nls >> para_nls;
     
     //HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-2layerL2.h5","r");
-    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-4components.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-4components2.h5","r");
     Mesh mesh;
     int meshID  = (int)para_material["meshID"];
     filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
