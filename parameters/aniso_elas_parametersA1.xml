@@ -12,14 +12,21 @@
         <parameter key="Epsilon2_adv"    type="double"   value="20.0" />
         <parameter key="Epsilon2_med"    type="double"   value="50.0" />
         <parameter key="Epsilon2_pla"    type="double"   value="50.0" />
-        <parameter key="Alpha1_adv"    type="double"   value="1.5e10e3" />
-        <parameter key="Alpha1_med"    type="double"   value="5.0e5e3" />
+        <parameter key="Alpha1_adv"    type="double"   value="1.5e13" />
+        <parameter key="Alpha1_med"    type="double"   value="5.0e8" />
         <parameter key="Alpha2_adv"    type="double"   value="20.0" />
         <parameter key="Alpha2_med"    type="double"   value="7.0" />
         <parameter key="Alpha3_adv"    type="double"   value="1005.2e3" />
         <parameter key="Alpha3_med"    type="double"   value="49999.1e3" />
         <parameter key="Alpha4_adv"    type="double"   value="6.3" />
         <parameter key="Alpha4_med"    type="double"   value="4.1" />
+        <parameter key="Alpha5_adv"    type="double"   value="3.0" />
+        <parameter key="Alpha5_med"    type="double"   value="10.0" />
+        <parameter key="Alpha5_pla"    type="double"   value="10.0" />
+        <parameter key="K1_adv"    type="double"   value="6.0e3" />
+        <parameter key="K1_med"    type="double"   value="1018.8e3" />
+        <parameter key="K2_adv"    type="double"   value="20.0" />
+        <parameter key="K2_med"    type="double"   value="20.0" />
         <parameter key="Beta1"    type="double"   value="80.0e3" />
         <parameter key="Eta1"    type="double"   value="250.0e3" />
         <parameter key="Delta1"    type="double"   value="2000.0e3" />

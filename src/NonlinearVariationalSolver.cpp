@@ -218,6 +218,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            para_coarse["absolute_tolerance"] = (double)(parameters["NL_atol"]);
            para_coarse["relative_tolerance"] = (double)(parameters["NL_rtol"]);
            para_coarse["line_search"] = std::string(parameters["NL_line_search"]);
+           para_coarse["options_prefix"] = std::string(parameters["NL_options_prefix"]);
            para_coarse["report"] = (bool)(parameters["NL_report"]);
            para_coarse["maximum_iterations"] = (int)(parameters["NL_maximum_iterations"]);
            double rho0 = parameters["NL_res_r"];
@@ -268,6 +269,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    backup_file << *u;
                }
                snes_solver->parameters.update(parameters("snes_solver"));
+               snes_solver->set_options_prefix((std::string)(""));
                ret = snes_solver->solve(*nonlinear_problem, *u->vector());
 
                
@@ -301,7 +303,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                    norm_res0 = norm_res;
                    if(_problem->has_object())
                        obj0 = obj;
-                   nonlinear_coarse_problem->clear_dofs_values();
+                   //nonlinear_coarse_problem->clear_dofs_values();
                    nonlinear_coarse_problem->save_coarse(bad_dof,bad_cell,bad_cell_ov);
                    *rc_hist << res ;
                    end();
@@ -331,6 +333,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                PETScVector x_copy(u->vector()->down_cast<PETScVector>());
 
                snes_solver->parameters.update(para_coarse);
+               snes_solver->set_options_prefix((std::string)(parameters["NL_options_prefix"]));
                ret = snes_solver->solve(*nonlinear_coarse_problem, *u->vector());
                if(1)// restricted
                {

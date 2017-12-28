@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <dolfin xmlns:dolfin="http://fenicsproject.org">
     <parameters name="nonlinear_solver_parameters">
+        <parameter key="meshID"    type="int"   value="1" />
         <parameter key="dt"    type="double"   value="0.1" />
         <parameter key="nonlinear_solver"               type="string"   value="snes" />
         <parameter key="NL_res_r"               type="double"   value="8.0e-1" />

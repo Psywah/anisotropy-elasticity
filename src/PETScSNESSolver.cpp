@@ -81,6 +81,7 @@ Parameters PETScSNESSolver::default_parameters()
   Parameters p(NewtonSolver::default_parameters());
   p.rename("snes_solver");
   p.add("solution_tolerance", 1.0e-16);
+  p.add("options_prefix", "default");
   p.add("maximum_residual_evaluations", 2000);
   p.remove("convergence_criterion");
   p.remove("relaxation_parameter");

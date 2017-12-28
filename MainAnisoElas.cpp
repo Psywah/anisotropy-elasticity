@@ -61,13 +61,57 @@ int main(int argc, char** argv)
     para_file_material >> para_material;
     info(para_material, true);
     Parameters para_nls("nls_parameters");
-    File para_file_nls("../parameters/solver_parameters_aniso.xml");
+    File para_file_nls("./solver_parameters_aniso.xml");
     para_file_nls >> para_nls;
     
     //HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-2layerL2.h5","r");
-    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-4components2.h5","r");
+    HDF5File filer(MPI_COMM_WORLD,"/home/gongshihua/work/mesh/tube-4components.h5","r");
+    
+   /* 
+    // produce a initial guess
+    Parameters para_nls_c("nls_parameters_c");
+    File para_file_nls_c("./solver_parameters_aniso_c.xml");
+    para_file_nls_c >> para_nls_c;
+    Mesh mesh_c;
+    int meshID_c  = 1;
+    filer.read(mesh_c,std::string("mesh") + std::to_string(meshID_c) ,false);
+
+    // Create mesh functions over the cells and acets
+    MeshFunction<std::size_t> sub_domains_mark_c(reference_to_no_delete_pointer(mesh_c), mesh_c.topology().dim());
+    MeshFunction<std::size_t> boundary_mark_c(reference_to_no_delete_pointer(mesh_c), mesh_c.topology().dim() - 1);
+
+    filer.read(sub_domains_mark_c,std::string("subdomains_mark") + std::to_string(meshID_c) );
+    filer.read(boundary_mark_c,std::string("facet_mark") + std::to_string(meshID_c) );
+
+    Timer t1_c("Inital Forms"); info("Initial Forms");
+    t1_c.start();
+    VariationalForms forms_c(mesh_c, sub_domains_mark_c, boundary_mark_c, para_material);
+    t1_c.stop();
+
+    //solve(F == 0, u, bcs, J, para);
+    Timer t2_c("Inital Nonlinear Problem"); info("Initial Nonlinear Problem");
+    t2_c.start();
+    //NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J, forms._obj);
+    NonlinearVariationalProblem problem_c(forms_c._F, forms_c._u, forms_c.bcs, forms_c._J);
+    t2_c.stop();
+
+    Timer t3_c("Initial Nonlinear Solver"); info("Initial Nonlinear Solver");
+    t3_c.start();
+    NonlinearVariationalSolver solver_c(problem_c);
+    solver_c.parameters.update(para_nls_c);
+    t3_c.stop();
+
+    Timer t4_c("Solve Nonlinear Problem"); info("Solve Nonlinear Problem");
+    //solver_c.solve();
+    info("Coarse Solver done. \n\n\n\n\n\n\n\n");
+    */
+    
+    
+    
+
+
     Mesh mesh;
-    int meshID  = (int)para_material["meshID"];
+    int meshID  = (int)para_nls["meshID"];
     filer.read(mesh,std::string("mesh") + std::to_string(meshID) ,false);
 
     // Create mesh functions over the cells and acets
@@ -95,6 +139,25 @@ int main(int argc, char** argv)
     //NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J, forms._obj);
     NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
     t2.stop();
+    
+    /*
+    forms_c.load_solution("u1.xml");
+    forms_c._u->set_allow_extrapolation(true);
+    forms._u->interpolate(*(forms_c._u));
+    forms_c.save_solution("u1");
+    forms.save_solution(std::string("u") + std::to_string(meshID) );
+    //forms_c.backup_solution("u1.xml");
+    forms.backup_solution(std::string("u") + std::to_string(meshID) + std::string(".xml"));
+    return 0;
+    */
+    
+    
+    
+    
+    //forms.load_solution("u3.xml");
+    forms.load_solution(std::string("u") + std::to_string(meshID) + std::string(".xml"));
+    //forms.save_solution();
+    //return 0;
 
     Timer t3("Initial Nonlinear Solver"); info("Initial Nonlinear Solver");
     t3.start();

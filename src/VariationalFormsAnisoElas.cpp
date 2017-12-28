@@ -274,6 +274,7 @@ VariationalForms::VariationalForms(
     pressure = para["pressure_boundary_condition"]; t = 1.0;
     final_pressure = pressure;
     std::shared_ptr<Constant> _pressure = std::make_shared<Constant>(pressure);
+    // to be deleted
     std::shared_ptr<PressureNormal> pressure_normal = 
                      std::make_shared<PressureNormal>(mesh,&pressure);
     std::shared_ptr<PressurePara> pressure_para = 
@@ -306,7 +307,7 @@ VariationalForms::VariationalForms(
            Alpha2_adv  = (double)(para["Alpha2_adv"]),
            Alpha2_med  = (double)(para["Alpha2_med"]);
     std::shared_ptr<MaterialCoef> coef_alpha1 = std::make_shared<MaterialCoef>(Alpha1_adv, Alpha1_med, 0.0);
-    std::shared_ptr<MaterialCoef> coef_alpha2 = std::make_shared<MaterialCoef>(Alpha2_adv, Alpha2_med, 0.0);
+    std::shared_ptr<MaterialCoef> coef_alpha2 = std::make_shared<MaterialCoef>(Alpha2_adv, Alpha2_med, 2.0);
     coef_list["alpha1"] = coef_alpha1;
     coef_list["alpha2"] = coef_alpha2;
     info("number of coefficients %d", coef_list.size());
@@ -369,13 +370,13 @@ VariationalForms::VariationalForms(
 }
 
     
-void VariationalForms::save_solution()
+void VariationalForms::save_solution(std::string pre)
 {
     std::stringstream ss;
     ss << std::fixed << std::setprecision(2) << double(para["pressure_boundary_condition"]);
     std::string idx = std::string("Pres") + ss.str();
     // Save solution in VTK format
-    File file(std::string("./result/displacement")+idx+std::string(".pvd"));
+    File file(pre+idx+std::string(".pvd"));
     file << *_u;
     File file_backup(std::string("backup_solution")+(".xml"));
     file_backup << *_u;

@@ -13,7 +13,7 @@
 #define R (0.01*1)
 #define Thk_med (0.00132*1)
 #define Thk_adv (0.00096*1)
-#define Depth (0.005*1)
+#define Depth (0.001*1)
 
 
 
@@ -36,7 +36,7 @@ namespace dolfin
     /// Destructor
     virtual ~VariationalForms() {}
 
-    void save_solution();
+    void save_solution(std::string pre=std::string("./result/displacement"));
 
     void load_solution(std::string str="backup_solution.xml");
     void backup_solution(std::string str="backup_solution.xml");

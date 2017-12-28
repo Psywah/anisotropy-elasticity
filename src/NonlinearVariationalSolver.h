@@ -136,6 +136,7 @@ namespace dolfin
       p.add("NL_overlap", 0);
       p.add("NL_maximum_iterations", 30);
       p.add("NL_line_search", "basic");
+      p.add("NL_options_prefix","default");
       p.add("NL_report", true);
       p.add("dt", 1e-1);
 

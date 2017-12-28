@@ -650,6 +650,254 @@ public:
 };
 
 
+class hyperelasticitya_finite_element_5: public ufc::finite_element
+{
+public:
+
+  hyperelasticitya_finite_element_5();
+
+  ~hyperelasticitya_finite_element_5() override;
+
+  const char * signature() const final override;
+
+  ufc::shape cell_shape() const final override;
+
+  std::size_t topological_dimension() const final override;
+
+  std::size_t geometric_dimension() const final override;
+
+  std::size_t space_dimension() const final override;
+
+  std::size_t value_rank() const final override;
+
+  std::size_t value_dimension(std::size_t i) const final override;
+
+  std::size_t value_size() const final override;
+
+  std::size_t reference_value_rank() const final override;
+
+  std::size_t reference_value_dimension(std::size_t i) const final override;
+
+  std::size_t reference_value_size() const final override;
+
+  std::size_t degree() const final override;
+
+  const char * family() const final override;
+
+  static void _evaluate_basis(std::size_t i,
+                              double * values,
+                              const double * x,
+                              const double * coordinate_dofs,
+                              int cell_orientation);
+
+  void evaluate_basis(std::size_t i,
+                      double * values,
+                      const double * x,
+                      const double * coordinate_dofs,
+                      int cell_orientation) const final override
+  {
+    _evaluate_basis(i, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_all(double * values,
+                                  const double * x,
+                                  const double * coordinate_dofs,
+                                  int cell_orientation);
+
+  void evaluate_basis_all(double * values,
+                          const double * x,
+                          const double * coordinate_dofs,
+                          int cell_orientation) const final override
+  {
+    _evaluate_basis_all(values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_derivatives(std::size_t i,
+                                          std::size_t n,
+                                          double * values,
+                                          const double * x,
+                                          const double * coordinate_dofs,
+                                          int cell_orientation);
+
+  void evaluate_basis_derivatives(std::size_t i,
+                                  std::size_t n,
+                                  double * values,
+                                  const double * x,
+                                  const double * coordinate_dofs,
+                                  int cell_orientation) const final override
+  {
+    _evaluate_basis_derivatives(i, n, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_derivatives_all(std::size_t n,
+                                              double * values,
+                                              const double * x,
+                                              const double * coordinate_dofs,
+                                              int cell_orientation);
+
+  void evaluate_basis_derivatives_all(std::size_t n,
+                                      double * values,
+                                      const double * x,
+                                      const double * coordinate_dofs,
+                                      int cell_orientation) const final override
+  {
+    _evaluate_basis_derivatives_all(n, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  double evaluate_dof(std::size_t i,
+                      const ufc::function& f,
+                      const double * coordinate_dofs,
+                      int cell_orientation,
+                      const ufc::cell& c) const final override;
+
+  void evaluate_dofs(double * values,
+                     const ufc::function& f,
+                     const double * coordinate_dofs,
+                     int cell_orientation,
+                     const ufc::cell& c) const final override;
+
+  void interpolate_vertex_values(double * vertex_values,
+                                 const double * dof_values,
+                                 const double * coordinate_dofs,
+                                 int cell_orientation,
+                                 const ufc::cell& c) const final override;
+
+  void tabulate_dof_coordinates(double * coordinates,
+                                const double * coordinate_dofs) const final override;
+
+  std::size_t num_sub_elements() const final override;
+
+  ufc::finite_element * create_sub_element(std::size_t i) const final override;
+
+  ufc::finite_element * create() const final override;
+
+};
+
+
+class hyperelasticitya_finite_element_6: public ufc::finite_element
+{
+public:
+
+  hyperelasticitya_finite_element_6();
+
+  ~hyperelasticitya_finite_element_6() override;
+
+  const char * signature() const final override;
+
+  ufc::shape cell_shape() const final override;
+
+  std::size_t topological_dimension() const final override;
+
+  std::size_t geometric_dimension() const final override;
+
+  std::size_t space_dimension() const final override;
+
+  std::size_t value_rank() const final override;
+
+  std::size_t value_dimension(std::size_t i) const final override;
+
+  std::size_t value_size() const final override;
+
+  std::size_t reference_value_rank() const final override;
+
+  std::size_t reference_value_dimension(std::size_t i) const final override;
+
+  std::size_t reference_value_size() const final override;
+
+  std::size_t degree() const final override;
+
+  const char * family() const final override;
+
+  static void _evaluate_basis(std::size_t i,
+                              double * values,
+                              const double * x,
+                              const double * coordinate_dofs,
+                              int cell_orientation);
+
+  void evaluate_basis(std::size_t i,
+                      double * values,
+                      const double * x,
+                      const double * coordinate_dofs,
+                      int cell_orientation) const final override
+  {
+    _evaluate_basis(i, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_all(double * values,
+                                  const double * x,
+                                  const double * coordinate_dofs,
+                                  int cell_orientation);
+
+  void evaluate_basis_all(double * values,
+                          const double * x,
+                          const double * coordinate_dofs,
+                          int cell_orientation) const final override
+  {
+    _evaluate_basis_all(values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_derivatives(std::size_t i,
+                                          std::size_t n,
+                                          double * values,
+                                          const double * x,
+                                          const double * coordinate_dofs,
+                                          int cell_orientation);
+
+  void evaluate_basis_derivatives(std::size_t i,
+                                  std::size_t n,
+                                  double * values,
+                                  const double * x,
+                                  const double * coordinate_dofs,
+                                  int cell_orientation) const final override
+  {
+    _evaluate_basis_derivatives(i, n, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  static void _evaluate_basis_derivatives_all(std::size_t n,
+                                              double * values,
+                                              const double * x,
+                                              const double * coordinate_dofs,
+                                              int cell_orientation);
+
+  void evaluate_basis_derivatives_all(std::size_t n,
+                                      double * values,
+                                      const double * x,
+                                      const double * coordinate_dofs,
+                                      int cell_orientation) const final override
+  {
+    _evaluate_basis_derivatives_all(n, values, x, coordinate_dofs, cell_orientation);
+  }
+
+  double evaluate_dof(std::size_t i,
+                      const ufc::function& f,
+                      const double * coordinate_dofs,
+                      int cell_orientation,
+                      const ufc::cell& c) const final override;
+
+  void evaluate_dofs(double * values,
+                     const ufc::function& f,
+                     const double * coordinate_dofs,
+                     int cell_orientation,
+                     const ufc::cell& c) const final override;
+
+  void interpolate_vertex_values(double * vertex_values,
+                                 const double * dof_values,
+                                 const double * coordinate_dofs,
+                                 int cell_orientation,
+                                 const ufc::cell& c) const final override;
+
+  void tabulate_dof_coordinates(double * coordinates,
+                                const double * coordinate_dofs) const final override;
+
+  std::size_t num_sub_elements() const final override;
+
+  ufc::finite_element * create_sub_element(std::size_t i) const final override;
+
+  ufc::finite_element * create() const final override;
+
+};
+
+
 class hyperelasticitya_dofmap_0: public ufc::dofmap
 {
 public:
@@ -885,6 +1133,100 @@ public:
 };
 
 
+class hyperelasticitya_dofmap_5: public ufc::dofmap
+{
+public:
+
+  hyperelasticitya_dofmap_5();
+
+  ~hyperelasticitya_dofmap_5() override;
+
+  const char * signature() const final override;
+
+  bool needs_mesh_entities(std::size_t d) const final override;
+
+  std::size_t topological_dimension() const final override;
+
+  std::size_t global_dimension(const std::vector<std::size_t>&
+                               num_global_entities) const final override;
+
+  std::size_t num_element_dofs() const final override;
+
+  std::size_t num_facet_dofs() const final override;
+
+  std::size_t num_entity_dofs(std::size_t d) const final override;
+
+  std::size_t num_entity_closure_dofs(std::size_t d) const final override;
+
+  void tabulate_dofs(std::size_t * dofs,
+                     const std::vector<std::size_t>& num_global_entities,
+                     const std::vector<std::vector<std::size_t>>& entity_indices) const final override;
+
+  void tabulate_facet_dofs(std::size_t * dofs,
+                           std::size_t facet) const final override;
+
+  void tabulate_entity_dofs(std::size_t * dofs,
+                            std::size_t d, std::size_t i) const final override;
+
+  void tabulate_entity_closure_dofs(std::size_t * dofs,
+                            std::size_t d, std::size_t i) const final override;
+
+  std::size_t num_sub_dofmaps() const final override;
+
+  ufc::dofmap * create_sub_dofmap(std::size_t i) const final override;
+
+  ufc::dofmap * create() const final override;
+
+};
+
+
+class hyperelasticitya_dofmap_6: public ufc::dofmap
+{
+public:
+
+  hyperelasticitya_dofmap_6();
+
+  ~hyperelasticitya_dofmap_6() override;
+
+  const char * signature() const final override;
+
+  bool needs_mesh_entities(std::size_t d) const final override;
+
+  std::size_t topological_dimension() const final override;
+
+  std::size_t global_dimension(const std::vector<std::size_t>&
+                               num_global_entities) const final override;
+
+  std::size_t num_element_dofs() const final override;
+
+  std::size_t num_facet_dofs() const final override;
+
+  std::size_t num_entity_dofs(std::size_t d) const final override;
+
+  std::size_t num_entity_closure_dofs(std::size_t d) const final override;
+
+  void tabulate_dofs(std::size_t * dofs,
+                     const std::vector<std::size_t>& num_global_entities,
+                     const std::vector<std::vector<std::size_t>>& entity_indices) const final override;
+
+  void tabulate_facet_dofs(std::size_t * dofs,
+                           std::size_t facet) const final override;
+
+  void tabulate_entity_dofs(std::size_t * dofs,
+                            std::size_t d, std::size_t i) const final override;
+
+  void tabulate_entity_closure_dofs(std::size_t * dofs,
+                            std::size_t d, std::size_t i) const final override;
+
+  std::size_t num_sub_dofmaps() const final override;
+
+  ufc::dofmap * create_sub_dofmap(std::size_t i) const final override;
+
+  ufc::dofmap * create() const final override;
+
+};
+
+
 class hyperelasticitya_cell_integral_0_1: public ufc::cell_integral
 {
 public:
@@ -975,13 +1317,13 @@ public:
 };
 
 
-class hyperelasticitya_exterior_facet_integral_0_1: public ufc::exterior_facet_integral
+class hyperelasticitya_exterior_facet_integral_0_3: public ufc::exterior_facet_integral
 {
 public:
 
-  hyperelasticitya_exterior_facet_integral_0_1();
+  hyperelasticitya_exterior_facet_integral_0_3();
 
-  ~hyperelasticitya_exterior_facet_integral_0_1() override;
+  ~hyperelasticitya_exterior_facet_integral_0_3() override;
 
   const std::vector<bool> & enabled_coefficients() const final override;
 
@@ -1156,13 +1498,13 @@ public:
 };
 
 
-class hyperelasticitya_exterior_facet_integral_2_1: public ufc::exterior_facet_integral
+class hyperelasticitya_exterior_facet_integral_2_3: public ufc::exterior_facet_integral
 {
 public:
 
-  hyperelasticitya_exterior_facet_integral_2_1();
+  hyperelasticitya_exterior_facet_integral_2_3();
 
-  ~hyperelasticitya_exterior_facet_integral_2_1() override;
+  ~hyperelasticitya_exterior_facet_integral_2_3() override;
 
   const std::vector<bool> & enabled_coefficients() const final override;
 
@@ -3259,8 +3601,8 @@ public:
   // Constructor for standard function space
   Form_Mass_vms_FunctionSpace_0(std::shared_ptr<const dolfin::Mesh> mesh):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh))
   {
     // Do nothing
   }
@@ -3268,8 +3610,8 @@ public:
   // Constructor for constrained function space
   Form_Mass_vms_FunctionSpace_0(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::SubDomain> constrained_domain):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh, constrained_domain))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh, constrained_domain))
   {
     // Do nothing
   }
@@ -3283,8 +3625,8 @@ public:
   // Constructor for standard function space
   Form_Mass_vms_FunctionSpace_1(std::shared_ptr<const dolfin::Mesh> mesh):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh))
   {
     // Do nothing
   }
@@ -3292,8 +3634,8 @@ public:
   // Constructor for constrained function space
   Form_Mass_vms_FunctionSpace_1(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::SubDomain> constrained_domain):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh, constrained_domain))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh, constrained_domain))
   {
     // Do nothing
   }
@@ -3450,8 +3792,8 @@ public:
   // Constructor for standard function space
   Form_L_vms_FunctionSpace_0(std::shared_ptr<const dolfin::Mesh> mesh):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh))
   {
     // Do nothing
   }
@@ -3459,8 +3801,8 @@ public:
   // Constructor for constrained function space
   Form_L_vms_FunctionSpace_0(std::shared_ptr<const dolfin::Mesh> mesh, std::shared_ptr<const dolfin::SubDomain> constrained_domain):
     dolfin::FunctionSpace(mesh,
-                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_4>()),
-                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_4>(), *mesh, constrained_domain))
+                          std::make_shared<const dolfin::FiniteElement>(std::make_shared<hyperelasticitya_finite_element_6>()),
+                          std::make_shared<const dolfin::DofMap>(std::make_shared<hyperelasticitya_dofmap_6>(), *mesh, constrained_domain))
   {
     // Do nothing
   }
