@@ -260,6 +260,8 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
            bool accept = false;
            std::size_t iter = 0, max_iter = parameters("snes_solver")["maximum_iterations"] ;
            parameters("snes_solver")["maximum_iterations"] = 1;
+           int num_ne=0, num_newton_ne=0;
+           double pct_elim=0.0;
            while(!converged && iter< max_iter)
            {
                if(iter!=0 && iter%30==0)
@@ -331,6 +333,8 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                info("Size of coarse problem %d < %d * %.2f (total_size * rho_2), Need for nonlinear elimination",
                        size_total-size_good, size_total, rho2);
                PETScVector x_copy(u->vector()->down_cast<PETScVector>());
+               if(double(size_total-size_good)/size_total > pct_elim)
+                   pct_elim = double(size_total-size_good)/size_total;
 
                snes_solver->parameters.update(para_coarse);
                snes_solver->set_options_prefix((std::string)(parameters["NL_options_prefix"]));
@@ -339,6 +343,10 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                {
                    nonlinear_coarse_problem->restricted_update(*u->vector(), x_copy);
                }
+               num_ne++;
+
+               int num_newton = std::get<0>(ret);
+               num_newton_ne += num_newton;
 
                double obj_c;
                if(_problem->has_object())
@@ -385,6 +393,7 @@ std::pair<std::size_t, bool> NonlinearVariationalSolver::solve()
                end();
 
            }
+           info( "num_ne : %d,  num_newton_ne : %d, max_pct_elim : %f", num_ne, num_newton_ne, pct_elim);
        }
        #else
        info("begin snes solve");

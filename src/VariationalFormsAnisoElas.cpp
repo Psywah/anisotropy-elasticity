@@ -58,6 +58,23 @@ class BottomPoint : public SubDomain
         return false;
     }
 };
+// Sub domain for clamp at botton end
+class TopPoint : public SubDomain
+{
+    bool inside(const Array<double>& x, bool on_boundary) const
+    {
+        if(//(std::abs(x[2]) < DOLFIN_EPS) &&
+                (std::abs(x[1]-R-Thk_med-Thk_adv) < DOLFIN_EPS) 
+          )
+        {   
+            //std::cout<<"found bottom point"<<std::endl;
+            //std::cout<<x[0]<<"  "<<x[1]<<"  "<<x[2]<<std::endl;
+            return true;
+        }
+        return false;
+    }
+};
+
 // Pressure boundary condition
 class PressurePara : public Expression
 {
@@ -330,6 +347,7 @@ VariationalForms::VariationalForms(
     std::shared_ptr<LeftPoint> left = std::make_shared<LeftPoint>();
     std::shared_ptr<RightPoint> right = std::make_shared<RightPoint>();
     std::shared_ptr<BottomPoint> bottom = std::make_shared<BottomPoint>();
+    std::shared_ptr<TopPoint> top = std::make_shared<TopPoint>();
 
     // Define Dirichlet boundary functions
     std::shared_ptr<Constant> zero = std::make_shared<Constant>(0.0);
@@ -339,7 +357,8 @@ VariationalForms::VariationalForms(
     // Create Dirichlet boundary conditions
     std::shared_ptr<DirichletBC> bcl = std::make_shared<DirichletBC>((*_V)[1], zero, left, method);
     std::shared_ptr<DirichletBC> bcr = std::make_shared<DirichletBC>((*_V)[1], zero, right, method);
-    std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
+    std::shared_ptr<DirichletBC> bcb = std::make_shared<DirichletBC>((*_V)[0], zero, bottom, method);
+    std::shared_ptr<DirichletBC> bct = std::make_shared<DirichletBC>((*_V)[0], zero, top, method);
     std::shared_ptr<DirichletBC> bc_cross2 = std::make_shared<DirichletBC>((*_V)[2], zero, 
             reference_to_no_delete_pointer(boundary_mark), 2);
     std::shared_ptr<DirichletBC> bc_cross1 = std::make_shared<DirichletBC>((*_V)[2], zero, 
@@ -355,6 +374,7 @@ VariationalForms::VariationalForms(
     bcs.push_back(bcl);
     bcs.push_back(bcr);
     bcs.push_back(bct);
+    bcs.push_back(bcb);
     bcs.push_back(bc_cross1);
     bcs.push_back(bc_cross2);
     

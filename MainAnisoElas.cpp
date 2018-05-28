@@ -106,8 +106,6 @@ int main(int argc, char** argv)
     info("Coarse Solver done. \n\n\n\n\n\n\n\n");
     */
     
-    
-    
 
 
     Mesh mesh;
@@ -140,22 +138,30 @@ int main(int argc, char** argv)
     NonlinearVariationalProblem problem(forms._F, forms._u, forms.bcs, forms._J);
     t2.stop();
     
-    /*
-    forms_c.load_solution("u1.xml");
+   /* 
+    forms_c.load_solution("backup_solution.xml");
     forms_c._u->set_allow_extrapolation(true);
     forms._u->interpolate(*(forms_c._u));
-    forms_c.save_solution("u1");
-    forms.save_solution(std::string("u") + std::to_string(meshID) );
-    //forms_c.backup_solution("u1.xml");
-    forms.backup_solution(std::string("u") + std::to_string(meshID) + std::string(".xml"));
+    //forms_c.save_solution("u3sol");
+    //forms.save_solution(std::string("u3to") + std::to_string(meshID) );
+    //forms_c.backup_solution("u3sol.xml");
+    forms.backup_solution(std::string("xxxxx") + std::to_string(meshID) + std::string(".xml"));
     return 0;
     */
     
     
     
     
-    //forms.load_solution("u3.xml");
-    forms.load_solution(std::string("u") + std::to_string(meshID) + std::string(".xml"));
+    
+    
+    
+    
+    
+    
+    forms.load_solution(std::string(para_nls["loadfile"]));
+    //forms.load_solution("u3to4.xml");
+    //forms.load_solution("backup_solution.xml");
+    //forms.load_solution(std::string("u") + std::to_string(meshID) + std::string(".xml"));
     //forms.save_solution();
     //return 0;
 
@@ -172,11 +178,11 @@ int main(int argc, char** argv)
     solver.solve();
     t4.stop();
 
-    forms.save_solution();
-    forms.save_von_misec_stress();
+    //forms.save_solution();
+    //forms.save_von_misec_stress();
 
-    std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
-    list_timings(TimingClear::clear,type); 
+    //std::set<TimingType> type = {TimingType::wall,TimingType::user, TimingType::system};
+    //list_timings(TimingClear::clear,type); 
 
     //forms.plot_solution();
 

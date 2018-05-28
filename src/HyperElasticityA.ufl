@@ -37,7 +37,7 @@ v  = TestFunction(VecCG)      # Test function
 # Functions
 u = Coefficient(VecCG)        # Displacement from previous iteration
 B = VectorConstant(tetrahedron)        # Body force per unit volume
-T = VectorConstant(tetrahedron)        # Traction force on the boundary
+#T = VectorConstant(tetrahedron)        # Traction force on the boundary
 
 # Structural tensor
 vec1 = VectorConstant(tetrahedron)
@@ -64,6 +64,13 @@ I = Identity(d)                 # Identity tensor
 F = I + grad(u)                 # Deformation gradient
 C = F.T*F                       # Right Cauchy-Green tensor
 C = variable(C)
+
+pressure = Constant(tetrahedron)
+n = FacetNormal(tetrahedron)
+invF = inv(F)
+#T = -pressure*cofac(F)*n
+T = -pressure*n
+
 
 # Invariants of deformation tensors
 I1 = tr(C)
