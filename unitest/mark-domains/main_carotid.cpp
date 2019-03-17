@@ -60,15 +60,25 @@ class RightSide : public SubDomain
     }
   };
   */
-
+/*
   // Read mesh
-  //Mesh mesh(MPI_COMM_WORLD, "../../mesh/carotid_HII.xml");
+  Mesh mesh(MPI_COMM_WORLD, "/Users/shihua/BaiduYun/Note/anisotropic_hyperelasticity/code/data/CARE-566-left/carotid-artery/carotid_HII1.xml");
 
   //return 0;
   // Create mesh functions over the cells and acets
-  //MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
-  //MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
+  MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim(), 1 );
+  MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim() - 1);
+  
+  // Read sub domains from file
+  File file_read("/Users/shihua/BaiduYun/Note/anisotropic_hyperelasticity/code/data/CARE-566-left/carotid-artery/carotid_HII1_physical_region.xml");
+  file_read >> sub_domains_mark;
 
+  // Save sub domains to file
+  File file_bnd_read("/Users/shihua/BaiduYun/Note/anisotropic_hyperelasticity/code/data/CARE-566-left/carotid-artery/carotid_HII1_facet_region.xml");
+  file_bnd_read >> boundary_mark;
+  */
+
+ 
   // Mark all cells  as sub domain 1
   //sub_domains_mark = 1;
   //boundary_mark = 0;
@@ -82,11 +92,15 @@ class RightSide : public SubDomain
   //file_bnd << boundary_mark;
   
   // serial write a patch of meshes
-  HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
-  for(int i =1;i<5;i++)
+  
+  //HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
+  /*
+  HDF5File filew(MPI_COMM_WORLD,"pipe.h5","w");
+  for(int i =1;i<3;i++)
   {
       // Read mesh
-      std::string prefix("/scratch/summit/shgo7817/mesh/carotid_HII");
+      std::string prefix("/Users/shihua/BaiduYun/Note/anisotropic_hyperelasticity/code/data/pipe/pipe");
+      //std::string prefix("/Users/shihua/BaiduYun/Note/anisotropic_hyperelasticity/code/data/CARE-566-left/carotid-artery/carotid_HII");
       Mesh mesh(MPI_COMM_WORLD, prefix + std::to_string(i) + std::string(".xml"));
 
       // Create mesh functions over the cells and acets
@@ -115,6 +129,8 @@ class RightSide : public SubDomain
       filew.write(boundary_mark,s3.c_str());
   }
   filew.close();
+  
+  */
 
 
 
@@ -122,15 +138,7 @@ class RightSide : public SubDomain
 
 
 // serial write single mesh
-  /*
-  // Read sub domains from file
-  File file_read("../../mesh/carotid_HII_physical_region.xml");
-  file_read >> sub_domains_mark;
-
-  // Save sub domains to file
-  File file_bnd_read("../../mesh/carotid_HII_facet_region.xml");
-  file_bnd_read >> boundary_mark;
-
+ /*
   HDF5File filew(MPI_COMM_WORLD,"carotidHII.h5","w");
   filew.write(mesh,"/mesh");
   filew.write(sub_domains_mark,"/subdomains_mark");
@@ -142,24 +150,26 @@ class RightSide : public SubDomain
 
 
 // parallel write
-/*
+
   Mesh mesh;
-  HDF5File filer(mesh.mpi_comm(),"carotidHII.h5","r");
-  filer.read(mesh,"/mesh",false);
+  //HDF5File filer(mesh.mpi_comm(),"carotidHII.h5","r");
+  HDF5File filer(mesh.mpi_comm(),"pipe.h5","r");
+  filer.read(mesh,"/mesh2",false);
   //filer.flush();
 
   MeshFunction<std::size_t> sub_domains_mark(reference_to_no_delete_pointer(mesh), mesh.topology().dim());
   MeshFunction<std::size_t> boundary_mark(reference_to_no_delete_pointer(mesh),mesh.topology().dim()-1);
 
-  filer.read(sub_domains_mark,"/subdomains_mark");
+  filer.read(sub_domains_mark,"/subdomains_mark2");
   std::cout<< "finished reading subdomains mark\n"<<std::flush<<std::endl;
 
-  filer.read(boundary_mark,"facet_mark");
+  filer.read(boundary_mark,"facet_mark2");
   std::cout<< "finished reading\n"<<std::flush<<std::endl;
   info("has PETSc");
+  
 
   //filer.flush();
-
+/*
   HDF5File filew(MPI_COMM_WORLD,"carotidHIIdist.h5","w");
   filew.write(mesh,"mesh");
   std::cout<< "wrote mesh\n"<<std::endl;
@@ -176,12 +186,14 @@ class RightSide : public SubDomain
 
 
 
-  /*
+  
      plot(mesh);
      plot(sub_domains_mark);
      plot(boundary_mark);
      interactive();
-     */
+     
+     
+     
 
 
   return 0;
